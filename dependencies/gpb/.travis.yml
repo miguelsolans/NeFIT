@@ -1,0 +1,21 @@
+dist: trusty
+language: erlang
+addons:
+  apt:
+    sources:
+      - sourceline: ppa:maarten-fonville/protobuf
+    packages:
+      - libprotobuf-dev
+      - protobuf-compiler
+otp_release:
+  - 22.0
+  - 21.3
+  - 20.3
+  - 19.3
+  - 18.3
+env:
+  - VERBOSE=1
+script:
+  - make
+  - protoc --version
+  - make test
