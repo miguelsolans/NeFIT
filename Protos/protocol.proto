@@ -1,5 +1,27 @@
 syntax = "proto2";
 
+message Message{
+    required string user_type = 1;
+    optional ItemOrderOffer item_order_offer = 2;
+    optional ItemProductionOffer item_production_offer = 3;
+    optional User user = 4;
+}
+
+message ItemOrderOffer{
+    required string manufacter_name = 1;
+    required string product_name = 2;
+    required float quantity = 3;
+    required float unit_price = 4;
+}
+
+message ItemProductionOffer{
+    required string name = 1;
+    required float unit_price = 2;
+    required float minimum_amount = 3;
+    required float maximum_amount = 4;
+    required int64 period = 5;
+}
+
 message User {
     required string username = 1;
     required string password = 2;
