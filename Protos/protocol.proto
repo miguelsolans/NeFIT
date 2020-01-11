@@ -8,13 +8,7 @@ message Message{
     optional ItemProductionOffer item_production_offer = 3;
     optional User user = 4;
     required Type type = 5;
-}
-
-enum Type{
-    LOGIN = 0;
-    LOGOUT = 1;
-    REGISTER = 2;
-    RESPONSE = 3;
+    optional State state = 6;
 }
 
 message ItemOrderOffer{
@@ -35,4 +29,16 @@ message ItemProductionOffer{
 message User {
     required string username = 1;
     required string password = 2;
+}
+
+enum Type{
+    LOGIN = 0;
+    LOGOUT = 1;
+    REGISTER = 2;
+    RESPONSE = 3;
+}
+
+message State {
+    optional bool result = 1;
+    optional string description = 2;
 }
