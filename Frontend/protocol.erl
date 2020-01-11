@@ -16,6 +16,7 @@
 -export([find_msg_def/1, fetch_msg_def/1]).
 -export([find_enum_def/1, fetch_enum_def/1]).
 -export([enum_symbol_by_value/2, enum_value_by_symbol/2]).
+-export([enum_symbol_by_value_Type/1, enum_value_by_symbol_Type/1]).
 -export([get_service_names/0]).
 -export([get_service_def/1]).
 -export([get_rpc_names/1]).
@@ -46,15 +47,16 @@
 
 
 %% enumerated types
-
--export_type([]).
+-type 'Type'() :: 'LOGIN' | 'LOGOUT' | 'REGISTER' | 'RESPONSE'.
+-export_type(['Type'/0]).
 
 %% message types
 -type 'Message'() ::
       #{user_type               := iodata(),        % = 1
         item_order_offer        => 'ItemOrderOffer'(), % = 2
         item_production_offer   => 'ItemProductionOffer'(), % = 3
-        user                    => 'User'()         % = 4
+        user                    => 'User'(),        % = 4
+        type                    := 'LOGIN' | 'LOGOUT' | 'REGISTER' | 'RESPONSE' | integer() % = 5, enum Type
        }.
 
 -type 'ItemOrderOffer'() ::
@@ -108,8 +110,8 @@ encode_msg_Message(Msg, TrUserData) ->
     encode_msg_Message(Msg, <<>>, TrUserData).
 
 
-encode_msg_Message(#{user_type := F1} = M, Bin,
-		   TrUserData) ->
+encode_msg_Message(#{user_type := F1, type := F5} = M,
+		   Bin, TrUserData) ->
     B1 = begin
 	   TrF1 = id(F1, TrUserData),
 	   e_type_string(TrF1, <<Bin/binary, 10>>, TrUserData)
@@ -134,14 +136,18 @@ encode_msg_Message(#{user_type := F1} = M, Bin,
 	       end;
 	   _ -> B2
 	 end,
-    case M of
-      #{user := F4} ->
-	  begin
-	    TrF4 = id(F4, TrUserData),
-	    e_mfield_Message_user(TrF4, <<B3/binary, 34>>,
-				  TrUserData)
-	  end;
-      _ -> B3
+    B4 = case M of
+	   #{user := F4} ->
+	       begin
+		 TrF4 = id(F4, TrUserData),
+		 e_mfield_Message_user(TrF4, <<B3/binary, 34>>,
+				       TrUserData)
+	       end;
+	   _ -> B3
+	 end,
+    begin
+      TrF5 = id(F5, TrUserData),
+      e_enum_Type(TrF5, <<B4/binary, 40>>, TrUserData)
     end.
 
 encode_msg_ItemOrderOffer(Msg, TrUserData) ->
@@ -231,6 +237,16 @@ e_mfield_Message_user(Msg, Bin, TrUserData) ->
     SubBin = encode_msg_User(Msg, <<>>, TrUserData),
     Bin2 = e_varint(byte_size(SubBin), Bin),
     <<Bin2/binary, SubBin/binary>>.
+
+e_enum_Type('LOGIN', Bin, _TrUserData) ->
+    <<Bin/binary, 0>>;
+e_enum_Type('LOGOUT', Bin, _TrUserData) ->
+    <<Bin/binary, 1>>;
+e_enum_Type('REGISTER', Bin, _TrUserData) ->
+    <<Bin/binary, 2>>;
+e_enum_Type('RESPONSE', Bin, _TrUserData) ->
+    <<Bin/binary, 3>>;
+e_enum_Type(V, Bin, _TrUserData) -> e_varint(V, Bin).
 
 -compile({nowarn_unused_function,e_type_sint/3}).
 e_type_sint(Value, Bin, _TrUserData) when Value >= 0 ->
@@ -365,27 +381,33 @@ decode_msg_Message(Bin, TrUserData) ->
 			       id('$undef', TrUserData),
 			       id('$undef', TrUserData),
 			       id('$undef', TrUserData),
+			       id('$undef', TrUserData),
 			       id('$undef', TrUserData), TrUserData).
 
 dfp_read_field_def_Message(<<10, Rest/binary>>, Z1, Z2,
-			   F@_1, F@_2, F@_3, F@_4, TrUserData) ->
+			   F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData) ->
     d_field_Message_user_type(Rest, Z1, Z2, F@_1, F@_2,
-			      F@_3, F@_4, TrUserData);
+			      F@_3, F@_4, F@_5, TrUserData);
 dfp_read_field_def_Message(<<18, Rest/binary>>, Z1, Z2,
-			   F@_1, F@_2, F@_3, F@_4, TrUserData) ->
+			   F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData) ->
     d_field_Message_item_order_offer(Rest, Z1, Z2, F@_1,
-				     F@_2, F@_3, F@_4, TrUserData);
+				     F@_2, F@_3, F@_4, F@_5, TrUserData);
 dfp_read_field_def_Message(<<26, Rest/binary>>, Z1, Z2,
-			   F@_1, F@_2, F@_3, F@_4, TrUserData) ->
+			   F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData) ->
     d_field_Message_item_production_offer(Rest, Z1, Z2,
-					  F@_1, F@_2, F@_3, F@_4, TrUserData);
+					  F@_1, F@_2, F@_3, F@_4, F@_5,
+					  TrUserData);
 dfp_read_field_def_Message(<<34, Rest/binary>>, Z1, Z2,
-			   F@_1, F@_2, F@_3, F@_4, TrUserData) ->
+			   F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData) ->
     d_field_Message_user(Rest, Z1, Z2, F@_1, F@_2, F@_3,
-			 F@_4, TrUserData);
+			 F@_4, F@_5, TrUserData);
+dfp_read_field_def_Message(<<40, Rest/binary>>, Z1, Z2,
+			   F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData) ->
+    d_field_Message_type(Rest, Z1, Z2, F@_1, F@_2, F@_3,
+			 F@_4, F@_5, TrUserData);
 dfp_read_field_def_Message(<<>>, 0, 0, F@_1, F@_2, F@_3,
-			   F@_4, _) ->
-    S1 = #{user_type => F@_1},
+			   F@_4, F@_5, _) ->
+    S1 = #{user_type => F@_1, type => F@_5},
     S2 = if F@_2 == '$undef' -> S1;
 	    true -> S1#{item_order_offer => F@_2}
 	 end,
@@ -396,53 +418,57 @@ dfp_read_field_def_Message(<<>>, 0, 0, F@_1, F@_2, F@_3,
        true -> S3#{user => F@_4}
     end;
 dfp_read_field_def_Message(Other, Z1, Z2, F@_1, F@_2,
-			   F@_3, F@_4, TrUserData) ->
+			   F@_3, F@_4, F@_5, TrUserData) ->
     dg_read_field_def_Message(Other, Z1, Z2, F@_1, F@_2,
-			      F@_3, F@_4, TrUserData).
+			      F@_3, F@_4, F@_5, TrUserData).
 
 dg_read_field_def_Message(<<1:1, X:7, Rest/binary>>, N,
-			  Acc, F@_1, F@_2, F@_3, F@_4, TrUserData)
+			  Acc, F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData)
     when N < 32 - 7 ->
     dg_read_field_def_Message(Rest, N + 7, X bsl N + Acc,
-			      F@_1, F@_2, F@_3, F@_4, TrUserData);
+			      F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData);
 dg_read_field_def_Message(<<0:1, X:7, Rest/binary>>, N,
-			  Acc, F@_1, F@_2, F@_3, F@_4, TrUserData) ->
+			  Acc, F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData) ->
     Key = X bsl N + Acc,
     case Key of
       10 ->
 	  d_field_Message_user_type(Rest, 0, 0, F@_1, F@_2, F@_3,
-				    F@_4, TrUserData);
+				    F@_4, F@_5, TrUserData);
       18 ->
 	  d_field_Message_item_order_offer(Rest, 0, 0, F@_1, F@_2,
-					   F@_3, F@_4, TrUserData);
+					   F@_3, F@_4, F@_5, TrUserData);
       26 ->
 	  d_field_Message_item_production_offer(Rest, 0, 0, F@_1,
-						F@_2, F@_3, F@_4, TrUserData);
+						F@_2, F@_3, F@_4, F@_5,
+						TrUserData);
       34 ->
 	  d_field_Message_user(Rest, 0, 0, F@_1, F@_2, F@_3, F@_4,
-			       TrUserData);
+			       F@_5, TrUserData);
+      40 ->
+	  d_field_Message_type(Rest, 0, 0, F@_1, F@_2, F@_3, F@_4,
+			       F@_5, TrUserData);
       _ ->
 	  case Key band 7 of
 	    0 ->
 		skip_varint_Message(Rest, 0, 0, F@_1, F@_2, F@_3, F@_4,
-				    TrUserData);
+				    F@_5, TrUserData);
 	    1 ->
 		skip_64_Message(Rest, 0, 0, F@_1, F@_2, F@_3, F@_4,
-				TrUserData);
+				F@_5, TrUserData);
 	    2 ->
 		skip_length_delimited_Message(Rest, 0, 0, F@_1, F@_2,
-					      F@_3, F@_4, TrUserData);
+					      F@_3, F@_4, F@_5, TrUserData);
 	    3 ->
 		skip_group_Message(Rest, Key bsr 3, 0, F@_1, F@_2, F@_3,
-				   F@_4, TrUserData);
+				   F@_4, F@_5, TrUserData);
 	    5 ->
 		skip_32_Message(Rest, 0, 0, F@_1, F@_2, F@_3, F@_4,
-				TrUserData)
+				F@_5, TrUserData)
 	  end
     end;
 dg_read_field_def_Message(<<>>, 0, 0, F@_1, F@_2, F@_3,
-			  F@_4, _) ->
-    S1 = #{user_type => F@_1},
+			  F@_4, F@_5, _) ->
+    S1 = #{user_type => F@_1, type => F@_5},
     S2 = if F@_2 == '$undef' -> S1;
 	    true -> S1#{item_order_offer => F@_2}
 	 end,
@@ -454,12 +480,12 @@ dg_read_field_def_Message(<<>>, 0, 0, F@_1, F@_2, F@_3,
     end.
 
 d_field_Message_user_type(<<1:1, X:7, Rest/binary>>, N,
-			  Acc, F@_1, F@_2, F@_3, F@_4, TrUserData)
+			  Acc, F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData)
     when N < 57 ->
     d_field_Message_user_type(Rest, N + 7, X bsl N + Acc,
-			      F@_1, F@_2, F@_3, F@_4, TrUserData);
+			      F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData);
 d_field_Message_user_type(<<0:1, X:7, Rest/binary>>, N,
-			  Acc, _, F@_2, F@_3, F@_4, TrUserData) ->
+			  Acc, _, F@_2, F@_3, F@_4, F@_5, TrUserData) ->
     {NewFValue, RestF} = begin
 			   Len = X bsl N + Acc,
 			   <<Utf8:Len/binary, Rest2/binary>> = Rest,
@@ -468,18 +494,20 @@ d_field_Message_user_type(<<0:1, X:7, Rest/binary>>, N,
 			    Rest2}
 			 end,
     dfp_read_field_def_Message(RestF, 0, 0, NewFValue, F@_2,
-			       F@_3, F@_4, TrUserData).
+			       F@_3, F@_4, F@_5, TrUserData).
 
 d_field_Message_item_order_offer(<<1:1, X:7,
 				   Rest/binary>>,
-				 N, Acc, F@_1, F@_2, F@_3, F@_4, TrUserData)
+				 N, Acc, F@_1, F@_2, F@_3, F@_4, F@_5,
+				 TrUserData)
     when N < 57 ->
     d_field_Message_item_order_offer(Rest, N + 7,
 				     X bsl N + Acc, F@_1, F@_2, F@_3, F@_4,
-				     TrUserData);
+				     F@_5, TrUserData);
 d_field_Message_item_order_offer(<<0:1, X:7,
 				   Rest/binary>>,
-				 N, Acc, F@_1, Prev, F@_3, F@_4, TrUserData) ->
+				 N, Acc, F@_1, Prev, F@_3, F@_4, F@_5,
+				 TrUserData) ->
     {NewFValue, RestF} = begin
 			   Len = X bsl N + Acc,
 			   <<Bs:Len/binary, Rest2/binary>> = Rest,
@@ -493,19 +521,19 @@ d_field_Message_item_order_offer(<<0:1, X:7,
 				      merge_msg_ItemOrderOffer(Prev, NewFValue,
 							       TrUserData)
 			       end,
-			       F@_3, F@_4, TrUserData).
+			       F@_3, F@_4, F@_5, TrUserData).
 
 d_field_Message_item_production_offer(<<1:1, X:7,
 					Rest/binary>>,
-				      N, Acc, F@_1, F@_2, F@_3, F@_4,
+				      N, Acc, F@_1, F@_2, F@_3, F@_4, F@_5,
 				      TrUserData)
     when N < 57 ->
     d_field_Message_item_production_offer(Rest, N + 7,
 					  X bsl N + Acc, F@_1, F@_2, F@_3, F@_4,
-					  TrUserData);
+					  F@_5, TrUserData);
 d_field_Message_item_production_offer(<<0:1, X:7,
 					Rest/binary>>,
-				      N, Acc, F@_1, F@_2, Prev, F@_4,
+				      N, Acc, F@_1, F@_2, Prev, F@_4, F@_5,
 				      TrUserData) ->
     {NewFValue, RestF} = begin
 			   Len = X bsl N + Acc,
@@ -521,15 +549,15 @@ d_field_Message_item_production_offer(<<0:1, X:7,
 								    NewFValue,
 								    TrUserData)
 			       end,
-			       F@_4, TrUserData).
+			       F@_4, F@_5, TrUserData).
 
 d_field_Message_user(<<1:1, X:7, Rest/binary>>, N, Acc,
-		     F@_1, F@_2, F@_3, F@_4, TrUserData)
+		     F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData)
     when N < 57 ->
     d_field_Message_user(Rest, N + 7, X bsl N + Acc, F@_1,
-			 F@_2, F@_3, F@_4, TrUserData);
+			 F@_2, F@_3, F@_4, F@_5, TrUserData);
 d_field_Message_user(<<0:1, X:7, Rest/binary>>, N, Acc,
-		     F@_1, F@_2, F@_3, Prev, TrUserData) ->
+		     F@_1, F@_2, F@_3, Prev, F@_5, TrUserData) ->
     {NewFValue, RestF} = begin
 			   Len = X bsl N + Acc,
 			   <<Bs:Len/binary, Rest2/binary>> = Rest,
@@ -543,45 +571,64 @@ d_field_Message_user(<<0:1, X:7, Rest/binary>>, N, Acc,
 				      merge_msg_User(Prev, NewFValue,
 						     TrUserData)
 			       end,
-			       TrUserData).
+			       F@_5, TrUserData).
+
+d_field_Message_type(<<1:1, X:7, Rest/binary>>, N, Acc,
+		     F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData)
+    when N < 57 ->
+    d_field_Message_type(Rest, N + 7, X bsl N + Acc, F@_1,
+			 F@_2, F@_3, F@_4, F@_5, TrUserData);
+d_field_Message_type(<<0:1, X:7, Rest/binary>>, N, Acc,
+		     F@_1, F@_2, F@_3, F@_4, _, TrUserData) ->
+    {NewFValue, RestF} = {id(d_enum_Type(begin
+					   <<Res:32/signed-native>> = <<(X bsl N
+									   +
+									   Acc):32/unsigned-native>>,
+					   id(Res, TrUserData)
+					 end),
+			     TrUserData),
+			  Rest},
+    dfp_read_field_def_Message(RestF, 0, 0, F@_1, F@_2,
+			       F@_3, F@_4, NewFValue, TrUserData).
 
 skip_varint_Message(<<1:1, _:7, Rest/binary>>, Z1, Z2,
-		    F@_1, F@_2, F@_3, F@_4, TrUserData) ->
+		    F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData) ->
     skip_varint_Message(Rest, Z1, Z2, F@_1, F@_2, F@_3,
-			F@_4, TrUserData);
+			F@_4, F@_5, TrUserData);
 skip_varint_Message(<<0:1, _:7, Rest/binary>>, Z1, Z2,
-		    F@_1, F@_2, F@_3, F@_4, TrUserData) ->
+		    F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData) ->
     dfp_read_field_def_Message(Rest, Z1, Z2, F@_1, F@_2,
-			       F@_3, F@_4, TrUserData).
+			       F@_3, F@_4, F@_5, TrUserData).
 
 skip_length_delimited_Message(<<1:1, X:7, Rest/binary>>,
-			      N, Acc, F@_1, F@_2, F@_3, F@_4, TrUserData)
+			      N, Acc, F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData)
     when N < 57 ->
     skip_length_delimited_Message(Rest, N + 7,
-				  X bsl N + Acc, F@_1, F@_2, F@_3, F@_4,
+				  X bsl N + Acc, F@_1, F@_2, F@_3, F@_4, F@_5,
 				  TrUserData);
 skip_length_delimited_Message(<<0:1, X:7, Rest/binary>>,
-			      N, Acc, F@_1, F@_2, F@_3, F@_4, TrUserData) ->
+			      N, Acc, F@_1, F@_2, F@_3, F@_4, F@_5,
+			      TrUserData) ->
     Length = X bsl N + Acc,
     <<_:Length/binary, Rest2/binary>> = Rest,
     dfp_read_field_def_Message(Rest2, 0, 0, F@_1, F@_2,
-			       F@_3, F@_4, TrUserData).
+			       F@_3, F@_4, F@_5, TrUserData).
 
 skip_group_Message(Bin, FNum, Z2, F@_1, F@_2, F@_3,
-		   F@_4, TrUserData) ->
+		   F@_4, F@_5, TrUserData) ->
     {_, Rest} = read_group(Bin, FNum),
     dfp_read_field_def_Message(Rest, 0, Z2, F@_1, F@_2,
-			       F@_3, F@_4, TrUserData).
+			       F@_3, F@_4, F@_5, TrUserData).
 
 skip_32_Message(<<_:32, Rest/binary>>, Z1, Z2, F@_1,
-		F@_2, F@_3, F@_4, TrUserData) ->
+		F@_2, F@_3, F@_4, F@_5, TrUserData) ->
     dfp_read_field_def_Message(Rest, Z1, Z2, F@_1, F@_2,
-			       F@_3, F@_4, TrUserData).
+			       F@_3, F@_4, F@_5, TrUserData).
 
 skip_64_Message(<<_:64, Rest/binary>>, Z1, Z2, F@_1,
-		F@_2, F@_3, F@_4, TrUserData) ->
+		F@_2, F@_3, F@_4, F@_5, TrUserData) ->
     dfp_read_field_def_Message(Rest, Z1, Z2, F@_1, F@_2,
-			       F@_3, F@_4, TrUserData).
+			       F@_3, F@_4, F@_5, TrUserData).
 
 decode_msg_ItemOrderOffer(Bin, TrUserData) ->
     dfp_read_field_def_ItemOrderOffer(Bin, 0, 0,
@@ -1222,6 +1269,12 @@ skip_64_User(<<_:64, Rest/binary>>, Z1, Z2, F@_1, F@_2,
     dfp_read_field_def_User(Rest, Z1, Z2, F@_1, F@_2,
 			    TrUserData).
 
+d_enum_Type(0) -> 'LOGIN';
+d_enum_Type(1) -> 'LOGOUT';
+d_enum_Type(2) -> 'REGISTER';
+d_enum_Type(3) -> 'RESPONSE';
+d_enum_Type(V) -> V.
+
 read_group(Bin, FieldNum) ->
     {NumBytes, EndTagLen} = read_gr_b(Bin, 0, 0, 0, 0, FieldNum),
     <<Group:NumBytes/binary, _:EndTagLen/binary, Rest/binary>> = Bin,
@@ -1296,8 +1349,9 @@ merge_msgs(Prev, New, MsgName, Opts) ->
 
 -compile({nowarn_unused_function,merge_msg_Message/3}).
 merge_msg_Message(#{} = PMsg,
-		  #{user_type := NFuser_type} = NMsg, TrUserData) ->
-    S1 = #{user_type => NFuser_type},
+		  #{user_type := NFuser_type, type := NFtype} = NMsg,
+		  TrUserData) ->
+    S1 = #{user_type => NFuser_type, type => NFtype},
     S2 = case {PMsg, NMsg} of
 	   {#{item_order_offer := PFitem_order_offer},
 	    #{item_order_offer := NFitem_order_offer}} ->
@@ -1379,7 +1433,7 @@ verify_msg(Msg, MsgName, Opts) ->
 
 -compile({nowarn_unused_function,v_msg_Message/3}).
 -dialyzer({nowarn_function,v_msg_Message/3}).
-v_msg_Message(#{user_type := F1} = M, Path,
+v_msg_Message(#{user_type := F1, type := F5} = M, Path,
 	      TrUserData) ->
     v_type_string(F1, [user_type | Path], TrUserData),
     case M of
@@ -1399,10 +1453,12 @@ v_msg_Message(#{user_type := F1} = M, Path,
 	  v_msg_User(F4, [user | Path], TrUserData);
       _ -> ok
     end,
+    v_enum_Type(F5, [type | Path], TrUserData),
     lists:foreach(fun (user_type) -> ok;
 		      (item_order_offer) -> ok;
 		      (item_production_offer) -> ok;
 		      (user) -> ok;
+		      (type) -> ok;
 		      (OtherKey) ->
 			  mk_type_error({extraneous_key, OtherKey}, M, Path)
 		  end,
@@ -1410,7 +1466,7 @@ v_msg_Message(#{user_type := F1} = M, Path,
     ok;
 v_msg_Message(M, Path, _TrUserData) when is_map(M) ->
     mk_type_error({missing_fields,
-		   [user_type] -- maps:keys(M), 'Message'},
+		   [user_type, type] -- maps:keys(M), 'Message'},
 		  M, Path);
 v_msg_Message(X, Path, _TrUserData) ->
     mk_type_error({expected_msg, 'Message'}, X, Path).
@@ -1499,6 +1555,30 @@ v_msg_User(M, Path, _TrUserData) when is_map(M) ->
 v_msg_User(X, Path, _TrUserData) ->
     mk_type_error({expected_msg, 'User'}, X, Path).
 
+-compile({nowarn_unused_function,v_enum_Type/3}).
+-dialyzer({nowarn_function,v_enum_Type/3}).
+v_enum_Type('LOGIN', _Path, _TrUserData) -> ok;
+v_enum_Type('LOGOUT', _Path, _TrUserData) -> ok;
+v_enum_Type('REGISTER', _Path, _TrUserData) -> ok;
+v_enum_Type('RESPONSE', _Path, _TrUserData) -> ok;
+v_enum_Type(V, Path, TrUserData) when is_integer(V) ->
+    v_type_sint32(V, Path, TrUserData);
+v_enum_Type(X, Path, _TrUserData) ->
+    mk_type_error({invalid_enum, 'Type'}, X, Path).
+
+-compile({nowarn_unused_function,v_type_sint32/3}).
+-dialyzer({nowarn_function,v_type_sint32/3}).
+v_type_sint32(N, _Path, _TrUserData)
+    when -2147483648 =< N, N =< 2147483647 ->
+    ok;
+v_type_sint32(N, Path, _TrUserData)
+    when is_integer(N) ->
+    mk_type_error({value_out_of_range, sint32, signed, 32},
+		  N, Path);
+v_type_sint32(X, Path, _TrUserData) ->
+    mk_type_error({bad_integer, sint32, signed, 32}, X,
+		  Path).
+
 -compile({nowarn_unused_function,v_type_int64/3}).
 -dialyzer({nowarn_function,v_type_int64/3}).
 v_type_int64(N, _Path, _TrUserData)
@@ -1582,7 +1662,10 @@ cons(Elem, Acc, _TrUserData) -> [Elem | Acc].
 
 
 get_msg_defs() ->
-    [{{msg, 'Message'},
+    [{{enum, 'Type'},
+      [{'LOGIN', 0}, {'LOGOUT', 1}, {'REGISTER', 2},
+       {'RESPONSE', 3}]},
+     {{msg, 'Message'},
       [#{name => user_type, fnum => 1, rnum => 2,
 	 type => string, occurrence => required, opts => []},
        #{name => item_order_offer, fnum => 2, rnum => 3,
@@ -1593,6 +1676,9 @@ get_msg_defs() ->
 	 occurrence => optional, opts => []},
        #{name => user, fnum => 4, rnum => 5,
 	 type => {msg, 'User'}, occurrence => optional,
+	 opts => []},
+       #{name => type, fnum => 5, rnum => 6,
+	 type => {enum, 'Type'}, occurrence => required,
 	 opts => []}]},
      {{msg, 'ItemOrderOffer'},
       [#{name => manufacter_name, fnum => 1, rnum => 2,
@@ -1634,7 +1720,7 @@ get_msg_or_group_names() ->
      'User'].
 
 
-get_enum_names() -> [].
+get_enum_names() -> ['Type'].
 
 
 fetch_msg_def(MsgName) ->
@@ -1644,9 +1730,11 @@ fetch_msg_def(MsgName) ->
     end.
 
 
--spec fetch_enum_def(_) -> no_return().
 fetch_enum_def(EnumName) ->
-    erlang:error({no_such_enum, EnumName}).
+    case find_enum_def(EnumName) of
+      Es when is_list(Es) -> Es;
+      error -> erlang:error({no_such_enum, EnumName})
+    end.
 
 
 find_msg_def('Message') ->
@@ -1660,6 +1748,9 @@ find_msg_def('Message') ->
        occurrence => optional, opts => []},
      #{name => user, fnum => 4, rnum => 5,
        type => {msg, 'User'}, occurrence => optional,
+       opts => []},
+     #{name => type, fnum => 5, rnum => 6,
+       type => {enum, 'Type'}, occurrence => required,
        opts => []}];
 find_msg_def('ItemOrderOffer') ->
     [#{name => manufacter_name, fnum => 1, rnum => 2,
@@ -1689,18 +1780,30 @@ find_msg_def('User') ->
 find_msg_def(_) -> error.
 
 
+find_enum_def('Type') ->
+    [{'LOGIN', 0}, {'LOGOUT', 1}, {'REGISTER', 2},
+     {'RESPONSE', 3}];
 find_enum_def(_) -> error.
 
 
--spec enum_symbol_by_value(_, _) -> no_return().
-enum_symbol_by_value(E, V) ->
-    erlang:error({no_enum_defs, E, V}).
+enum_symbol_by_value('Type', Value) ->
+    enum_symbol_by_value_Type(Value).
 
 
--spec enum_value_by_symbol(_, _) -> no_return().
-enum_value_by_symbol(E, V) ->
-    erlang:error({no_enum_defs, E, V}).
+enum_value_by_symbol('Type', Sym) ->
+    enum_value_by_symbol_Type(Sym).
 
+
+enum_symbol_by_value_Type(0) -> 'LOGIN';
+enum_symbol_by_value_Type(1) -> 'LOGOUT';
+enum_symbol_by_value_Type(2) -> 'REGISTER';
+enum_symbol_by_value_Type(3) -> 'RESPONSE'.
+
+
+enum_value_by_symbol_Type('LOGIN') -> 0;
+enum_value_by_symbol_Type('LOGOUT') -> 1;
+enum_value_by_symbol_Type('REGISTER') -> 2;
+enum_value_by_symbol_Type('RESPONSE') -> 3.
 
 
 get_service_names() -> [].
@@ -1751,31 +1854,31 @@ service_and_rpc_name_to_fqbins(S, R) ->
     error({gpb_error, {badservice_or_rpc, {S, R}}}).
 
 
-fqbin_to_msg_name(<<"Message">>) -> 'Message';
-fqbin_to_msg_name(<<"ItemOrderOffer">>) -> 'ItemOrderOffer';
-fqbin_to_msg_name(<<"ItemProductionOffer">>) -> 'ItemProductionOffer';
-fqbin_to_msg_name(<<"User">>) -> 'User';
+fqbin_to_msg_name(<<"Protos.Message">>) -> 'Message';
+fqbin_to_msg_name(<<"Protos.ItemOrderOffer">>) -> 'ItemOrderOffer';
+fqbin_to_msg_name(<<"Protos.ItemProductionOffer">>) -> 'ItemProductionOffer';
+fqbin_to_msg_name(<<"Protos.User">>) -> 'User';
 fqbin_to_msg_name(E) -> error({gpb_error, {badmsg, E}}).
 
 
-msg_name_to_fqbin('Message') -> <<"Message">>;
-msg_name_to_fqbin('ItemOrderOffer') -> <<"ItemOrderOffer">>;
-msg_name_to_fqbin('ItemProductionOffer') -> <<"ItemProductionOffer">>;
-msg_name_to_fqbin('User') -> <<"User">>;
+msg_name_to_fqbin('Message') -> <<"Protos.Message">>;
+msg_name_to_fqbin('ItemOrderOffer') -> <<"Protos.ItemOrderOffer">>;
+msg_name_to_fqbin('ItemProductionOffer') -> <<"Protos.ItemProductionOffer">>;
+msg_name_to_fqbin('User') -> <<"Protos.User">>;
 msg_name_to_fqbin(E) -> error({gpb_error, {badmsg, E}}).
 
 
--spec fqbin_to_enum_name(_) -> no_return().
+fqbin_to_enum_name(<<"Protos.Type">>) -> 'Type';
 fqbin_to_enum_name(E) ->
     error({gpb_error, {badenum, E}}).
 
 
--spec enum_name_to_fqbin(_) -> no_return().
+enum_name_to_fqbin('Type') -> <<"Protos.Type">>;
 enum_name_to_fqbin(E) ->
     error({gpb_error, {badenum, E}}).
 
 
-get_package_name() -> undefined.
+get_package_name() -> 'Protos'.
 
 
 %% Whether or not the message names
@@ -1824,15 +1927,15 @@ get_rpc_containment(P) ->
     error({gpb_error, {badproto, P}}).
 
 
-get_enum_containment("protocol") -> [];
+get_enum_containment("protocol") -> ['Type'];
 get_enum_containment(P) ->
     error({gpb_error, {badproto, P}}).
 
 
-get_proto_by_msg_name_as_fqbin(<<"User">>) -> "protocol";
-get_proto_by_msg_name_as_fqbin(<<"ItemProductionOffer">>) -> "protocol";
-get_proto_by_msg_name_as_fqbin(<<"ItemOrderOffer">>) -> "protocol";
-get_proto_by_msg_name_as_fqbin(<<"Message">>) -> "protocol";
+get_proto_by_msg_name_as_fqbin(<<"Protos.User">>) -> "protocol";
+get_proto_by_msg_name_as_fqbin(<<"Protos.ItemProductionOffer">>) -> "protocol";
+get_proto_by_msg_name_as_fqbin(<<"Protos.ItemOrderOffer">>) -> "protocol";
+get_proto_by_msg_name_as_fqbin(<<"Protos.Message">>) -> "protocol";
 get_proto_by_msg_name_as_fqbin(E) ->
     error({gpb_error, {badmsg, E}}).
 
@@ -1842,7 +1945,7 @@ get_proto_by_service_name_as_fqbin(E) ->
     error({gpb_error, {badservice, E}}).
 
 
--spec get_proto_by_enum_name_as_fqbin(_) -> no_return().
+get_proto_by_enum_name_as_fqbin(<<"Protos.Type">>) -> "protocol";
 get_proto_by_enum_name_as_fqbin(E) ->
     error({gpb_error, {badenum, E}}).
 

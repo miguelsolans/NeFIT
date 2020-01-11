@@ -1,10 +1,20 @@
 syntax = "proto2";
 
+package Protos;
+
 message Message{
     required string user_type = 1;
     optional ItemOrderOffer item_order_offer = 2;
     optional ItemProductionOffer item_production_offer = 3;
     optional User user = 4;
+    required Type type = 5;
+}
+
+enum Type{
+    LOGIN = 0;
+    LOGOUT = 1;
+    REGISTER = 2;
+    RESPONSE = 3;
 }
 
 message ItemOrderOffer{
