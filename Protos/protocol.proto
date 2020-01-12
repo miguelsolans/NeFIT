@@ -3,7 +3,7 @@ syntax = "proto2";
 package Protos;
 
 message Message{
-    required string user_type = 1;
+    optional string user_type = 1;
     optional ItemOrderOffer item_order_offer = 2;
     optional ItemProductionOffer item_production_offer = 3;
     optional User user = 4;

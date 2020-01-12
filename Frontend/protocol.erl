@@ -52,7 +52,7 @@
 
 %% message types
 -type 'Message'() ::
-      #{user_type               := iodata(),        % = 1
+      #{user_type               => iodata(),        % = 1
         item_order_offer        => 'ItemOrderOffer'(), % = 2
         item_production_offer   => 'ItemProductionOffer'(), % = 3
         user                    => 'User'(),        % = 4
@@ -118,11 +118,15 @@ encode_msg_Message(Msg, TrUserData) ->
     encode_msg_Message(Msg, <<>>, TrUserData).
 
 
-encode_msg_Message(#{user_type := F1, type := F5} = M,
-		   Bin, TrUserData) ->
-    B1 = begin
-	   TrF1 = id(F1, TrUserData),
-	   e_type_string(TrF1, <<Bin/binary, 10>>, TrUserData)
+encode_msg_Message(#{type := F5} = M, Bin,
+		   TrUserData) ->
+    B1 = case M of
+	   #{user_type := F1} ->
+	       begin
+		 TrF1 = id(F1, TrUserData),
+		 e_type_string(TrF1, <<Bin/binary, 10>>, TrUserData)
+	       end;
+	   _ -> Bin
 	 end,
     B2 = case M of
 	   #{item_order_offer := F2} ->
@@ -458,18 +462,21 @@ dfp_read_field_def_Message(<<50, Rest/binary>>, Z1, Z2,
 			  F@_4, F@_5, F@_6, TrUserData);
 dfp_read_field_def_Message(<<>>, 0, 0, F@_1, F@_2, F@_3,
 			   F@_4, F@_5, F@_6, _) ->
-    S1 = #{user_type => F@_1, type => F@_5},
-    S2 = if F@_2 == '$undef' -> S1;
-	    true -> S1#{item_order_offer => F@_2}
+    S1 = #{type => F@_5},
+    S2 = if F@_1 == '$undef' -> S1;
+	    true -> S1#{user_type => F@_1}
 	 end,
-    S3 = if F@_3 == '$undef' -> S2;
-	    true -> S2#{item_production_offer => F@_3}
+    S3 = if F@_2 == '$undef' -> S2;
+	    true -> S2#{item_order_offer => F@_2}
 	 end,
-    S4 = if F@_4 == '$undef' -> S3;
-	    true -> S3#{user => F@_4}
+    S4 = if F@_3 == '$undef' -> S3;
+	    true -> S3#{item_production_offer => F@_3}
 	 end,
-    if F@_6 == '$undef' -> S4;
-       true -> S4#{state => F@_6}
+    S5 = if F@_4 == '$undef' -> S4;
+	    true -> S4#{user => F@_4}
+	 end,
+    if F@_6 == '$undef' -> S5;
+       true -> S5#{state => F@_6}
     end;
 dfp_read_field_def_Message(Other, Z1, Z2, F@_1, F@_2,
 			   F@_3, F@_4, F@_5, F@_6, TrUserData) ->
@@ -527,18 +534,21 @@ dg_read_field_def_Message(<<0:1, X:7, Rest/binary>>, N,
     end;
 dg_read_field_def_Message(<<>>, 0, 0, F@_1, F@_2, F@_3,
 			  F@_4, F@_5, F@_6, _) ->
-    S1 = #{user_type => F@_1, type => F@_5},
-    S2 = if F@_2 == '$undef' -> S1;
-	    true -> S1#{item_order_offer => F@_2}
+    S1 = #{type => F@_5},
+    S2 = if F@_1 == '$undef' -> S1;
+	    true -> S1#{user_type => F@_1}
 	 end,
-    S3 = if F@_3 == '$undef' -> S2;
-	    true -> S2#{item_production_offer => F@_3}
+    S3 = if F@_2 == '$undef' -> S2;
+	    true -> S2#{item_order_offer => F@_2}
 	 end,
-    S4 = if F@_4 == '$undef' -> S3;
-	    true -> S3#{user => F@_4}
+    S4 = if F@_3 == '$undef' -> S3;
+	    true -> S3#{item_production_offer => F@_3}
 	 end,
-    if F@_6 == '$undef' -> S4;
-       true -> S4#{state => F@_6}
+    S5 = if F@_4 == '$undef' -> S4;
+	    true -> S4#{user => F@_4}
+	 end,
+    if F@_6 == '$undef' -> S5;
+       true -> S5#{state => F@_6}
     end.
 
 d_field_Message_user_type(<<1:1, X:7, Rest/binary>>, N,
@@ -1564,52 +1574,58 @@ merge_msgs(Prev, New, MsgName, Opts) ->
     end.
 
 -compile({nowarn_unused_function,merge_msg_Message/3}).
-merge_msg_Message(#{} = PMsg,
-		  #{user_type := NFuser_type, type := NFtype} = NMsg,
+merge_msg_Message(#{} = PMsg, #{type := NFtype} = NMsg,
 		  TrUserData) ->
-    S1 = #{user_type => NFuser_type, type => NFtype},
+    S1 = #{type => NFtype},
     S2 = case {PMsg, NMsg} of
+	   {_, #{user_type := NFuser_type}} ->
+	       S1#{user_type => NFuser_type};
+	   {#{user_type := PFuser_type}, _} ->
+	       S1#{user_type => PFuser_type};
+	   _ -> S1
+	 end,
+    S3 = case {PMsg, NMsg} of
 	   {#{item_order_offer := PFitem_order_offer},
 	    #{item_order_offer := NFitem_order_offer}} ->
-	       S1#{item_order_offer =>
+	       S2#{item_order_offer =>
 		       merge_msg_ItemOrderOffer(PFitem_order_offer,
 						NFitem_order_offer,
 						TrUserData)};
 	   {_, #{item_order_offer := NFitem_order_offer}} ->
-	       S1#{item_order_offer => NFitem_order_offer};
+	       S2#{item_order_offer => NFitem_order_offer};
 	   {#{item_order_offer := PFitem_order_offer}, _} ->
-	       S1#{item_order_offer => PFitem_order_offer};
-	   {_, _} -> S1
+	       S2#{item_order_offer => PFitem_order_offer};
+	   {_, _} -> S2
 	 end,
-    S3 = case {PMsg, NMsg} of
+    S4 = case {PMsg, NMsg} of
 	   {#{item_production_offer := PFitem_production_offer},
 	    #{item_production_offer := NFitem_production_offer}} ->
-	       S2#{item_production_offer =>
+	       S3#{item_production_offer =>
 		       merge_msg_ItemProductionOffer(PFitem_production_offer,
 						     NFitem_production_offer,
 						     TrUserData)};
 	   {_,
 	    #{item_production_offer := NFitem_production_offer}} ->
-	       S2#{item_production_offer => NFitem_production_offer};
+	       S3#{item_production_offer => NFitem_production_offer};
 	   {#{item_production_offer := PFitem_production_offer},
 	    _} ->
-	       S2#{item_production_offer => PFitem_production_offer};
-	   {_, _} -> S2
-	 end,
-    S4 = case {PMsg, NMsg} of
-	   {#{user := PFuser}, #{user := NFuser}} ->
-	       S3#{user => merge_msg_User(PFuser, NFuser, TrUserData)};
-	   {_, #{user := NFuser}} -> S3#{user => NFuser};
-	   {#{user := PFuser}, _} -> S3#{user => PFuser};
+	       S3#{item_production_offer => PFitem_production_offer};
 	   {_, _} -> S3
+	 end,
+    S5 = case {PMsg, NMsg} of
+	   {#{user := PFuser}, #{user := NFuser}} ->
+	       S4#{user => merge_msg_User(PFuser, NFuser, TrUserData)};
+	   {_, #{user := NFuser}} -> S4#{user => NFuser};
+	   {#{user := PFuser}, _} -> S4#{user => PFuser};
+	   {_, _} -> S4
 	 end,
     case {PMsg, NMsg} of
       {#{state := PFstate}, #{state := NFstate}} ->
-	  S4#{state =>
+	  S5#{state =>
 		  merge_msg_State(PFstate, NFstate, TrUserData)};
-      {_, #{state := NFstate}} -> S4#{state => NFstate};
-      {#{state := PFstate}, _} -> S4#{state => PFstate};
-      {_, _} -> S4
+      {_, #{state := NFstate}} -> S5#{state => NFstate};
+      {#{state := PFstate}, _} -> S5#{state => PFstate};
+      {_, _} -> S5
     end.
 
 -compile({nowarn_unused_function,merge_msg_ItemOrderOffer/3}).
@@ -1674,9 +1690,12 @@ verify_msg(Msg, MsgName, Opts) ->
 
 -compile({nowarn_unused_function,v_msg_Message/3}).
 -dialyzer({nowarn_function,v_msg_Message/3}).
-v_msg_Message(#{user_type := F1, type := F5} = M, Path,
-	      TrUserData) ->
-    v_type_string(F1, [user_type | Path], TrUserData),
+v_msg_Message(#{type := F5} = M, Path, TrUserData) ->
+    case M of
+      #{user_type := F1} ->
+	  v_type_string(F1, [user_type | Path], TrUserData);
+      _ -> ok
+    end,
     case M of
       #{item_order_offer := F2} ->
 	  v_msg_ItemOrderOffer(F2, [item_order_offer | Path],
@@ -1712,8 +1731,8 @@ v_msg_Message(#{user_type := F1, type := F5} = M, Path,
 		  maps:keys(M)),
     ok;
 v_msg_Message(M, Path, _TrUserData) when is_map(M) ->
-    mk_type_error({missing_fields,
-		   [user_type, type] -- maps:keys(M), 'Message'},
+    mk_type_error({missing_fields, [type] -- maps:keys(M),
+		   'Message'},
 		  M, Path);
 v_msg_Message(X, Path, _TrUserData) ->
     mk_type_error({expected_msg, 'Message'}, X, Path).
@@ -1950,7 +1969,7 @@ get_msg_defs() ->
        {'RESPONSE', 3}]},
      {{msg, 'Message'},
       [#{name => user_type, fnum => 1, rnum => 2,
-	 type => string, occurrence => required, opts => []},
+	 type => string, occurrence => optional, opts => []},
        #{name => item_order_offer, fnum => 2, rnum => 3,
 	 type => {msg, 'ItemOrderOffer'}, occurrence => optional,
 	 opts => []},
@@ -2030,7 +2049,7 @@ fetch_enum_def(EnumName) ->
 
 find_msg_def('Message') ->
     [#{name => user_type, fnum => 1, rnum => 2,
-       type => string, occurrence => required, opts => []},
+       type => string, occurrence => optional, opts => []},
      #{name => item_order_offer, fnum => 2, rnum => 3,
        type => {msg, 'ItemOrderOffer'}, occurrence => optional,
        opts => []},
