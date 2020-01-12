@@ -11,7 +11,7 @@ authenticationHandler(Sock) ->
                 'LOGIN' ->
                     loginHandler(Sock, User, Pass);
                 'REGISTER' ->
-                    UserType = maps:get(userType, Msg),
+                    UserType = maps:get(user_type, Msg),
                     registerHandler(Sock, User, Pass, UserType)
             end;
         {tcp_closed, _} ->
@@ -22,7 +22,7 @@ authenticationHandler(Sock) ->
 
 % function that verifies the credentials for authentication
 loginHandler(Sock, Username, Password) ->
-    case login_manager:login(Username, Password) of
+    case clients_state:login(Username, Password) of
         {ok, UserType} ->
             sender:sendAuthResponse(Sock, UserType, 'RESPONSE', true, "LOGGED IN");
             % here I'll invoke an UserHandler
@@ -33,7 +33,7 @@ loginHandler(Sock, Username, Password) ->
 
 % function that tries to register a client
 registerHandler(Sock, Username, Password, UserType) ->
-    case login_manager:register(Username, Password, UserType) of
+    case clients_state:register(Username, Password, UserType) of
         {ok, UT} ->
             sender:sendAuthResponse(Sock, UT, 'RESPONSE', true, "USER CREATED"),
             authenticationHandler(Sock);
