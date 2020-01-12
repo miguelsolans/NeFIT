@@ -133,17 +133,17 @@ public final class Protocol {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>required string user_type = 1;</code>
+     * <code>optional string user_type = 1;</code>
      * @return Whether the userType field is set.
      */
     boolean hasUserType();
     /**
-     * <code>required string user_type = 1;</code>
+     * <code>optional string user_type = 1;</code>
      * @return The userType.
      */
     java.lang.String getUserType();
     /**
-     * <code>required string user_type = 1;</code>
+     * <code>optional string user_type = 1;</code>
      * @return The bytes for userType.
      */
     com.google.protobuf.ByteString
@@ -374,14 +374,14 @@ public final class Protocol {
     public static final int USER_TYPE_FIELD_NUMBER = 1;
     private volatile java.lang.Object userType_;
     /**
-     * <code>required string user_type = 1;</code>
+     * <code>optional string user_type = 1;</code>
      * @return Whether the userType field is set.
      */
     public boolean hasUserType() {
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>required string user_type = 1;</code>
+     * <code>optional string user_type = 1;</code>
      * @return The userType.
      */
     public java.lang.String getUserType() {
@@ -399,7 +399,7 @@ public final class Protocol {
       }
     }
     /**
-     * <code>required string user_type = 1;</code>
+     * <code>optional string user_type = 1;</code>
      * @return The bytes for userType.
      */
     public com.google.protobuf.ByteString
@@ -534,10 +534,6 @@ public final class Protocol {
       if (isInitialized == 1) return true;
       if (isInitialized == 0) return false;
 
-      if (!hasUserType()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       if (!hasType()) {
         memoizedIsInitialized = 0;
         return false;
@@ -1005,9 +1001,6 @@ public final class Protocol {
 
       @java.lang.Override
       public final boolean isInitialized() {
-        if (!hasUserType()) {
-          return false;
-        }
         if (!hasType()) {
           return false;
         }
@@ -1051,14 +1044,14 @@ public final class Protocol {
 
       private java.lang.Object userType_ = "";
       /**
-       * <code>required string user_type = 1;</code>
+       * <code>optional string user_type = 1;</code>
        * @return Whether the userType field is set.
        */
       public boolean hasUserType() {
         return ((bitField0_ & 0x00000001) != 0);
       }
       /**
-       * <code>required string user_type = 1;</code>
+       * <code>optional string user_type = 1;</code>
        * @return The userType.
        */
       public java.lang.String getUserType() {
@@ -1076,7 +1069,7 @@ public final class Protocol {
         }
       }
       /**
-       * <code>required string user_type = 1;</code>
+       * <code>optional string user_type = 1;</code>
        * @return The bytes for userType.
        */
       public com.google.protobuf.ByteString
@@ -1093,7 +1086,7 @@ public final class Protocol {
         }
       }
       /**
-       * <code>required string user_type = 1;</code>
+       * <code>optional string user_type = 1;</code>
        * @param value The userType to set.
        * @return This builder for chaining.
        */
@@ -1108,7 +1101,7 @@ public final class Protocol {
         return this;
       }
       /**
-       * <code>required string user_type = 1;</code>
+       * <code>optional string user_type = 1;</code>
        * @return This builder for chaining.
        */
       public Builder clearUserType() {
@@ -1118,7 +1111,7 @@ public final class Protocol {
         return this;
       }
       /**
-       * <code>required string user_type = 1;</code>
+       * <code>optional string user_type = 1;</code>
        * @param value The bytes for userType to set.
        * @return This builder for chaining.
        */
@@ -5266,7 +5259,7 @@ public final class Protocol {
   static {
     java.lang.String[] descriptorData = {
       "\n\016protocol.proto\022\006Protos\"\340\001\n\007Message\022\021\n\t" +
-      "user_type\030\001 \002(\t\0220\n\020item_order_offer\030\002 \001(" +
+      "user_type\030\001 \001(\t\0220\n\020item_order_offer\030\002 \001(" +
       "\0132\026.Protos.ItemOrderOffer\022:\n\025item_produc" +
       "tion_offer\030\003 \001(\0132\033.Protos.ItemProduction" +
       "Offer\022\032\n\004user\030\004 \001(\0132\014.Protos.User\022\032\n\004typ" +
