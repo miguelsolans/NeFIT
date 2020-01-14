@@ -27,23 +27,24 @@ public class Client implements Runnable {
         System.out.print("Password: ");
         String pass = this.sin.readLine();
 
+        Message msg = Message.newBuilder()
+                // Set message type
+                .setType(Type.LOGIN)
+                // Set user credentials
+                .setUser(
+                        User.newBuilder()
+                                .setUsername(username)
+                                .setPassword(pass)
+                                .build()
+                ).build();
+
         // Write the message to the SocketManager
-        this.sm.write(
-                // build message
-                Message.newBuilder()
-                        // Set message type
-                        .setType(Type.LOGIN)
-                        // Set user credentials
-                        .setUser(
-                                User.newBuilder()
-                                        .setUsername(username)
-                                        .setPassword(pass)
-                        ).build()
-        );
+        this.sm.write(msg);
 
         // Wait for the response message
-        Message res = this.sm.read();
-        if (res.hasType() &&
+        Message res = this.sm.getMessage();
+        if (res != null &&
+                res.hasType() &&
                 res.getType().equals(Type.RESPONSE) &&
                 res.hasState() &&
                 res.getState().getResult() &&
@@ -76,22 +77,29 @@ public class Client implements Runnable {
             case "2": clientType = "IMPORTER"; break;
         }
 
-        this.sm.write(
-                Message.newBuilder()
-                        .setType(Type.REGISTER)
-                        .setUserType(clientType)
-                        .setUser(
-                                User.newBuilder()
-                                        .setUsername(username)
-                                        .setPassword(pass)
-                        ).build()
-        );
+        Message msg = Message.newBuilder()
+                .setType(Type.REGISTER)
+                .setUserType(clientType)
+                .setUser(
+                        User.newBuilder()
+                                .setUsername(username)
+                                .setPassword(pass)
+                                .build()
+                ).build();
 
-        Message res = this.sm.read();
-        return res.hasType() &&
+        this.sm.write(msg);
+
+        Message res = this.sm.getMessage();
+        if (res != null &&
+                res.hasType() &&
                 res.getType().equals(Type.RESPONSE) &&
                 res.hasState() &&
-                res.getState().getResult();
+                res.getState().getResult()
+        ) {
+            this.type = clientType;
+            return true;
+        }
+        return false;
     }
 
     private boolean initialMenu() throws IOException {
@@ -135,6 +143,7 @@ public class Client implements Runnable {
                 }
                 // do stuff
                 System.out.println("Passei o menu inicial");
+                break;
             }
 
         } finally {
