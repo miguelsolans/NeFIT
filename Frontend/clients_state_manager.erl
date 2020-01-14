@@ -2,7 +2,7 @@
 % interface functions that access to the actor of this MODULE
 
 -module(clients_state_manager).
--export([start/0, login/2, register/3]).
+-export([start/0, login/2, logout/1, register/3]).
 
 % register module as a process and start it
 start() ->
@@ -15,6 +15,13 @@ login(Username, Passwd) ->
         {?MODULE, Res, UT} -> {Res, UT}
     end.
 
+% function that contacts process to logout a client
+logout(Username) ->
+    ?MODULE ! {logout, Username, self()},
+    receive
+        {?MODULE, Res} -> Res
+    end.
+
 % function that contacts process to register an account
 register(Username, Passwd, UserType) ->
     ?MODULE ! {register, Username, Passwd, UserType, self()},
@@ -23,24 +30,33 @@ register(Username, Passwd, UserType) ->
     end.
 
 % process that runs indefinitely and keeps the users state
-clientsLoop(Map) ->
+clientsLoop(StateMap) ->
     receive
         {register, U, P, UT, From} ->
-            case maps:find(U,Map) of
+            case maps:find(U, StateMap) of
                 error ->
                     From ! {?MODULE, ok, UT},
-                    clientsLoop(maps:put(U, {P,UT,false}, Map));
+                    clientsLoop(maps:put(U, {P, UT, false}, StateMap));
                 _ ->
                     From ! {?MODULE, user_exists, UT},
-                    clientsLoop(Map)
+                    clientsLoop(StateMap)
             end;
         {login, U, P, From} ->
-            case maps:find(U,Map) of
+            case maps:find(U, StateMap) of
                 error ->
                     From ! {?MODULE, error, user_not_found},
-                    clientsLoop(Map);
-                {ok, {P,UT,_}} ->
+                    clientsLoop(StateMap);
+                {ok, {P, UT, _}} ->
                     From ! {?MODULE, ok, UT},
-                    clientsLoop(maps:put(U, {P,UT,true}, Map))
+                    clientsLoop(maps:put(U, {P, UT, true}, StateMap))
+            end;
+        {logout, U, From} ->
+            case maps:find(U, StateMap) of
+                error ->
+                    From ! {?MODULE, error},
+                    clientsLoop(StateMap);
+                {ok, {P, UT, _}} ->
+                    From ! {?MODULE, ok},
+                    clientsLoop(maps:put(U, { P, UT, false}, StateMap))
             end
     end.

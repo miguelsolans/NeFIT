@@ -17,29 +17,31 @@ authentication(Sock) ->
                     registerHandler(Sock, User, Pass, UserType)
             end;
         {tcp_closed, _} ->
-            io:format("Connection ~p teardown~n", [Sock]);
+            io:format("Connection ~p teardown~n", [Sock]),
+            exit(normal);
         {tcp_error, _, _} ->
-            gen_tcp:close(Sock)
+            io:puts("An error occured in the connection~n"),
+            exit(normal)
     end.
 
 % function that verifies the credentials for authentication
 loginHandler(Sock, Username, Password) ->
-    case clients_state:login(Username, Password) of
+    case clients_state_manager:login(Username, Password) of
         {ok, UserType} ->
-            sender:sendAuthResponse(Sock, UserType, 'RESPONSE', true, "LOGGED IN");
-            % here I'll invoke an UserHandler
+            sender_handler:sendAuthResponse(Sock, UserType, 'RESPONSE', true, "LOGGED IN"),
+            user_manager:loop(Sock, Username);
         {error, UserType} ->
-            sender:sendAuthResponse(Sock, UserType, 'RESPONSE', false, "INVALID LOGIN"),
+            sender_handler:sendAuthResponse(Sock, UserType, 'RESPONSE', false, "INVALID LOGIN"),
             authentication(Sock)
     end.
 
 % function that tries to register a client
 registerHandler(Sock, Username, Password, UserType) ->
-    case clients_state:register(Username, Password, UserType) of
+    case clients_state_manager:register(Username, Password, UserType) of
         {ok, UT} ->
-            sender:sendAuthResponse(Sock, UT, 'RESPONSE', true, "USER CREATED"),
+            sender_handler:sendAuthResponse(Sock, UT, 'RESPONSE', true, "USER CREATED"),
             authentication(Sock);
         {user_exists, UT} ->
-            sender:sendAuthResponse(Sock, UT, 'RESPONSE', false, "USER EXISTS"),
+            sender_handler:sendAuthResponse(Sock, UT, 'RESPONSE', false, "USER EXISTS"),
             authentication(Sock)
     end.

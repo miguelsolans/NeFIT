@@ -1,4 +1,4 @@
--module(sender).
+-module(sender_handler).
 -export ([sendAuthResponse/5]).
 
 % function that sends an authentication response to the correspondent client
