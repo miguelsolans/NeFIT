@@ -3,7 +3,7 @@
 
 % fuction for starts running the frontend server with somo configurations
 server(Port) ->
-    clients_state:start(),
+    clients_state_manager:start(),
     {ok, LSock} = gen_tcp:listen(Port, [binary, {packet, 0}, {reuseaddr, true}, {active, true}]),
     acceptor(LSock).
 

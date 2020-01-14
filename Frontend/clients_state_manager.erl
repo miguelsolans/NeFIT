@@ -1,7 +1,7 @@
 % encapsulated module
 % interface functions that access to the actor of this MODULE
 
--module(clients_state).
+-module(clients_state_manager).
 -export([start/0, login/2, register/3]).
 
 % register module as a process and start it
