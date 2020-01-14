@@ -1,6 +1,8 @@
+-module(authentication_handler).
+-export ([authentication/1]).
 
 % function that hendles the authentication process
-authenticationHandler(Sock) ->
+authentication(Sock) ->
     receive
         {tcp, Sock, Data} ->
             Msg = protocol:decode_msg(Data, 'Message'),
@@ -28,7 +30,7 @@ loginHandler(Sock, Username, Password) ->
             % here I'll invoke an UserHandler
         {error, UserType} ->
             sender:sendAuthResponse(Sock, UserType, 'RESPONSE', false, "INVALID LOGIN"),
-            authenticationHandler(Sock)
+            authentication(Sock)
     end.
 
 % function that tries to register a client
@@ -36,8 +38,8 @@ registerHandler(Sock, Username, Password, UserType) ->
     case clients_state:register(Username, Password, UserType) of
         {ok, UT} ->
             sender:sendAuthResponse(Sock, UT, 'RESPONSE', true, "USER CREATED"),
-            authenticationHandler(Sock);
+            authentication(Sock);
         {user_exists, UT} ->
             sender:sendAuthResponse(Sock, UT, 'RESPONSE', false, "USER EXISTS"),
-            authenticationHandler(Sock)
+            authentication(Sock)
     end.

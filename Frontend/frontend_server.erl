@@ -1,6 +1,5 @@
 -module(frontend_server).
 -export ([server/1]).
--include("authentication_handler.erl").
 
 % fuction for starts running the frontend server with somo configurations
 server(Port) ->
@@ -13,4 +12,4 @@ acceptor(LSock) ->
     {ok, Sock} = gen_tcp:accept(LSock),
     spawn(fun() -> acceptor(LSock) end),
     gen_tcp:controlling_process(Sock, self()),
-    authenticationHandler(Sock).
+    authentication_handler:authentication(Sock).
