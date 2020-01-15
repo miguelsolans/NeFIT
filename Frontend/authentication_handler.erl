@@ -30,8 +30,11 @@ loginHandler(Sock, Username, Password) ->
         {ok, UserType} ->
             sender_handler:sendAuthResponse(Sock, UserType, 'RESPONSE', true, "LOGGED IN"),
             user_manager:loop(Sock, Username);
-        {error, UserType} ->
-            sender_handler:sendAuthResponse(Sock, UserType, 'RESPONSE', false, "INVALID LOGIN"),
+        {error, user_not_found} ->
+            sender_handler:sendInvalidAuthResponse(Sock, 'RESPONSE', false, "INVALID LOGIN; USER NOT FOUND"),
+            authentication(Sock);
+        {error, wrong_password} ->
+            sender_handler:sendInvalidAuthResponse(Sock, 'RESPONSE', false, "INVALID LOGIN; WRONG PASSWORD"),
             authentication(Sock)
     end.
 
