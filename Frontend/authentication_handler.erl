@@ -28,13 +28,13 @@ authentication(Sock) ->
 loginHandler(Sock, Username, Password) ->
     case clients_state_manager:login(Username, Password) of
         {ok, UserType} ->
-            sender_handler:sendAuthResponse(Sock, UserType, 'RESPONSE', true, "LOGGED IN"),
+            sender_handler:sendAuthResponse(Sock, UserType, "LOGGED IN"),
             user_manager:loop(Sock, Username);
         {error, user_not_found} ->
-            sender_handler:sendInvalidAuthResponse(Sock, 'RESPONSE', false, "INVALID LOGIN; USER NOT FOUND"),
+            sender_handler:sendInvalidAuthResponse(Sock, "INVALID LOGIN; USER NOT FOUND"),
             authentication(Sock);
         {error, wrong_password} ->
-            sender_handler:sendInvalidAuthResponse(Sock, 'RESPONSE', false, "INVALID LOGIN; WRONG PASSWORD"),
+            sender_handler:sendInvalidAuthResponse(Sock, "INVALID LOGIN; WRONG PASSWORD"),
             authentication(Sock)
     end.
 
@@ -42,9 +42,9 @@ loginHandler(Sock, Username, Password) ->
 registerHandler(Sock, Username, Password, UserType) ->
     case clients_state_manager:register(Username, Password, UserType) of
         {ok, UT} ->
-            sender_handler:sendAuthResponse(Sock, UT, 'RESPONSE', true, "USER CREATED"),
+            sender_handler:sendAuthResponse(Sock, UT, "USER CREATED"),
             authentication(Sock);
         {user_exists, UT} ->
-            sender_handler:sendAuthResponse(Sock, UT, 'RESPONSE', false, "USER EXISTS"),
+            sender_handler:sendInvalidAuthResponse(Sock, "USER EXISTS"),
             authentication(Sock)
     end.

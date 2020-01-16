@@ -35,6 +35,14 @@ public final class Protocol {
      * <code>RESPONSE = 3;</code>
      */
     RESPONSE(3),
+    /**
+     * <code>ITEMORDEROFFER = 4;</code>
+     */
+    ITEMORDEROFFER(4),
+    /**
+     * <code>ITEMPRODUCTIONOFFER = 5;</code>
+     */
+    ITEMPRODUCTIONOFFER(5),
     ;
 
     /**
@@ -53,6 +61,14 @@ public final class Protocol {
      * <code>RESPONSE = 3;</code>
      */
     public static final int RESPONSE_VALUE = 3;
+    /**
+     * <code>ITEMORDEROFFER = 4;</code>
+     */
+    public static final int ITEMORDEROFFER_VALUE = 4;
+    /**
+     * <code>ITEMPRODUCTIONOFFER = 5;</code>
+     */
+    public static final int ITEMPRODUCTIONOFFER_VALUE = 5;
 
 
     public final int getNumber() {
@@ -79,6 +95,8 @@ public final class Protocol {
         case 1: return LOGOUT;
         case 2: return REGISTER;
         case 3: return RESPONSE;
+        case 4: return ITEMORDEROFFER;
+        case 5: return ITEMPRODUCTIONOFFER;
         default: return null;
       }
     }
@@ -5451,9 +5469,10 @@ public final class Protocol {
       "maximum_amount\030\004 \002(\002\022\016\n\006period\030\005 \002(\003\022\031\n\021" +
       "manufacturer_name\030\006 \002(\t\"*\n\004User\022\020\n\010usern" +
       "ame\030\001 \002(\t\022\020\n\010password\030\002 \001(\t\",\n\005State\022\016\n\006" +
-      "result\030\001 \001(\010\022\023\n\013description\030\002 \001(\t*9\n\004Typ" +
+      "result\030\001 \001(\010\022\023\n\013description\030\002 \001(\t*f\n\004Typ" +
       "e\022\t\n\005LOGIN\020\000\022\n\n\006LOGOUT\020\001\022\014\n\010REGISTER\020\002\022\014" +
-      "\n\010RESPONSE\020\003"
+      "\n\010RESPONSE\020\003\022\022\n\016ITEMORDEROFFER\020\004\022\027\n\023ITEM" +
+      "PRODUCTIONOFFER\020\005"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

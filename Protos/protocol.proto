@@ -37,6 +37,8 @@ enum Type{
     LOGOUT = 1;
     REGISTER = 2;
     RESPONSE = 3;
+    ITEMORDEROFFER = 4;
+    ITEMPRODUCTIONOFFER = 5;
 }
 
 message State {
