@@ -147,7 +147,8 @@ public class Client implements Runnable {
     private boolean importerMenu() throws IOException {
         System.out.println("Welcome back "+username+"! You logged in as an importer.");
         while(true) {
-            System.out.println("\n1) View available offers \n2) New order \n3) Logout");
+            System.out.println("\n1) View available offers \n2) New order \n3) Subscribe manufacturer");
+            System.out.println("\n4) Unsubscribe manufacturer \n5) Toggle order notifications \n6) Logout");
             System.out.print("-> ");
 
             switch (this.sin.readLine()){
@@ -170,6 +171,33 @@ public class Client implements Runnable {
                     break;
 
                 case "3":
+                    if (!subscribe())
+                        System.out.println("\nSOMETHING WENT WRONG WITH YOUR SUBSCRIPTION\n");
+                    else {
+                        System.out.println("\nSUBSCRIPTION SUCCESSFUL.\n");
+                        return true;
+                    }
+                    break;
+
+                case "4":
+                    if (!unsubscribe())
+                        System.out.println("\nSOMETHING WENT WRONG WITH YOUR SUBSCRIPTION'S CANCELLING\n");
+                    else {
+                        System.out.println("\nSUBSCRIPTION'S CANCELLING SUCCESSFUL.\n");
+                        return true;
+                    }
+                    break;
+
+                case "5":
+                    if (!notifications())
+                        System.out.println("\nSOMETHING WENT WRONG WHILE TOGGLING NOTIFICATIONS\n");
+                    else {
+                        System.out.println("\nNOTIFICATIONS TOGGLING SUCCESSFUL.\n");
+                        return true;
+                    }
+                    break;
+
+                case "6":
                     return false;
 
                 default:
@@ -210,11 +238,43 @@ public class Client implements Runnable {
         return true;
     }
 
-    private boolean newOrder() {
+    private boolean newOrder() throws IOException {
+        System.out.print("\nNew Offer\nProduct name: ");
+        String name = this.sin.readLine();
+        System.out.print("Minimum production amount: ");
+        String min = this.sin.readLine();
+        System.out.print("Maximum production amount: ");
+        String max = this.sin.readLine();
+        System.out.print("Minimum unit price: ");
+        String price = this.sin.readLine();
+        System.out.print("Order placement period: ");
+        String period = this.sin.readLine();
+
         return true;
     }
 
-    private boolean newOffer() {
+    private boolean subscribe() {
+        return true;
+    }
+
+    private boolean unsubscribe() {
+        return true;
+    }
+
+    private boolean notifications() {
+        return true;
+    }
+
+    private boolean newOffer() throws IOException {
+        System.out.print("\nNew Offer\nManufacturer name: ");
+        String name = this.sin.readLine();
+        System.out.print("Product name: ");
+        String product = this.sin.readLine();
+        System.out.print("Quantity: ");
+        String quantity = this.sin.readLine();
+        System.out.print("Unit price: ");
+        String price = this.sin.readLine();
+
         return true;
     }
 
