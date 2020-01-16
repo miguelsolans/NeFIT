@@ -1,6 +1,8 @@
+-module(authentication_handler).
+-export ([authentication/1]).
 
 % function that hendles the authentication process
-authenticationHandler(Sock) ->
+authentication(Sock) ->
     receive
         {tcp, Sock, Data} ->
             Msg = protocol:decode_msg(Data, 'Message'),
@@ -15,29 +17,34 @@ authenticationHandler(Sock) ->
                     registerHandler(Sock, User, Pass, UserType)
             end;
         {tcp_closed, _} ->
-            io:format("Connection ~p teardown~n", [Sock]);
+            io:format("Connection ~p teardown~n", [Sock]),
+            exit(normal);
         {tcp_error, _, _} ->
-            gen_tcp:close(Sock)
+            io:puts("An error occured in the connection~n"),
+            exit(normal)
     end.
 
 % function that verifies the credentials for authentication
 loginHandler(Sock, Username, Password) ->
-    case clients_state:login(Username, Password) of
+    case clients_state_manager:login(Username, Password) of
         {ok, UserType} ->
-            sender:sendAuthResponse(Sock, UserType, 'RESPONSE', true, "LOGGED IN");
-            % here I'll invoke an UserHandler
-        {error, UserType} ->
-            sender:sendAuthResponse(Sock, UserType, 'RESPONSE', false, "INVALID LOGIN"),
-            authenticationHandler(Sock)
+            sender_handler:sendAuthResponse(Sock, UserType, "LOGGED IN"),
+            user_manager:loop(Sock, Username);
+        {error, user_not_found} ->
+            sender_handler:sendInvalidAuthResponse(Sock, "INVALID LOGIN; USER NOT FOUND"),
+            authentication(Sock);
+        {error, wrong_password} ->
+            sender_handler:sendInvalidAuthResponse(Sock, "INVALID LOGIN; WRONG PASSWORD"),
+            authentication(Sock)
     end.
 
 % function that tries to register a client
 registerHandler(Sock, Username, Password, UserType) ->
-    case clients_state:register(Username, Password, UserType) of
+    case clients_state_manager:register(Username, Password, UserType) of
         {ok, UT} ->
-            sender:sendAuthResponse(Sock, UT, 'RESPONSE', true, "USER CREATED"),
-            authenticationHandler(Sock);
+            sender_handler:sendAuthResponse(Sock, UT, "USER CREATED"),
+            authentication(Sock);
         {user_exists, UT} ->
-            sender:sendAuthResponse(Sock, UT, 'RESPONSE', false, "USER EXISTS"),
-            authenticationHandler(Sock)
+            sender_handler:sendInvalidAuthResponse(Sock, "USER EXISTS"),
+            authentication(Sock)
     end.
