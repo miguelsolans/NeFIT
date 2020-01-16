@@ -24,11 +24,12 @@ message ItemProductionOffer{
     required float minimum_amount = 3;
     required float maximum_amount = 4;
     required int64 period = 5;
+    required string manufacturer_name = 6;
 }
 
 message User {
     required string username = 1;
-    required string password = 2;
+    optional string password = 2;
 }
 
 enum Type{
