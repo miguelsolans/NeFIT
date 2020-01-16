@@ -36,8 +36,7 @@ loop(Sock, User) ->
                     end;
 
                 _ ->
-                    clients_state_manager:logout(User),
-                    exit(normal)
+                    supervisor_manager:exit(?MODULE, {User, Sock})
             end;
 
         {send_msg, Data} ->
@@ -45,10 +44,8 @@ loop(Sock, User) ->
             loop(Sock, User);
 
         {tcp_closed, Sock} ->
-            clients_state_manager:logout(User),
-            exit(normal);
+            supervisor_manager:exit(?MODULE, {User, Sock});
 
         {tcp_error, _, _} ->
-            clients_state_manager:logout(User),
-            exit(normal)
+            supervisor_manager:exit(?MODULE, {User, Sock})
   end.

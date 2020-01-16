@@ -4,4 +4,5 @@ code:load_abs("Frontend/authentication_handler").
 code:load_abs("Frontend/sender_handler").
 code:load_abs("Frontend/clients_state_manager").
 code:load_abs("Frontend/user_manager").
+code:load_abs("Frontend/supervisor_manager").
 frontend_server:server(9999).

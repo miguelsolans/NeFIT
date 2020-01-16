@@ -2,11 +2,15 @@
 % interface functions that access to the actor of this MODULE
 
 -module(clients_state_manager).
--export([start/0, login/2, logout/1, register/3, is_authenticated/1]).
+-export([start/0, start/1, login/2, logout/1, register/3, is_authenticated/1]).
 
 % register module as a process and start it
 start() ->
     register(?MODULE, spawn(fun() -> clientsLoop(#{}) end)).
+
+% register module as a process and start it with received Data
+start(Data) ->
+    register(?MODULE, spawn(fun() -> clientsLoop(Data) end)).
 
 % function that contacts process to register an account
 register(Username, Passwd, UserType) ->
