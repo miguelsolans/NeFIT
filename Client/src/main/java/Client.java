@@ -5,6 +5,32 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+class NotificationHandler implements Runnable {
+    private Socket cs;
+    private SocketManager sm;
+
+    NotificationHandler(Socket cs, SocketManager sm) throws IOException {
+        this.cs = cs;
+        this.sm = sm;
+    }
+
+    public void run() {
+        while(true){
+
+            // ISTO NÃO IRÁ INTERCEPTAR AS OUTRAS MENSAGENS??
+            Message msg = this.sm.getMessage();
+
+            if (msg != null &&
+                    msg.hasType() &&
+                    msg.getType().equals(Type.NOTIFICATION) &&
+                    msg.hasState() &&
+                    msg.getState().hasDescription()
+            )
+                System.out.println("NOTIFICATION: "+msg.getState().getDescription());
+        }
+    }
+}
+
 public class Client implements Runnable {
     private Socket cs;
     private SocketManager sm;
@@ -12,6 +38,9 @@ public class Client implements Runnable {
 
     private String type; // Producer, Consumer
     private String username;
+    private boolean notifications;
+
+    private Thread notificationsHandler;
 
     Client(Socket cs) throws IOException {
         this.cs = cs;
@@ -20,6 +49,11 @@ public class Client implements Runnable {
 
         this.type = "";
         this.username = "";
+        this.notifications = true;
+
+        notificationsHandler = new Thread(new NotificationHandler(this.cs, this.sm));
+        notificationsHandler.start();
+
     }
 
     // INITIAL MENU INTERFACE WITH OPTIONS
@@ -93,6 +127,9 @@ public class Client implements Runnable {
             this.username = username;
             return true;
         }
+        else if (res != null && res.hasState() && res.getState().hasDescription()){
+            System.out.println(res.getState().getDescription());
+        }
         return false;
     }
 
@@ -105,7 +142,7 @@ public class Client implements Runnable {
         String pass = this.sin.readLine();
 
         System.out.println("Select the option by typing its number.");
-        System.out.print("Type 1: Producer, 2: Consumer: ");
+        System.out.print("Type 1: Manufacturer, 2: Importer: ");
         String clientType = this.sin.readLine();
         while(!clientType.equals("1") && !clientType.equals("2")){
             System.out.println("Please choose a valid option.");
@@ -141,15 +178,17 @@ public class Client implements Runnable {
             this.username = username;
             return true;
         }
+        else if (res != null && res.hasState() && res.getState().hasDescription()){
+            System.out.println(res.getState().getDescription());
+        }
         return false;
     }
 
     // IMPORTER MENU INTERFACE
     private boolean importerMenu() throws IOException {
-        System.out.println("Welcome "+username+"! You logged in as an importer.");
         while(true) {
             System.out.println("\n1) View available offers \n2) New order \n3) Subscribe manufacturer");
-            System.out.println("\n4) Unsubscribe manufacturer \n5) Toggle order notifications \n6) Logout");
+            System.out.println("4) Unsubscribe manufacturer \n5) Toggle order notifications \n6) Logout");
             System.out.print("-> ");
 
             switch (this.sin.readLine()){
@@ -172,7 +211,7 @@ public class Client implements Runnable {
                     break;
 
                 case "3":
-                    if (!subscribe())
+                    if (!subscribe(true))
                         System.out.println("\nSOMETHING WENT WRONG WITH YOUR SUBSCRIPTION\n");
                     else {
                         System.out.println("\nSUBSCRIPTION SUCCESSFUL.\n");
@@ -181,7 +220,7 @@ public class Client implements Runnable {
                     break;
 
                 case "4":
-                    if (!unsubscribe())
+                    if (!subscribe(false))
                         System.out.println("\nSOMETHING WENT WRONG WITH YOUR SUBSCRIPTION'S CANCELLING\n");
                     else {
                         System.out.println("\nSUBSCRIPTION'S CANCELLING SUCCESSFUL.\n");
@@ -190,7 +229,7 @@ public class Client implements Runnable {
                     break;
 
                 case "5":
-                    if (!notifications())
+                    if (!notifications(!this.notifications))
                         System.out.println("\nSOMETHING WENT WRONG WHILE TOGGLING NOTIFICATIONS\n");
                     else {
                         System.out.println("\nNOTIFICATIONS TOGGLING SUCCESSFUL.\n");
@@ -210,7 +249,7 @@ public class Client implements Runnable {
 
     // MANUFACTURER MENU INTERFACE
     private boolean manufacturerMenu() throws IOException {
-        System.out.println("Welcome back "+username+"! You logged in as a manufacturer.");
+        System.out.println("Welcome back "+username+"! You logged in as a manufacturer. Notifications are on!");
         while(true) {
             System.out.println("\n1) New offer \n2) Logout");
             System.out.print("-> ");
@@ -268,22 +307,67 @@ public class Client implements Runnable {
         this.sm.write(msg);
 
         Message res = this.sm.getMessage();
-        return res != null &&
+        if(res != null &&
                 res.hasType() &&
                 res.getType().equals(Type.RESPONSE) &&
                 res.hasState() &&
-                res.getState().getResult();
+                res.getState().getResult()){
+            return true;
+        }
+        else if (res != null && res.hasState() && res.getState().hasDescription()){
+            System.out.println(res.getState().getDescription());
+        }
+        return false;
     }
 
-    private boolean subscribe() {
-        return true;
+    private boolean subscribe(boolean value) throws IOException {
+        if (value)
+            System.out.println("Subscribe a manufacturer's orders:");
+        else
+            System.out.println("Unsubscribe a manufacturer's orders:");
+
+        System.out.print("Manufacturer name: ");
+        String name = this.sin.readLine();
+
+        Subscription sub = Subscription.newBuilder()
+                .setManufacturerName(name)
+                .setValue(value)
+                .build();
+
+        Message msg = Message.newBuilder()
+                .setSubscription(sub)
+                .setType(Type.SUBSCRIPTION)
+                .build();
+
+        this.sm.write(msg);
+
+        Message res = this.sm.getMessage();
+        if(res != null &&
+                res.hasType() &&
+                res.getType().equals(Type.RESPONSE) &&
+                res.hasState() &&
+                res.getState().getResult()){
+            return true;
+        }
+        else if (res != null && res.hasState() && res.getState().hasDescription()){
+            System.out.println(res.getState().getDescription());
+        }
+        return false;
     }
 
-    private boolean unsubscribe() {
-        return true;
-    }
+    private boolean notifications(boolean value) {
+        if (value){
+            System.out.println("Turning on the notifications!");
+            notificationsHandler.start();
+        }
+        else {
+            System.out.println("Turning off the notifications!");
+            notificationsHandler.interrupt();
+        }
 
-    private boolean notifications() {
+
+
+        this.notifications = value;
         return true;
     }
 
@@ -312,11 +396,17 @@ public class Client implements Runnable {
         this.sm.write(msg);
 
         Message res = this.sm.getMessage();
-        return res != null &&
+        if(res != null &&
                 res.hasType() &&
                 res.getType().equals(Type.RESPONSE) &&
                 res.hasState() &&
-                res.getState().getResult();
+                res.getState().getResult()){
+            return true;
+        }
+        else if (res != null && res.hasState() && res.getState().hasDescription()){
+            System.out.println(res.getState().getDescription());
+        }
+        return false;
     }
 
     // RUN THE CLIENT
@@ -327,10 +417,14 @@ public class Client implements Runnable {
                     if (!initialMenu()) break;
 
                     if (type.equals("MANUFACTURER")){
-                        if (!manufacturerMenu()) break;
+                        while(true){
+                            if(!manufacturerMenu()) break;
+                        }
                     }
                     else if (type.equals("IMPORTER")) {
-                        if (!importerMenu()) break;
+                        while(true){
+                            if(!importerMenu()) break;
+                        }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
