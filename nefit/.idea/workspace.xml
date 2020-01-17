@@ -2,26 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="043796ee-78ef-467d-9806-6088cb66057f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Controller/NegotiatorController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Model/Offer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Model/ProductionOffer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/business/Negotiator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/db/NegotiatorDB.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/CompanyConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CompanyConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Controller/ItemProductionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Controller/ItemProductionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/NeFIT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/NeFIT.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/db/ItemOrderDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/db/ItemOrderDB.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/db/ItemProductionDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/db/ItemProductionDB.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/health/TemplateHealthCheck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/health/TemplateHealthCheck.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/CompanyConfiguration.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/CompanyConfiguration.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Controller/ItemProductionController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Controller/ItemProductionController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Controller/UserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/NeFIT.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NeFIT.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/db/ItemOrderDB.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/db/ItemOrderDB.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/db/ItemProductionDB.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/db/ItemProductionDB.class" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -112,7 +94,7 @@
       <updated>1579195591586</updated>
       <workItem from="1579195593099" duration="10141000" />
       <workItem from="1579217923086" duration="751000" />
-      <workItem from="1579254987412" duration="2116000" />
+      <workItem from="1579254987412" duration="6095000" />
     </task>
     <servers />
   </component>
