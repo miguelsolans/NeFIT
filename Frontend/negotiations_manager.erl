@@ -34,9 +34,9 @@ negotiationsLoop(NegotiatorsMap, ManufaturersMap) ->
                             Host = maps:get(host, Res),
                             Port = maps:get(port, Res),
                             %NegotiatorPid = exchangeProducer:run(Host,Port),
-                            maps:put(Name, NegotiatorPid, NegotiatorsMap),
-                            maps:put(Manufacturer, NegotiatorPid, ManufaturersMap),
-                            From ! {ok, NegotiatorPid},
+                            %maps:put(Name, NegotiatorPid, NegotiatorsMap),
+                            %maps:put(Manufacturer, NegotiatorPid, ManufaturersMap),
+                            %From ! {ok, NegotiatorPid},
                             negotiationsLoop(NegotiatorsMap, ManufaturersMap)
                     end
             end
