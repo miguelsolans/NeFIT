@@ -9,7 +9,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("production")
+@Path("b")
 @Produces(MediaType.APPLICATION_JSON)
 public class ItemProductionController {
 

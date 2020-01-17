@@ -2,7 +2,6 @@ package db;
 
 import business.ItemProductionOffer;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
