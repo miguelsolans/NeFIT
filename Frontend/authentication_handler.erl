@@ -42,7 +42,7 @@ registerHandler(Sock, Username, Password, UserType) ->
         {ok, UT} ->
             sender_handler:sendAuthResponse(Sock, UT, "USER CREATED"),
             authentication(Sock);
-        {user_exists, UT} ->
+        {user_exists, _} ->
             sender_handler:sendInvalidAuthResponse(Sock, "USER EXISTS"),
             authentication(Sock)
     end.
