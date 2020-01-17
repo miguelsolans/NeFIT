@@ -238,7 +238,7 @@ public class Client implements Runnable {
         return true;
     }
 
-    private boolean newOrder() throws IOException {
+    private boolean newOffer() throws IOException {
         System.out.print("\nNew Offer\nProduct name: ");
         String name = this.sin.readLine();
         System.out.print("Minimum production amount: ");
@@ -250,7 +250,28 @@ public class Client implements Runnable {
         System.out.print("Order placement period: ");
         String period = this.sin.readLine();
 
-        return true;
+        ItemProductionOffer offer = ItemProductionOffer.newBuilder()
+                .setName(name)
+                .setMinimumAmount(Integer.parseInt(min))
+                .setMaximumAmount(Integer.parseInt(max))
+                .setUnitPrice(Float.parseFloat(price))
+                .setPeriod(Long.parseLong(period))
+                .setManufacturerName(username)
+                .build();
+
+        Message msg = Message.newBuilder()
+                .setItemProductionOffer(offer)
+                .setType(Type.ITEMPRODUCTIONOFFER)
+                .build();
+
+        this.sm.write(msg);
+
+        Message res = this.sm.getMessage();
+        return res != null &&
+                res.hasType() &&
+                res.getType().equals(Type.RESPONSE) &&
+                res.hasState() &&
+                res.getState().getResult();
     }
 
     private boolean subscribe() {
@@ -265,7 +286,7 @@ public class Client implements Runnable {
         return true;
     }
 
-    private boolean newOffer() throws IOException {
+    private boolean newOrder() throws IOException {
         System.out.print("\nNew Offer\nManufacturer name: ");
         String name = this.sin.readLine();
         System.out.print("Product name: ");
@@ -275,7 +296,26 @@ public class Client implements Runnable {
         System.out.print("Unit price: ");
         String price = this.sin.readLine();
 
-        return true;
+        ItemOrderOffer order = ItemOrderOffer.newBuilder()
+                .setManufacterName(name)
+                .setProductName(product)
+                .setQuantity(Float.parseFloat(quantity))
+                .setUnitPrice(Float.parseFloat(price))
+                .build();
+
+        Message msg = Message.newBuilder()
+                .setItemOrderOffer(order)
+                .setType(Type.ITEMORDEROFFER)
+                .build();
+
+        this.sm.write(msg);
+
+        Message res = this.sm.getMessage();
+        return res != null &&
+                res.hasType() &&
+                res.getType().equals(Type.RESPONSE) &&
+                res.hasState() &&
+                res.getState().getResult();
     }
 
     // RUN THE CLIENT
