@@ -2,7 +2,7 @@
 % interface functions that access to the actor of this MODULE
 
 -module(clients_state_manager).
--export([start/0, start/1, login/2, logout/1, register/3, is_authenticated/1]).
+-export([start/0, start/1, login/2, logout/1, register/3, isAuthenticated/1]).
 
 % register module as a process and start it
 start() ->
@@ -34,7 +34,7 @@ logout(Username) ->
     end.
 
 % function that checks if a user is authenticated
-is_authenticated(Username) ->
+isAuthenticated(Username) ->
     ?MODULE ! {online, Username, self()},
     receive
         {?MODULE, Res} -> Res
@@ -52,7 +52,6 @@ clientsLoop(StateMap) ->
                     From ! {?MODULE, user_exists, UT},
                     clientsLoop(StateMap)
             end;
-
         {login, U, P, From} ->
             case maps:find(U, StateMap) of
                 error ->
@@ -65,7 +64,6 @@ clientsLoop(StateMap) ->
                     From ! {?MODULE, error, wrong_password},
                     clientsLoop(StateMap)
             end;
-
         {logout, U, From} ->
             case maps:find(U, StateMap) of
                 error ->
@@ -75,7 +73,6 @@ clientsLoop(StateMap) ->
                     From ! {?MODULE, ok},
                     clientsLoop(maps:put(U, { P, UT, false}, StateMap))
             end;
-
         {online, U, From} ->
             case maps:find(U, StateMap) of
                 error ->

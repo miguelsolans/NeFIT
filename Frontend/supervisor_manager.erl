@@ -21,11 +21,9 @@ supervision() ->
         {clients_state_manager, Data} ->
             clients_state_manager:start(Data),
             supervision();
-
         {authentication_handler, Sock} ->
             io:format("Connection ~p teardown~n", [Sock]),
             supervision();
-
         {user_manager, {User, Sock}} ->
             clients_state_manager:logout(User),
             io:format("Connection ~p teardown, with user ~p~n", [Sock,User]),

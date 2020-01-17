@@ -1,6 +1,7 @@
 -module(user_manager).
 -export ([loop/2, sendMsg/2]).
 
+% function for send a message to the client
 sendMsg(Pid, Data) ->
     Pid ! {send_msg, Data}.
 
@@ -15,37 +16,36 @@ loop(Sock, User) ->
                 'ITEMPRODUCTIONOFFER' ->
                     case UT of
                         "MANUFACTURER" ->
-                            IPO = maps:get(item_production_offer, Msg),
-                            %negotiations_manager:add_production_offer(User, IPO),
-                            % send response
+                            %IPO = maps:get(item_production_offer, Msg),
+                            U = maps:get(user, Msg),
+                            Username = maps:get(username, U),
+                            NPid = negotiations_manager:findNegotiator(Username),
+                            % Send to NPid the order
+                            % send response to user
                             loop(Sock, User);
                         _ ->
                             sender_handler:sendInvalidOperation(Sock, UT),
                             loop(Sock, User)
                     end;
-
                 'ITEMORDEROFFER' ->
                     case UT of
                         "IMPORTER" ->
                             IOO = maps:get(item_order_offer, Msg),
-                            % send response
+                            Name = maps:get(manufacturer_name, IOO),
+                            NPid = negotiations_manager:findNegotiator(Name),
+                            % send to NPid the order
+                            % send response to user
                             loop(Sock,User);
                         _ ->
                             sender_handler:sendInvalidOperation(Sock, UT),
                             loop(Sock, User)
-                    end;
-
-                _ ->
-                    supervisor_manager:exit(?MODULE, {User, Sock})
+                    end
             end;
-
         {send_msg, Data} ->
             sender_handler:sendEncoded(Sock, Data),
             loop(Sock, User);
-
         {tcp_closed, Sock} ->
             supervisor_manager:exit(?MODULE, {User, Sock});
-
         {tcp_error, _, _} ->
             supervisor_manager:exit(?MODULE, {User, Sock})
   end.

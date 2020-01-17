@@ -5,4 +5,6 @@ code:load_abs("Frontend/sender_handler").
 code:load_abs("Frontend/clients_state_manager").
 code:load_abs("Frontend/user_manager").
 code:load_abs("Frontend/supervisor_manager").
+code:load_abs("Frontend/negotiations_manager").
+code:load_abs("Frontend/mochijson2").
 frontend_server:server(9999).
