@@ -6,9 +6,10 @@ message Message{
     optional string user_type = 1;
     optional ItemOrderOffer item_order_offer = 2;
     optional ItemProductionOffer item_production_offer = 3;
-    optional User user = 4;
-    required Type type = 5;
-    optional State state = 6;
+    optional Subscription subscription = 4;
+    optional User user = 5;
+    required Type type = 6;
+    optional State state = 7;
 }
 
 message ItemOrderOffer{
@@ -32,6 +33,11 @@ message User {
     optional string password = 2;
 }
 
+message Subscription {
+    required string manufacturer_name = 1;
+    required bool value = 2;
+}
+
 enum Type{
     LOGIN = 0;
     LOGOUT = 1;
@@ -39,6 +45,8 @@ enum Type{
     RESPONSE = 3;
     ITEMORDEROFFER = 4;
     ITEMPRODUCTIONOFFER = 5;
+    SUBSCRIPTION = 6;
+    NOTIFICATION = 7;
 }
 
 message State {
