@@ -138,6 +138,7 @@ public class Client implements Runnable {
                 res.getState().getResult()
         ) {
             this.type = clientType;
+            this.username = username;
             return true;
         }
         return false;
@@ -145,7 +146,7 @@ public class Client implements Runnable {
 
     // IMPORTER MENU INTERFACE
     private boolean importerMenu() throws IOException {
-        System.out.println("Welcome back "+username+"! You logged in as an importer.");
+        System.out.println("Welcome "+username+"! You logged in as an importer.");
         while(true) {
             System.out.println("\n1) View available offers \n2) New order \n3) Subscribe manufacturer");
             System.out.println("\n4) Unsubscribe manufacturer \n5) Toggle order notifications \n6) Logout");
