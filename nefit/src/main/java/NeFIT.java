@@ -7,7 +7,6 @@
 import Controller.ItemOrderController;
 import Controller.ItemProductionController;
 import Controller.NegotiatorController;
-import Controller.UserController;
 import core.Template;
 import health.TemplateHealthCheck;
 import io.dropwizard.Application;
@@ -21,7 +20,6 @@ public class NeFIT extends Application<CompanyConfiguration> {
 
         final Template template = configuration.buildTemplate();
         environment.healthChecks().register("template", new TemplateHealthCheck(template));
-        environment.jersey().register(new UserController(environment.getValidator()));
         environment.jersey().register(new ItemProductionController(environment.getValidator()));
         environment.jersey().register(new ItemOrderController(environment.getValidator()));
         environment.jersey().register(new NegotiatorController(environment.getValidator()));

@@ -37,13 +37,12 @@ public class ItemProductionController {
     @Path("/")
     public Response addProduct(
             @NotNull @QueryParam("productName") String productName,
-            @NotNull @QueryParam("manufacturerName") String manufacturerName,
             @NotNull @QueryParam("unitPrice") double unitPrice,
             @NotNull @QueryParam("minimumAmout") double minimumAmout,
             @NotNull @QueryParam("maximumAmount") double maximumAmount,
             @NotNull @QueryParam("period") int period
     ) {
-        ItemProductionOffer product = new ItemProductionOffer(productName, manufacturerName, unitPrice, minimumAmout, maximumAmount, period);
+        ItemProductionOffer product = new ItemProductionOffer(productName, unitPrice, minimumAmout, maximumAmount, period);
 
         ItemProductionDB.addProduct(product);
 

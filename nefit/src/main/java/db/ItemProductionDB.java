@@ -9,13 +9,13 @@ public class ItemProductionDB {
 
     static List<ItemProductionOffer> products = new ArrayList<>();
 
-    static {
-        // periodo em segundos ????
-        addProduct(new ItemProductionOffer("product1", "manufacturer1", 1.0, 1.0, 1.0, 10));
-        addProduct(new ItemProductionOffer("product2", "manufacturer1", 1.0, 1.0, 1.0, 10));
-        addProduct(new ItemProductionOffer("product1", "manufacturer2", 1.0, 1.0, 1.0, 10));
-
-    }
+//    static {
+//        // periodo em segundos ????
+//        addProduct(new ItemProductionOffer("product1", "manufacturer1", 1.0, 1.0, 1.0, 50000));
+//        addProduct(new ItemProductionOffer("product2", "manufacturer1", 1.0, 1.0, 1.0, 402));
+//        addProduct(new ItemProductionOffer("product1", "manufacturer2", 1.0, 1.0, 1.0, 1234));
+//
+//    }
 
     public static List<ItemProductionOffer> getAvailableProducts() {
         return products;

@@ -1,26 +1,26 @@
 package business;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
 public class ItemProductionOffer {
+
     String productName;
     String manufacturerName;
     double unitPrice;
     double minimumAmout;
     double maximumAmount;
-    Date start;
-    Date end;
+    DateTime start;
+    DateTime end;
 
 
-    public ItemProductionOffer(String productName, String manufacturerName, double unitPrice, double minimumAmout, double maximumAmount, int period) {
+    public ItemProductionOffer(String productName, double unitPrice, double minimumAmout, double maximumAmount, int period) {
         this.productName = productName;
-        this.manufacturerName = manufacturerName;
         this.unitPrice = unitPrice;
         this.minimumAmout = minimumAmout;
         this.minimumAmout = maximumAmount;
 
-        this.start = new Date();
-        // this.end = new Date // Calc last day of offer
+        this.start = new DateTime();
+        this.end = new DateTime().plusSeconds(period);
     }
 
     public String getManufacturerName() {
@@ -71,19 +71,19 @@ public class ItemProductionOffer {
         this.maximumAmount = maximumAmount;
     }
 
-    public Date getStart() {
+    public DateTime getStart() {
         return this.start;
     }
 
-    public void setStart(Date start) {
+    public void setStart(DateTime start) {
         this.start = start;
     }
 
-    public Date getEnd() {
+    public DateTime getEnd() {
         return this.end;
     }
 
-    public void setEnd(Date end) {
+    public void setEnd(DateTime end) {
         this.end = end;
     }
 }

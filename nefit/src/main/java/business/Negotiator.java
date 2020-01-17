@@ -10,7 +10,6 @@ public class Negotiator {
     @NotNull
     String port;
 
-
     public Negotiator(String name, String host, String port) {
         this.name = name;
         this.host = host;
