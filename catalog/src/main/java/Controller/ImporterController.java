@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response;
 
 @Path("importer")
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class ImporterController {
 
     Validator validator;
@@ -43,6 +44,14 @@ public class ImporterController {
 
 //    @PUT
 //    @Path("{name}/order/{}")
+
+    @POST
+    @Path("/")
+    public void newImporter(
+            @NotNull @QueryParam("name") String name
+    ) {
+        System.out.println("Name: " + name);
+    }
 
     @POST
     @Path("{name}")

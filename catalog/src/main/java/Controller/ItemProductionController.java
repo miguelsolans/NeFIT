@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response;
 
 @Path("product")
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class ItemProductionController {
 
     private Validator validator;
@@ -40,11 +41,11 @@ public class ItemProductionController {
             @NotNull @PathParam("manufacturer") String manufacturer,
             @NotNull @QueryParam("productName") String productName,
             @NotNull @QueryParam("unitPrice") double unitPrice,
-            @NotNull @QueryParam("minimumAmout") double minimumAmout,
+            @NotNull @QueryParam("minimumAmount") double minimumAmount,
             @NotNull @QueryParam("maximumAmount") double maximumAmount,
             @NotNull @QueryParam("period") int period
     ) {
-        ItemProductionOffer product = new ItemProductionOffer(productName, unitPrice, minimumAmout, maximumAmount, period);
+        ItemProductionOffer product = new ItemProductionOffer(productName, unitPrice, minimumAmount, maximumAmount, period);
 
         ManufacturerDB.addProduct(manufacturer, product);
 

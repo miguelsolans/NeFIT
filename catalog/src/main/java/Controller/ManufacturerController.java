@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response;
 
 @Path("manufacturer")
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class ManufacturerController {
     private Validator validator;
 

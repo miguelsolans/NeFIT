@@ -10,7 +10,7 @@ public class ItemProductionOffer {
     @NotNull
     double unitPrice;
     @NotNull
-    double minimumAmout;
+    double minimumAmount;
     @NotNull
     double maximumAmount;
     @NotNull
@@ -21,10 +21,10 @@ public class ItemProductionOffer {
     boolean active;
 
 
-    public ItemProductionOffer(String productName, double unitPrice, double minimumAmout, double maximumAmount, int period) {
+    public ItemProductionOffer(String productName, double unitPrice, double minimumAmount, double maximumAmount, int period) {
         this.productName = productName;
         this.unitPrice = unitPrice;
-        this.minimumAmout = minimumAmout;
+        this.minimumAmount = minimumAmount;
         this.maximumAmount = maximumAmount;
         this.active = true;
         this.start = new DateTime();
@@ -56,11 +56,11 @@ public class ItemProductionOffer {
     }
 
     public double getMinimumAmout() {
-        return this.minimumAmout;
+        return this.minimumAmount;
     }
 
     public void setMinimumAmout(float minimumAmout) {
-        this.minimumAmout = minimumAmout;
+        this.minimumAmount = minimumAmout;
     }
 
     public double getMaximumAmount() {

@@ -1,5 +1,6 @@
 package db;
 
+import business.ItemOrderOffer;
 import business.ItemProductionOffer;
 import business.Manufacturer;
 
@@ -47,6 +48,16 @@ public class ManufacturerDB {
         return products;
     }
 
+    public static List<ItemProductionOffer> getAllProducts() {
+        List<ItemProductionOffer> products = new ArrayList<>();
+
+        for(String key : manufacturers.keySet()) {
+            products.addAll(manufacturers.get(key).getProducts());
+        }
+
+        return products;
+    }
+
     public static List<ItemProductionOffer> getAvailableProducts() {
 
         List<ItemProductionOffer> products = new ArrayList<>();
@@ -56,7 +67,7 @@ public class ManufacturerDB {
 
             for(ItemProductionOffer offer : manufacturerProducts) {
                 if(offer.isActive())
-                    manufacturerProducts.add(offer);
+                    products.add(offer);
             }
         }
 
