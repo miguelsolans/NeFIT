@@ -11,6 +11,7 @@ public class Manufacturer {
 
 
     public Manufacturer(String name) {
+        this.name = name;
         this.products = new HashMap<>();
     }
 
@@ -22,14 +23,14 @@ public class Manufacturer {
         return name;
     }
 
-    public HashMap<String, ItemProductionOffer> getProducts() {
+    public List<ItemProductionOffer> getProducts() {
         List<ItemProductionOffer> products = new ArrayList<>();
 
         for(String key : this.products.keySet()) {
             products.add(this.products.get(key));
         }
 
-        return this.products;
+        return products;
     }
 
 

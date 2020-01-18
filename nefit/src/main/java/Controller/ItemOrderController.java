@@ -30,11 +30,11 @@ public class ItemOrderController {
         return Response.ok(ItemOrderDB.getOrders()).build();
     }
 
-    @POST
-    @Path("/")
-    public Response addOrder(
+    // @POST
+    // @Path("/")
+    // public Response addOrder(
 
-    ) {
-        return Response.ok().build();
-    }
+    // ) {
+    //     return Response.ok().build();
+    // }
 }

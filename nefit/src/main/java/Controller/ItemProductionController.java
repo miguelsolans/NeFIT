@@ -2,6 +2,7 @@ package Controller;
 
 import business.ItemProductionOffer;
 import db.ItemProductionDB;
+import db.ManufacturerDB;
 
 import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
@@ -9,7 +10,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("b")
+@Path("product")
 @Produces(MediaType.APPLICATION_JSON)
 public class ItemProductionController {
 
@@ -22,7 +23,7 @@ public class ItemProductionController {
     @GET
     @Path("/")
     public Response getProducts() {
-        return Response.ok(ItemProductionDB.getAvailableProducts()).build();
+        return Response.ok(ManufacturerDB.getAvailableProducts()).build();
     }
 
     @GET
@@ -30,12 +31,13 @@ public class ItemProductionController {
     public Response getManufacturerProducts(
             @NotNull @PathParam("manufacturer") String manufacturer
     ) {
-        return Response.ok(ItemProductionDB.getManufacturerProducts(manufacturer)).build();
+        return Response.ok(ManufacturerDB.getManufacturerProducts(manufacturer)).build();
     }
 
     @POST
-    @Path("/")
+    @Path("{manufacturer}")
     public Response addProduct(
+            @NotNull @PathParam("manufacturer") String manufacturer,
             @NotNull @QueryParam("productName") String productName,
             @NotNull @QueryParam("unitPrice") double unitPrice,
             @NotNull @QueryParam("minimumAmout") double minimumAmout,
@@ -44,10 +46,9 @@ public class ItemProductionController {
     ) {
         ItemProductionOffer product = new ItemProductionOffer(productName, unitPrice, minimumAmout, maximumAmount, period);
 
-        ItemProductionDB.addProduct(product);
+        ManufacturerDB.addProduct(manufacturer, product);
 
         return Response.ok().build();
     }
-
 
 }

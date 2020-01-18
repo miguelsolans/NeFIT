@@ -3,7 +3,7 @@ import core.Template;
 import io.dropwizard.Configuration;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class CompanyConfiguration extends Configuration {
+public class NefitConfiguration extends Configuration {
 
     @org.hibernate.validator.constraints.NotEmpty
     private String template;

@@ -38,5 +38,4 @@ public class ImporterController {
         return Response.ok().build();
     }
 
-
 }
