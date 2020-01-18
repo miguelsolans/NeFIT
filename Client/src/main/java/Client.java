@@ -203,6 +203,8 @@ public class Client implements Runnable {
                 return true;
             } else if (loginRes != null && loginRes.hasState() && loginRes.getState().hasDescription()) {
                 System.out.println(loginRes.getState().getDescription());
+                System.out.println("Please try to login again.");
+                return false;
             }
         } else if (res != null && res.hasState() && res.getState().hasDescription()) {
             System.out.println(res.getState().getDescription());
