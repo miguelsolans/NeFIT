@@ -31,13 +31,14 @@ message ItemProductionOffer{
 message Sale{
     optional string manufactureName = 1;
     optional string articleName = 2;
-    optional float globalPrice = 3;
-    required string message = 4;
+    optional string offerName = 3;
+    optional float globalPrice = 4;
+    required string message = 5;
 }
 
 message User {
     required string username = 1;
-    required string password = 2;
+    optional string password = 2;
 }
 
 enum Type{

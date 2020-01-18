@@ -22,9 +22,15 @@ public class ProductionOffers {
         }
         else {
             Map<String,ProductionOffer> offers = this.productionOffers.get(productionOffer.getFabricantName());
-            if (!offers.containsKey(productionOffer.getArticleName())){
+            if (!offers.containsKey(productionOffer.getArticleName()) ){
                 offers.put(productionOffer.getArticleName(),productionOffer);
                 this.productionOffers.put(productionOffer.getFabricantName(),offers);
+                return true;
+            }
+            ProductionOffer offer = offers.get(productionOffer.getArticleName());
+            if (offer!= null && !offer.getActive()){
+                offers.replace(productionOffer.getArticleName(),productionOffer);
+                this.productionOffers.replace(productionOffer.getFabricantName(),offers);
                 return true;
             }
             else return false;
