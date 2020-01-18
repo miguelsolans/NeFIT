@@ -1,0 +1,10 @@
+[
+{ "file"      : "c_src/erlzmq_nif.c"
+, "directory" : "/Users/joao/Desktop/Desktop_iCloud/Universidade/4ºano/1ºSemestre/PSD/TP/erlzmq2"
+, "command"   : "cc -c -Ic_src -Ideps/zeromq3/include -g -Wall -fPIC -I\"/usr/local/Cellar/erlang/22.2.2/lib/erlang/lib/erl_interface-3.13.1/include\" -I\"/usr/local/Cellar/erlang/22.2.2/lib/erlang/erts-10.6.2/include\" c_src/erlzmq_nif.c -o c_src/erlzmq_nif.o"
+},
+{ "file"      : "c_src/vector.c"
+, "directory" : "/Users/joao/Desktop/Desktop_iCloud/Universidade/4ºano/1ºSemestre/PSD/TP/erlzmq2"
+, "command"   : "cc -c -Ic_src -Ideps/zeromq3/include -g -Wall -fPIC -I\"/usr/local/Cellar/erlang/22.2.2/lib/erlang/lib/erl_interface-3.13.1/include\" -I\"/usr/local/Cellar/erlang/22.2.2/lib/erlang/erts-10.6.2/include\" c_src/vector.c -o c_src/vector.o"
+}
+]
