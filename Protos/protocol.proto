@@ -12,7 +12,7 @@ message Message{
 }
 
 message ItemOrderOffer{
-    required string manufacter_name = 1;
+    required string manufacturer_name = 1;
     required string product_name = 2;
     required float quantity = 3;
     required float unit_price = 4;
@@ -24,7 +24,6 @@ message ItemProductionOffer{
     required float minimum_amount = 3;
     required float maximum_amount = 4;
     required int64 period = 5;
-    required string manufacturer_name = 6;
 }
 
 message User {

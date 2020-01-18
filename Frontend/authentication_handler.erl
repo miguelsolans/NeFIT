@@ -17,11 +17,9 @@ authentication(Sock) ->
                     registerHandler(Sock, User, Pass, UserType)
             end;
         {tcp_closed, _} ->
-            io:format("Connection ~p teardown~n", [Sock]),
-            exit(normal);
+            supervisor_manager:exit(?MODULE, Sock);
         {tcp_error, _, _} ->
-            io:puts("An error occured in the connection~n"),
-            exit(normal)
+            supervisor_manager:exit(?MODULE, Sock)
     end.
 
 % function that verifies the credentials for authentication
@@ -44,7 +42,7 @@ registerHandler(Sock, Username, Password, UserType) ->
         {ok, UT} ->
             sender_handler:sendAuthResponse(Sock, UT, "USER CREATED"),
             authentication(Sock);
-        {user_exists, UT} ->
+        {user_exists, _} ->
             sender_handler:sendInvalidAuthResponse(Sock, "USER EXISTS"),
             authentication(Sock)
     end.
