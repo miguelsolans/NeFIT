@@ -8,7 +8,6 @@ package Controller;
 import db.ItemOrderDB;
 
 import javax.validation.Validator;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -30,11 +29,12 @@ public class ItemOrderController {
         return Response.ok(ItemOrderDB.getOrders()).build();
     }
 
-    @POST
-    @Path("/")
-    public Response addOrder(
+    // @POST
+    // @Path("/")
+    // public Response addOrder(
 
-    ) {
-        return Response.ok().build();
-    }
+    // ) {
+    //     return Response.ok().build();
+    // }
+
 }
