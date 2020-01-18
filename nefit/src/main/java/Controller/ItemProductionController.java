@@ -31,7 +31,10 @@ public class ItemProductionController {
     public Response getManufacturerProducts(
             @NotNull @PathParam("manufacturer") String manufacturer
     ) {
-@POST
+        return Response.ok(ManufacturerDB.getManufacturerProducts(manufacturer)).build();
+    }
+
+    @POST
     @Path("{manufacturer}")
     public Response addProduct(
             @NotNull @PathParam("manufacturer") String manufacturer,
