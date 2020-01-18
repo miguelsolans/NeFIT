@@ -8,8 +8,6 @@ public class ItemProductionOffer {
     @NotNull
     String productName;
     @NotNull
-    String manufacturerName;
-    @NotNull
     double unitPrice;
     @NotNull
     double minimumAmout;
@@ -19,24 +17,18 @@ public class ItemProductionOffer {
     DateTime start;
     @NotNull
     DateTime end;
+    @NotNull
+    boolean active;
 
 
     public ItemProductionOffer(String productName, double unitPrice, double minimumAmout, double maximumAmount, int period) {
         this.productName = productName;
         this.unitPrice = unitPrice;
         this.minimumAmout = minimumAmout;
-        this.minimumAmout = maximumAmount;
-
+        this.maximumAmount = maximumAmount;
+        this.active = true;
         this.start = new DateTime();
         this.end = new DateTime().plusSeconds(period);
-    }
-
-    public String getManufacturerName() {
-        return manufacturerName;
-    }
-
-    public void setManufacturerName(String manufacturerName) {
-        this.manufacturerName = manufacturerName;
     }
 
     public String getName() {
@@ -93,5 +85,13 @@ public class ItemProductionOffer {
 
     public void setEnd(DateTime end) {
         this.end = end;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
