@@ -20,7 +20,6 @@ public class NeFIT extends Application<NefitConfiguration> {
         environment.healthChecks().register("template", new TemplateHealthCheck(template));
 
         // Routes
-        environment.jersey().register(new ImporterController(environment.getValidator()));
         environment.jersey().register(new ItemOrderController(environment.getValidator()));
         environment.jersey().register(new ItemProductionController(environment.getValidator()));
         environment.jersey().register(new ManufacturerController(environment.getValidator()));
