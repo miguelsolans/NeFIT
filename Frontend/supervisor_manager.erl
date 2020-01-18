@@ -4,7 +4,7 @@
 % funtion that initializes supervisor
 start() ->
     register(supervisor, self()),
-    io:put_chars("SUPERVISOR STARTED...\n"),
+    io:put_chars("\nSUPERVISOR STARTED...\n"),
     supervision().
 
 % function that tells supervisor thar a process terminates with Data
@@ -26,6 +26,6 @@ supervision() ->
             supervision();
         {user_manager, {User, Sock}} ->
             clients_state_manager:logout(User),
-            io:format("Connection ~p teardown, with user ~p~n", [Sock,User]),
+            io:format("Connection ~p teardown~n", [Sock]),
             supervision()
     end.

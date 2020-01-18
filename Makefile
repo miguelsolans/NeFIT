@@ -10,7 +10,7 @@ frontend:
 	erlc -o Frontend/bin Frontend/*.erl dependencies/mochijson2.erl
 
 run:
-	cd dependencies/erlzmq2/ebin && erl < MakefileCommands
+	cd dependencies/erlzmq2/ebin && erl < ErlangCommands
 
 .PHONY: frontend
 

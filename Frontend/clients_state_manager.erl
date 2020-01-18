@@ -48,6 +48,7 @@ clientsLoop(StateMap) ->
             case maps:find(U, StateMap) of
                 error ->
                     From ! {?MODULE, ok, UT},
+                    io:format("Sign Up: ~s -> ~s~n",[U,UT]),
                     clientsLoop(maps:put(U, {P, UT, false, 0}, StateMap));
                 _ ->
                     From ! {?MODULE, user_exists, UT},
@@ -60,6 +61,7 @@ clientsLoop(StateMap) ->
                     clientsLoop(StateMap);
                 {ok, {P, UT, _, _}} ->
                     From ! {?MODULE, ok, UT},
+                    io:format("Sign In: ~s~n",[U]),
                     clientsLoop(maps:put(U, {P, UT, true, From}, StateMap));
                 {ok, _} ->
                     From ! {?MODULE, error, wrong_password},
@@ -72,6 +74,7 @@ clientsLoop(StateMap) ->
                     clientsLoop(StateMap);
                 {ok, {P, UT, _, _}} ->
                     From ! {?MODULE, ok},
+                    io:format("Logout: ~s~n",[U]),
                     clientsLoop(maps:put(U, { P, UT, false, 0}, StateMap))
             end;
         {online, U, From} ->
