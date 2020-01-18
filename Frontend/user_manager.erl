@@ -1,6 +1,7 @@
 -module(user_manager).
 -export ([loop/2, sendMsg/2]).
 
+% function for send a message to the client
 sendMsg(Pid, Data) ->
     Pid ! {send_msg, Data}.
 
@@ -15,40 +16,43 @@ loop(Sock, User) ->
                 'ITEMPRODUCTIONOFFER' ->
                     case UT of
                         "MANUFACTURER" ->
-                            IPO = maps:get(item_production_offer, Msg),
-                            %negotiations_manager:add_production_offer(User, IPO),
-                            % send response
+                            U = maps:get(user, Msg),
+                            Username = maps:get(username, U),
+                            NPid = negotiations_manager:findNegotiator(Username),
+                            case negotiations_producer:newOrder(Msg,NPid) of
+                                ok ->
+                                    sender_handler:sendOrderResponse(Sock,UT,true,"ITEM PRODUCTION OFFER SUCCEDED");
+                                error ->
+                                    sender_handler:sendOrderResponse(Sock,UT,false,"ITEM PRODUCTION OFFER DOES NOT SUCCEDED")
+                            end,
                             loop(Sock, User);
                         _ ->
                             sender_handler:sendInvalidOperation(Sock, UT),
                             loop(Sock, User)
                     end;
-
                 'ITEMORDEROFFER' ->
                     case UT of
                         "IMPORTER" ->
                             IOO = maps:get(item_order_offer, Msg),
-                            % send response
+                            Name = maps:get(manufacturer_name, IOO),
+                            NPid = negotiations_manager:findNegotiator(Name),
+                            case negotiations_producer:newOrder(Msg,NPid) of
+                                ok ->
+                                    sender_handler:sendOrderResponse(Sock,UT,true,"ITEM ORDER OFFER SUCCEDED");
+                                error ->
+                                    sender_handler:sendOrderResponse(Sock,UT,false,"ITEM ORDER OFFER DOES NOT SUCCEDED")
+                            end,
                             loop(Sock,User);
                         _ ->
                             sender_handler:sendInvalidOperation(Sock, UT),
                             loop(Sock, User)
-                    end;
-
-                _ ->
-                    clients_state_manager:logout(User),
-                    exit(normal)
+                    end
             end;
-
         {send_msg, Data} ->
             sender_handler:sendEncoded(Sock, Data),
             loop(Sock, User);
-
         {tcp_closed, Sock} ->
-            clients_state_manager:logout(User),
-            exit(normal);
-
+            supervisor_manager:exit(?MODULE, {User, Sock});
         {tcp_error, _, _} ->
-            clients_state_manager:logout(User),
-            exit(normal)
+            supervisor_manager:exit(?MODULE, {User, Sock})
   end.
