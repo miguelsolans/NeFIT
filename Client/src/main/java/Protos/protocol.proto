@@ -12,7 +12,7 @@ message Message{
 }
 
 message ItemOrderOffer{
-    required string manufacter_name = 1;
+    required string manufacturer_name = 1;
     required string product_name = 2;
     required float quantity = 3;
     required float unit_price = 4;
@@ -28,7 +28,7 @@ message ItemProductionOffer{
 
 message User {
     required string username = 1;
-    required string password = 2;
+    optional string password = 2;
 }
 
 enum Type{
@@ -36,6 +36,8 @@ enum Type{
     LOGOUT = 1;
     REGISTER = 2;
     RESPONSE = 3;
+    ITEMORDEROFFER = 4;
+    ITEMPRODUCTIONOFFER = 5;
 }
 
 message State {
