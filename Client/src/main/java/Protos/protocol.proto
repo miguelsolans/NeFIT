@@ -6,14 +6,13 @@ message Message{
     optional string user_type = 1;
     optional ItemOrderOffer item_order_offer = 2;
     optional ItemProductionOffer item_production_offer = 3;
-    optional Subscription subscription = 4;
-    optional User user = 5;
-    required Type type = 6;
-    optional State state = 7;
+    optional User user = 4;
+    required Type type = 5;
+    optional State state = 6;
 }
 
 message ItemOrderOffer{
-    required string manufacter_name = 1;
+    required string manufacturer_name = 1;
     required string product_name = 2;
     required float quantity = 3;
     required float unit_price = 4;
@@ -25,17 +24,11 @@ message ItemProductionOffer{
     required float minimum_amount = 3;
     required float maximum_amount = 4;
     required int64 period = 5;
-    required string manufacturer_name = 6;
 }
 
 message User {
     required string username = 1;
     optional string password = 2;
-}
-
-message Subscription {
-    required string manufacturer_name = 1;
-    required bool value = 2;
 }
 
 enum Type{
@@ -45,8 +38,6 @@ enum Type{
     RESPONSE = 3;
     ITEMORDEROFFER = 4;
     ITEMPRODUCTIONOFFER = 5;
-    SUBSCRIPTION = 6;
-    NOTIFICATION = 7;
 }
 
 message State {

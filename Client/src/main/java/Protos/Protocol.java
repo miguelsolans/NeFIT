@@ -1723,21 +1723,21 @@ public final class Protocol {
           com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>required string manufacter_name = 1;</code>
-     * @return Whether the manufacterName field is set.
+     * <code>required string manufacturer_name = 1;</code>
+     * @return Whether the manufacturerName field is set.
      */
-    boolean hasManufacterName();
+    boolean hasManufacturerName();
     /**
-     * <code>required string manufacter_name = 1;</code>
-     * @return The manufacterName.
+     * <code>required string manufacturer_name = 1;</code>
+     * @return The manufacturerName.
      */
-    java.lang.String getManufacterName();
+    java.lang.String getManufacturerName();
     /**
-     * <code>required string manufacter_name = 1;</code>
-     * @return The bytes for manufacterName.
+     * <code>required string manufacturer_name = 1;</code>
+     * @return The bytes for manufacturerName.
      */
     com.google.protobuf.ByteString
-    getManufacterNameBytes();
+    getManufacturerNameBytes();
 
     /**
      * <code>required string product_name = 2;</code>
@@ -1791,7 +1791,7 @@ public final class Protocol {
       super(builder);
     }
     private ItemOrderOffer() {
-      manufacterName_ = "";
+      manufacturerName_ = "";
       productName_ = "";
     }
 
@@ -1829,7 +1829,7 @@ public final class Protocol {
             case 10: {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000001;
-              manufacterName_ = bs;
+              manufacturerName_ = bs;
               break;
             }
             case 18: {
@@ -1881,21 +1881,21 @@ public final class Protocol {
     }
 
     private int bitField0_;
-    public static final int MANUFACTER_NAME_FIELD_NUMBER = 1;
-    private volatile java.lang.Object manufacterName_;
+    public static final int MANUFACTURER_NAME_FIELD_NUMBER = 1;
+    private volatile java.lang.Object manufacturerName_;
     /**
-     * <code>required string manufacter_name = 1;</code>
-     * @return Whether the manufacterName field is set.
+     * <code>required string manufacturer_name = 1;</code>
+     * @return Whether the manufacturerName field is set.
      */
-    public boolean hasManufacterName() {
+    public boolean hasManufacturerName() {
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>required string manufacter_name = 1;</code>
-     * @return The manufacterName.
+     * <code>required string manufacturer_name = 1;</code>
+     * @return The manufacturerName.
      */
-    public java.lang.String getManufacterName() {
-      java.lang.Object ref = manufacterName_;
+    public java.lang.String getManufacturerName() {
+      java.lang.Object ref = manufacturerName_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
@@ -1903,23 +1903,23 @@ public final class Protocol {
                 (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
-          manufacterName_ = s;
+          manufacturerName_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>required string manufacter_name = 1;</code>
-     * @return The bytes for manufacterName.
+     * <code>required string manufacturer_name = 1;</code>
+     * @return The bytes for manufacturerName.
      */
     public com.google.protobuf.ByteString
-    getManufacterNameBytes() {
-      java.lang.Object ref = manufacterName_;
+    getManufacturerNameBytes() {
+      java.lang.Object ref = manufacturerName_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b =
                 com.google.protobuf.ByteString.copyFromUtf8(
                         (java.lang.String) ref);
-        manufacterName_ = b;
+        manufacturerName_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -2012,7 +2012,7 @@ public final class Protocol {
       if (isInitialized == 1) return true;
       if (isInitialized == 0) return false;
 
-      if (!hasManufacterName()) {
+      if (!hasManufacturerName()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -2036,7 +2036,7 @@ public final class Protocol {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
             throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, manufacterName_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, manufacturerName_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, productName_);
@@ -2057,7 +2057,7 @@ public final class Protocol {
 
       size = 0;
       if (((bitField0_ & 0x00000001) != 0)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, manufacterName_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, manufacturerName_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, productName_);
@@ -2085,10 +2085,10 @@ public final class Protocol {
       }
       Protos.Protocol.ItemOrderOffer other = (Protos.Protocol.ItemOrderOffer) obj;
 
-      if (hasManufacterName() != other.hasManufacterName()) return false;
-      if (hasManufacterName()) {
-        if (!getManufacterName()
-                .equals(other.getManufacterName())) return false;
+      if (hasManufacturerName() != other.hasManufacturerName()) return false;
+      if (hasManufacturerName()) {
+        if (!getManufacturerName()
+                .equals(other.getManufacturerName())) return false;
       }
       if (hasProductName() != other.hasProductName()) return false;
       if (hasProductName()) {
@@ -2118,9 +2118,9 @@ public final class Protocol {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      if (hasManufacterName()) {
-        hash = (37 * hash) + MANUFACTER_NAME_FIELD_NUMBER;
-        hash = (53 * hash) + getManufacterName().hashCode();
+      if (hasManufacturerName()) {
+        hash = (37 * hash) + MANUFACTURER_NAME_FIELD_NUMBER;
+        hash = (53 * hash) + getManufacturerName().hashCode();
       }
       if (hasProductName()) {
         hash = (37 * hash) + PRODUCT_NAME_FIELD_NUMBER;
@@ -2269,7 +2269,7 @@ public final class Protocol {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        manufacterName_ = "";
+        manufacturerName_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
         productName_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -2308,7 +2308,7 @@ public final class Protocol {
         if (((from_bitField0_ & 0x00000001) != 0)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.manufacterName_ = manufacterName_;
+        result.manufacturerName_ = manufacturerName_;
         if (((from_bitField0_ & 0x00000002) != 0)) {
           to_bitField0_ |= 0x00000002;
         }
@@ -2370,9 +2370,9 @@ public final class Protocol {
 
       public Builder mergeFrom(Protos.Protocol.ItemOrderOffer other) {
         if (other == Protos.Protocol.ItemOrderOffer.getDefaultInstance()) return this;
-        if (other.hasManufacterName()) {
+        if (other.hasManufacturerName()) {
           bitField0_ |= 0x00000001;
-          manufacterName_ = other.manufacterName_;
+          manufacturerName_ = other.manufacturerName_;
           onChanged();
         }
         if (other.hasProductName()) {
@@ -2393,7 +2393,7 @@ public final class Protocol {
 
       @java.lang.Override
       public final boolean isInitialized() {
-        if (!hasManufacterName()) {
+        if (!hasManufacturerName()) {
           return false;
         }
         if (!hasProductName()) {
@@ -2428,26 +2428,26 @@ public final class Protocol {
       }
       private int bitField0_;
 
-      private java.lang.Object manufacterName_ = "";
+      private java.lang.Object manufacturerName_ = "";
       /**
-       * <code>required string manufacter_name = 1;</code>
-       * @return Whether the manufacterName field is set.
+       * <code>required string manufacturer_name = 1;</code>
+       * @return Whether the manufacturerName field is set.
        */
-      public boolean hasManufacterName() {
+      public boolean hasManufacturerName() {
         return ((bitField0_ & 0x00000001) != 0);
       }
       /**
-       * <code>required string manufacter_name = 1;</code>
-       * @return The manufacterName.
+       * <code>required string manufacturer_name = 1;</code>
+       * @return The manufacturerName.
        */
-      public java.lang.String getManufacterName() {
-        java.lang.Object ref = manufacterName_;
+      public java.lang.String getManufacturerName() {
+        java.lang.Object ref = manufacturerName_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
                   (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
-            manufacterName_ = s;
+            manufacturerName_ = s;
           }
           return s;
         } else {
@@ -2455,59 +2455,59 @@ public final class Protocol {
         }
       }
       /**
-       * <code>required string manufacter_name = 1;</code>
-       * @return The bytes for manufacterName.
+       * <code>required string manufacturer_name = 1;</code>
+       * @return The bytes for manufacturerName.
        */
       public com.google.protobuf.ByteString
-      getManufacterNameBytes() {
-        java.lang.Object ref = manufacterName_;
+      getManufacturerNameBytes() {
+        java.lang.Object ref = manufacturerName_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b =
                   com.google.protobuf.ByteString.copyFromUtf8(
                           (java.lang.String) ref);
-          manufacterName_ = b;
+          manufacturerName_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>required string manufacter_name = 1;</code>
-       * @param value The manufacterName to set.
+       * <code>required string manufacturer_name = 1;</code>
+       * @param value The manufacturerName to set.
        * @return This builder for chaining.
        */
-      public Builder setManufacterName(
+      public Builder setManufacturerName(
               java.lang.String value) {
         if (value == null) {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000001;
-        manufacterName_ = value;
+        manufacturerName_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>required string manufacter_name = 1;</code>
+       * <code>required string manufacturer_name = 1;</code>
        * @return This builder for chaining.
        */
-      public Builder clearManufacterName() {
+      public Builder clearManufacturerName() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        manufacterName_ = getDefaultInstance().getManufacterName();
+        manufacturerName_ = getDefaultInstance().getManufacturerName();
         onChanged();
         return this;
       }
       /**
-       * <code>required string manufacter_name = 1;</code>
-       * @param value The bytes for manufacterName to set.
+       * <code>required string manufacturer_name = 1;</code>
+       * @param value The bytes for manufacturerName to set.
        * @return This builder for chaining.
        */
-      public Builder setManufacterNameBytes(
+      public Builder setManufacturerNameBytes(
               com.google.protobuf.ByteString value) {
         if (value == null) {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000001;
-        manufacterName_ = value;
+        manufacturerName_ = value;
         onChanged();
         return this;
       }
@@ -2786,23 +2786,6 @@ public final class Protocol {
      * @return The period.
      */
     long getPeriod();
-
-    /**
-     * <code>required string manufacturer_name = 6;</code>
-     * @return Whether the manufacturerName field is set.
-     */
-    boolean hasManufacturerName();
-    /**
-     * <code>required string manufacturer_name = 6;</code>
-     * @return The manufacturerName.
-     */
-    java.lang.String getManufacturerName();
-    /**
-     * <code>required string manufacturer_name = 6;</code>
-     * @return The bytes for manufacturerName.
-     */
-    com.google.protobuf.ByteString
-    getManufacturerNameBytes();
   }
   /**
    * Protobuf type {@code Protos.ItemProductionOffer}
@@ -2818,7 +2801,6 @@ public final class Protocol {
     }
     private ItemProductionOffer() {
       name_ = "";
-      manufacturerName_ = "";
     }
 
     @java.lang.Override
@@ -2876,12 +2858,6 @@ public final class Protocol {
             case 40: {
               bitField0_ |= 0x00000010;
               period_ = input.readInt64();
-              break;
-            }
-            case 50: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000020;
-              manufacturerName_ = bs;
               break;
             }
             default: {
@@ -3030,51 +3006,6 @@ public final class Protocol {
       return period_;
     }
 
-    public static final int MANUFACTURER_NAME_FIELD_NUMBER = 6;
-    private volatile java.lang.Object manufacturerName_;
-    /**
-     * <code>required string manufacturer_name = 6;</code>
-     * @return Whether the manufacturerName field is set.
-     */
-    public boolean hasManufacturerName() {
-      return ((bitField0_ & 0x00000020) != 0);
-    }
-    /**
-     * <code>required string manufacturer_name = 6;</code>
-     * @return The manufacturerName.
-     */
-    public java.lang.String getManufacturerName() {
-      java.lang.Object ref = manufacturerName_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs =
-                (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          manufacturerName_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string manufacturer_name = 6;</code>
-     * @return The bytes for manufacturerName.
-     */
-    public com.google.protobuf.ByteString
-    getManufacturerNameBytes() {
-      java.lang.Object ref = manufacturerName_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b =
-                com.google.protobuf.ByteString.copyFromUtf8(
-                        (java.lang.String) ref);
-        manufacturerName_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -3102,10 +3033,6 @@ public final class Protocol {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!hasManufacturerName()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -3127,9 +3054,6 @@ public final class Protocol {
       }
       if (((bitField0_ & 0x00000010) != 0)) {
         output.writeInt64(5, period_);
-      }
-      if (((bitField0_ & 0x00000020) != 0)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, manufacturerName_);
       }
       unknownFields.writeTo(output);
     }
@@ -3158,9 +3082,6 @@ public final class Protocol {
       if (((bitField0_ & 0x00000010) != 0)) {
         size += com.google.protobuf.CodedOutputStream
                 .computeInt64Size(5, period_);
-      }
-      if (((bitField0_ & 0x00000020) != 0)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, manufacturerName_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3205,11 +3126,6 @@ public final class Protocol {
         if (getPeriod()
                 != other.getPeriod()) return false;
       }
-      if (hasManufacturerName() != other.hasManufacturerName()) return false;
-      if (hasManufacturerName()) {
-        if (!getManufacturerName()
-                .equals(other.getManufacturerName())) return false;
-      }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -3244,10 +3160,6 @@ public final class Protocol {
         hash = (37 * hash) + PERIOD_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
                 getPeriod());
-      }
-      if (hasManufacturerName()) {
-        hash = (37 * hash) + MANUFACTURER_NAME_FIELD_NUMBER;
-        hash = (53 * hash) + getManufacturerName().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -3392,8 +3304,6 @@ public final class Protocol {
         bitField0_ = (bitField0_ & ~0x00000008);
         period_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000010);
-        manufacturerName_ = "";
-        bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
 
@@ -3442,10 +3352,6 @@ public final class Protocol {
           result.period_ = period_;
           to_bitField0_ |= 0x00000010;
         }
-        if (((from_bitField0_ & 0x00000020) != 0)) {
-          to_bitField0_ |= 0x00000020;
-        }
-        result.manufacturerName_ = manufacturerName_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -3512,11 +3418,6 @@ public final class Protocol {
         if (other.hasPeriod()) {
           setPeriod(other.getPeriod());
         }
-        if (other.hasManufacturerName()) {
-          bitField0_ |= 0x00000020;
-          manufacturerName_ = other.manufacturerName_;
-          onChanged();
-        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -3537,9 +3438,6 @@ public final class Protocol {
           return false;
         }
         if (!hasPeriod()) {
-          return false;
-        }
-        if (!hasManufacturerName()) {
           return false;
         }
         return true;
@@ -3793,90 +3691,6 @@ public final class Protocol {
       public Builder clearPeriod() {
         bitField0_ = (bitField0_ & ~0x00000010);
         period_ = 0L;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object manufacturerName_ = "";
-      /**
-       * <code>required string manufacturer_name = 6;</code>
-       * @return Whether the manufacturerName field is set.
-       */
-      public boolean hasManufacturerName() {
-        return ((bitField0_ & 0x00000020) != 0);
-      }
-      /**
-       * <code>required string manufacturer_name = 6;</code>
-       * @return The manufacturerName.
-       */
-      public java.lang.String getManufacturerName() {
-        java.lang.Object ref = manufacturerName_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-                  (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            manufacturerName_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string manufacturer_name = 6;</code>
-       * @return The bytes for manufacturerName.
-       */
-      public com.google.protobuf.ByteString
-      getManufacturerNameBytes() {
-        java.lang.Object ref = manufacturerName_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
-                  com.google.protobuf.ByteString.copyFromUtf8(
-                          (java.lang.String) ref);
-          manufacturerName_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string manufacturer_name = 6;</code>
-       * @param value The manufacturerName to set.
-       * @return This builder for chaining.
-       */
-      public Builder setManufacturerName(
-              java.lang.String value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000020;
-        manufacturerName_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string manufacturer_name = 6;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearManufacturerName() {
-        bitField0_ = (bitField0_ & ~0x00000020);
-        manufacturerName_ = getDefaultInstance().getManufacturerName();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string manufacturer_name = 6;</code>
-       * @param value The bytes for manufacturerName to set.
-       * @return This builder for chaining.
-       */
-      public Builder setManufacturerNameBytes(
-              com.google.protobuf.ByteString value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000020;
-        manufacturerName_ = value;
         onChanged();
         return this;
       }
@@ -5461,18 +5275,17 @@ public final class Protocol {
                     "tion_offer\030\003 \001(\0132\033.Protos.ItemProduction" +
                     "Offer\022\032\n\004user\030\004 \001(\0132\014.Protos.User\022\032\n\004typ" +
                     "e\030\005 \002(\0162\014.Protos.Type\022\034\n\005state\030\006 \001(\0132\r.P" +
-                    "rotos.State\"e\n\016ItemOrderOffer\022\027\n\017manufac" +
-                    "ter_name\030\001 \002(\t\022\024\n\014product_name\030\002 \002(\t\022\020\n\010" +
-                    "quantity\030\003 \002(\002\022\022\n\nunit_price\030\004 \002(\002\"\222\001\n\023I" +
-                    "temProductionOffer\022\014\n\004name\030\001 \002(\t\022\022\n\nunit" +
-                    "_price\030\002 \002(\002\022\026\n\016minimum_amount\030\003 \002(\002\022\026\n\016" +
-                    "maximum_amount\030\004 \002(\002\022\016\n\006period\030\005 \002(\003\022\031\n\021" +
-                    "manufacturer_name\030\006 \002(\t\"*\n\004User\022\020\n\010usern" +
-                    "ame\030\001 \002(\t\022\020\n\010password\030\002 \001(\t\",\n\005State\022\016\n\006" +
-                    "result\030\001 \001(\010\022\023\n\013description\030\002 \001(\t*f\n\004Typ" +
-                    "e\022\t\n\005LOGIN\020\000\022\n\n\006LOGOUT\020\001\022\014\n\010REGISTER\020\002\022\014" +
-                    "\n\010RESPONSE\020\003\022\022\n\016ITEMORDEROFFER\020\004\022\027\n\023ITEM" +
-                    "PRODUCTIONOFFER\020\005"
+                    "rotos.State\"g\n\016ItemOrderOffer\022\031\n\021manufac" +
+                    "turer_name\030\001 \002(\t\022\024\n\014product_name\030\002 \002(\t\022\020" +
+                    "\n\010quantity\030\003 \002(\002\022\022\n\nunit_price\030\004 \002(\002\"w\n\023" +
+                    "ItemProductionOffer\022\014\n\004name\030\001 \002(\t\022\022\n\nuni" +
+                    "t_price\030\002 \002(\002\022\026\n\016minimum_amount\030\003 \002(\002\022\026\n" +
+                    "\016maximum_amount\030\004 \002(\002\022\016\n\006period\030\005 \002(\003\"*\n" +
+                    "\004User\022\020\n\010username\030\001 \002(\t\022\020\n\010password\030\002 \001(" +
+                    "\t\",\n\005State\022\016\n\006result\030\001 \001(\010\022\023\n\013descriptio" +
+                    "n\030\002 \001(\t*f\n\004Type\022\t\n\005LOGIN\020\000\022\n\n\006LOGOUT\020\001\022\014" +
+                    "\n\010REGISTER\020\002\022\014\n\010RESPONSE\020\003\022\022\n\016ITEMORDERO" +
+                    "FFER\020\004\022\027\n\023ITEMPRODUCTIONOFFER\020\005"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
             .internalBuildGeneratedFileFrom(descriptorData,
@@ -5489,13 +5302,13 @@ public final class Protocol {
     internal_static_Protos_ItemOrderOffer_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
             internal_static_Protos_ItemOrderOffer_descriptor,
-            new java.lang.String[] { "ManufacterName", "ProductName", "Quantity", "UnitPrice", });
+            new java.lang.String[] { "ManufacturerName", "ProductName", "Quantity", "UnitPrice", });
     internal_static_Protos_ItemProductionOffer_descriptor =
             getDescriptor().getMessageTypes().get(2);
     internal_static_Protos_ItemProductionOffer_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
             internal_static_Protos_ItemProductionOffer_descriptor,
-            new java.lang.String[] { "Name", "UnitPrice", "MinimumAmount", "MaximumAmount", "Period", "ManufacturerName", });
+            new java.lang.String[] { "Name", "UnitPrice", "MinimumAmount", "MaximumAmount", "Period", });
     internal_static_Protos_User_descriptor =
             getDescriptor().getMessageTypes().get(3);
     internal_static_Protos_User_fieldAccessorTable = new
