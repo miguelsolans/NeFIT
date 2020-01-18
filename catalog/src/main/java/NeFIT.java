@@ -5,16 +5,24 @@
  */
 
 import Controller.*;
+import core.Cors;
 import core.Template;
 import health.TemplateHealthCheck;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
+
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
+import java.util.EnumSet;
 
 public class NeFIT extends Application<NefitConfiguration> {
 
     @Override
     public void run(NefitConfiguration configuration, Environment environment) {
+
+        Cors.insecure(environment); // Check if works with Frontend with and without Cors
 
         final Template template = configuration.buildTemplate();
         environment.healthChecks().register("template", new TemplateHealthCheck(template));
@@ -23,6 +31,7 @@ public class NeFIT extends Application<NefitConfiguration> {
         environment.jersey().register(new ItemOrderController(environment.getValidator()));
         environment.jersey().register(new ItemProductionController(environment.getValidator()));
         environment.jersey().register(new ManufacturerController(environment.getValidator()));
+
 
     }
 

@@ -17,12 +17,15 @@ public class ItemOrderOffer {
     double quantity;
     @NotNull
     double unitPrice;
+    @NotNull
+    boolean finished;
 
     public ItemOrderOffer(String manufacturerName, String productName, double quantity, double unitPrice) {
         this.manufacturerName = manufacturerName;
         this.productName = productName;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
+        this.finished = false;
     }
 
     public String getManufacterName() {
@@ -55,5 +58,13 @@ public class ItemOrderOffer {
 
     public void setUnitPrice(float unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public boolean getFinished() {
+        return this.finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
     }
 }

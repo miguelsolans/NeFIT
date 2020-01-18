@@ -2,14 +2,22 @@ package business;
 
 import org.joda.time.DateTime;
 
-public class ItemProductionOffer {
+import javax.validation.constraints.NotNull;
 
+public class ItemProductionOffer {
+    @NotNull
     String productName;
+    @NotNull
     String manufacturerName;
+    @NotNull
     double unitPrice;
+    @NotNull
     double minimumAmout;
+    @NotNull
     double maximumAmount;
+    @NotNull
     DateTime start;
+    @NotNull
     DateTime end;
 
 
