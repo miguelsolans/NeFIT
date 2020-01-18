@@ -212,6 +212,7 @@ public class Client implements Runnable {
 
     // IMPORTER MENU INTERFACE
     private boolean importerMenu() throws IOException {
+        System.out.println("What do you want to do, " + username + "? \nNotifications are on!");
         while (true) {
             System.out.println("\n1) New order \n2) Subscribe manufacturer");
             System.out.println("3) Unsubscribe manufacturer \n4) Toggle order notifications \n5) Logout");
@@ -272,9 +273,9 @@ public class Client implements Runnable {
 
     // MANUFACTURER MENU INTERFACE
     private boolean manufacturerMenu() throws IOException {
-        System.out.println("Welcome back " + username + "! You logged in as a manufacturer. Notifications are on!");
+        System.out.println("What do you want to do, " + username + "? \nNotifications are on!");
         while (true) {
-            System.out.println("\n1) New offer \n2) Logout");
+            System.out.println("\n1) New offer \n2) Toggle order notifications \n3) Logout");
             System.out.print("-> ");
 
             switch (this.sin.readLine()) {
@@ -288,6 +289,15 @@ public class Client implements Runnable {
                     break;
 
                 case "2":
+                    if (!notifications(!this.notifications))
+                        System.out.println("\nSOMETHING WENT WRONG WHILE TOGGLING NOTIFICATIONS\n");
+                    else {
+                        System.out.println("\nNOTIFICATIONS TOGGLING SUCCESSFUL.\n");
+                        return true;
+                    }
+                    break;
+
+                case "3":
                     if (!logout())
                         System.out.println("\nLOGOUT UNSUCCESSFUL\n");
                     else {
