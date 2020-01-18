@@ -1,11 +1,13 @@
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.zeromq.ZMQ;
+
 import Protos.Protocol;
 
 public class Negotiator {
     private ProductionOffers productionMap; // key : fabricantName; Value: (key:Artigo;value:production
     private ZMQ.Socket push;
     private ZMQ.Socket pull;
+
 
     public Negotiator(ZMQ.Socket push, ZMQ.Socket pull) {
         this.push = push;
@@ -28,9 +30,6 @@ public class Negotiator {
         //Receiving part
         ZMQ.Socket pull = context.socket(ZMQ.PULL);
         pull.bind("tcp://*:"+portPULL);
-
-
-
 
         Negotiator negotiator = new Negotiator(push,pull);
 
@@ -78,6 +77,7 @@ public class Negotiator {
         }
         return null;
     }
+
 
     private boolean addOffer(Protocol.Message message){
         Protocol.User user = message.getUser();

@@ -1,5 +1,4 @@
 public class Offer {
-
     private String userName;
     private String fabricantName;
     private String articleName;
@@ -8,6 +7,7 @@ public class Offer {
     private Float globalPrice;
 
     public Offer(String fabricantName, String articleName, Float quantity, Float unitPrice,String userName) {
+
         this.fabricantName = fabricantName;
         this.articleName = articleName;
         this.quantity = quantity;
@@ -27,4 +27,5 @@ public class Offer {
     public String getArticleName() { return this.articleName; }
 
     public String getUserName() { return userName;}
+
 }

@@ -2,12 +2,14 @@ package teste;
 
 import org.zeromq.ZMQ;
 import Protos.Protocol;
+
 public class TestConsumer {
 
     public static void main(String[] args){
         ZMQ.Context context = ZMQ.context(1);
 
         ZMQ.Socket push = context.socket(ZMQ.PUSH);
+
         push.connect("tcp://localhost:12345");
 
         Protocol.User user = Protocol.User.newBuilder().

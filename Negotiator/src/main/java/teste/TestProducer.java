@@ -2,7 +2,9 @@ package teste;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.zeromq.ZMQ;
+
 import Protos.Protocol;
+
 
 public class TestProducer {
 
@@ -11,6 +13,7 @@ public class TestProducer {
         ZMQ.Context context = ZMQ.context(1);
 
         ZMQ.Socket push = context.socket(ZMQ.PUSH);
+
         push.connect("tcp://localhost:12345");
 
         ZMQ.Socket pull = context.socket(ZMQ.PULL);
@@ -19,6 +22,7 @@ public class TestProducer {
         Protocol.User user = Protocol.User.newBuilder().
                                             setUsername("Tifany").
                                             build();
+
 
         Protocol.ItemProductionOffer productionOffer = Protocol.ItemProductionOffer.newBuilder().
                                                                 setArticleName("Bananas").

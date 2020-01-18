@@ -5,7 +5,8 @@
 server(Port) ->
     clients_state_manager:start(),
     {ok, LSock} = gen_tcp:listen(Port, [binary, {packet, 0}, {reuseaddr, true}, {active, true}]),
-    acceptor(LSock).
+    spawn(fun() -> acceptor(LSock) end),
+    supervisor_manager:start().
 
 % function for create an ErlangProcess per client and keep accepting new connections
 acceptor(LSock) ->

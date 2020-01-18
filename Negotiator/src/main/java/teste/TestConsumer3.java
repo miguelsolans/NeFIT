@@ -3,7 +3,7 @@ package teste;
 import Protos.Protocol;
 import org.zeromq.ZMQ;
 
-public class TestConsumer3 {
+tConsumer3 {
 
     public static void main(String[] args){
         ZMQ.Context context = ZMQ.context(1);
@@ -14,6 +14,7 @@ public class TestConsumer3 {
         Protocol.User user = Protocol.User.newBuilder().
                 setUsername("Armindo").
                 build();
+
 
 
         Protocol.ItemOrderOffer itemOrderOffer = Protocol.ItemOrderOffer.newBuilder().

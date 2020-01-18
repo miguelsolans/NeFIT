@@ -61,7 +61,7 @@
        }.
 
 -type 'ItemOrderOffer'() ::
-      #{manufacter_name         := iodata(),        % = 1
+      #{manufacturer_name       := iodata(),        % = 1
         product_name            := iodata(),        % = 2
         quantity                := float() | integer() | infinity | '-infinity' | nan, % = 3
         unit_price              := float() | integer() | infinity | '-infinity' | nan % = 4
@@ -72,8 +72,7 @@
         unit_price              := float() | integer() | infinity | '-infinity' | nan, % = 2
         minimum_amount          := float() | integer() | infinity | '-infinity' | nan, % = 3
         maximum_amount          := float() | integer() | infinity | '-infinity' | nan, % = 4
-        period                  := integer(),       % = 5, 32 bits
-        manufacturer_name       := iodata()         % = 6
+        period                  := integer()        % = 5, 32 bits
        }.
 
 -type 'User'() ::
@@ -176,7 +175,7 @@ encode_msg_ItemOrderOffer(Msg, TrUserData) ->
     encode_msg_ItemOrderOffer(Msg, <<>>, TrUserData).
 
 
-encode_msg_ItemOrderOffer(#{manufacter_name := F1,
+encode_msg_ItemOrderOffer(#{manufacturer_name := F1,
 			    product_name := F2, quantity := F3,
 			    unit_price := F4},
 			  Bin, TrUserData) ->
@@ -203,8 +202,7 @@ encode_msg_ItemProductionOffer(Msg, TrUserData) ->
 
 encode_msg_ItemProductionOffer(#{name := F1,
 				 unit_price := F2, minimum_amount := F3,
-				 maximum_amount := F4, period := F5,
-				 manufacturer_name := F6},
+				 maximum_amount := F4, period := F5},
 			       Bin, TrUserData) ->
     B1 = begin
 	   TrF1 = id(F1, TrUserData),
@@ -222,13 +220,9 @@ encode_msg_ItemProductionOffer(#{name := F1,
 	   TrF4 = id(F4, TrUserData),
 	   e_type_float(TrF4, <<B3/binary, 37>>, TrUserData)
 	 end,
-    B5 = begin
-	   TrF5 = id(F5, TrUserData),
-	   e_type_int64(TrF5, <<B4/binary, 40>>, TrUserData)
-	 end,
     begin
-      TrF6 = id(F6, TrUserData),
-      e_type_string(TrF6, <<B5/binary, 50>>, TrUserData)
+      TrF5 = id(F5, TrUserData),
+      e_type_int64(TrF5, <<B4/binary, 40>>, TrUserData)
     end.
 
 encode_msg_User(Msg, TrUserData) ->
@@ -748,8 +742,9 @@ decode_msg_ItemOrderOffer(Bin, TrUserData) ->
 
 dfp_read_field_def_ItemOrderOffer(<<10, Rest/binary>>,
 				  Z1, Z2, F@_1, F@_2, F@_3, F@_4, TrUserData) ->
-    d_field_ItemOrderOffer_manufacter_name(Rest, Z1, Z2,
-					   F@_1, F@_2, F@_3, F@_4, TrUserData);
+    d_field_ItemOrderOffer_manufacturer_name(Rest, Z1, Z2,
+					     F@_1, F@_2, F@_3, F@_4,
+					     TrUserData);
 dfp_read_field_def_ItemOrderOffer(<<18, Rest/binary>>,
 				  Z1, Z2, F@_1, F@_2, F@_3, F@_4, TrUserData) ->
     d_field_ItemOrderOffer_product_name(Rest, Z1, Z2, F@_1,
@@ -764,7 +759,7 @@ dfp_read_field_def_ItemOrderOffer(<<37, Rest/binary>>,
 				      F@_2, F@_3, F@_4, TrUserData);
 dfp_read_field_def_ItemOrderOffer(<<>>, 0, 0, F@_1,
 				  F@_2, F@_3, F@_4, _) ->
-    #{manufacter_name => F@_1, product_name => F@_2,
+    #{manufacturer_name => F@_1, product_name => F@_2,
       quantity => F@_3, unit_price => F@_4};
 dfp_read_field_def_ItemOrderOffer(Other, Z1, Z2, F@_1,
 				  F@_2, F@_3, F@_4, TrUserData) ->
@@ -784,8 +779,9 @@ dg_read_field_def_ItemOrderOffer(<<0:1, X:7,
     Key = X bsl N + Acc,
     case Key of
       10 ->
-	  d_field_ItemOrderOffer_manufacter_name(Rest, 0, 0, F@_1,
-						 F@_2, F@_3, F@_4, TrUserData);
+	  d_field_ItemOrderOffer_manufacturer_name(Rest, 0, 0,
+						   F@_1, F@_2, F@_3, F@_4,
+						   TrUserData);
       18 ->
 	  d_field_ItemOrderOffer_product_name(Rest, 0, 0, F@_1,
 					      F@_2, F@_3, F@_4, TrUserData);
@@ -817,21 +813,21 @@ dg_read_field_def_ItemOrderOffer(<<0:1, X:7,
     end;
 dg_read_field_def_ItemOrderOffer(<<>>, 0, 0, F@_1, F@_2,
 				 F@_3, F@_4, _) ->
-    #{manufacter_name => F@_1, product_name => F@_2,
+    #{manufacturer_name => F@_1, product_name => F@_2,
       quantity => F@_3, unit_price => F@_4}.
 
-d_field_ItemOrderOffer_manufacter_name(<<1:1, X:7,
-					 Rest/binary>>,
-				       N, Acc, F@_1, F@_2, F@_3, F@_4,
-				       TrUserData)
+d_field_ItemOrderOffer_manufacturer_name(<<1:1, X:7,
+					   Rest/binary>>,
+					 N, Acc, F@_1, F@_2, F@_3, F@_4,
+					 TrUserData)
     when N < 57 ->
-    d_field_ItemOrderOffer_manufacter_name(Rest, N + 7,
-					   X bsl N + Acc, F@_1, F@_2, F@_3,
-					   F@_4, TrUserData);
-d_field_ItemOrderOffer_manufacter_name(<<0:1, X:7,
-					 Rest/binary>>,
-				       N, Acc, _, F@_2, F@_3, F@_4,
-				       TrUserData) ->
+    d_field_ItemOrderOffer_manufacturer_name(Rest, N + 7,
+					     X bsl N + Acc, F@_1, F@_2, F@_3,
+					     F@_4, TrUserData);
+d_field_ItemOrderOffer_manufacturer_name(<<0:1, X:7,
+					   Rest/binary>>,
+					 N, Acc, _, F@_2, F@_3, F@_4,
+					 TrUserData) ->
     {NewFValue, RestF} = begin
 			   Len = X bsl N + Acc,
 			   <<Utf8:Len/binary, Rest2/binary>> = Rest,
@@ -960,140 +956,125 @@ decode_msg_ItemProductionOffer(Bin, TrUserData) ->
 					   id('$undef', TrUserData),
 					   id('$undef', TrUserData),
 					   id('$undef', TrUserData),
-					   id('$undef', TrUserData),
 					   TrUserData).
 
 dfp_read_field_def_ItemProductionOffer(<<10,
 					 Rest/binary>>,
 				       Z1, Z2, F@_1, F@_2, F@_3, F@_4, F@_5,
-				       F@_6, TrUserData) ->
+				       TrUserData) ->
     d_field_ItemProductionOffer_name(Rest, Z1, Z2, F@_1,
-				     F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData);
+				     F@_2, F@_3, F@_4, F@_5, TrUserData);
 dfp_read_field_def_ItemProductionOffer(<<21,
 					 Rest/binary>>,
 				       Z1, Z2, F@_1, F@_2, F@_3, F@_4, F@_5,
-				       F@_6, TrUserData) ->
+				       TrUserData) ->
     d_field_ItemProductionOffer_unit_price(Rest, Z1, Z2,
-					   F@_1, F@_2, F@_3, F@_4, F@_5, F@_6,
+					   F@_1, F@_2, F@_3, F@_4, F@_5,
 					   TrUserData);
 dfp_read_field_def_ItemProductionOffer(<<29,
 					 Rest/binary>>,
 				       Z1, Z2, F@_1, F@_2, F@_3, F@_4, F@_5,
-				       F@_6, TrUserData) ->
+				       TrUserData) ->
     d_field_ItemProductionOffer_minimum_amount(Rest, Z1, Z2,
 					       F@_1, F@_2, F@_3, F@_4, F@_5,
-					       F@_6, TrUserData);
+					       TrUserData);
 dfp_read_field_def_ItemProductionOffer(<<37,
 					 Rest/binary>>,
 				       Z1, Z2, F@_1, F@_2, F@_3, F@_4, F@_5,
-				       F@_6, TrUserData) ->
+				       TrUserData) ->
     d_field_ItemProductionOffer_maximum_amount(Rest, Z1, Z2,
 					       F@_1, F@_2, F@_3, F@_4, F@_5,
-					       F@_6, TrUserData);
+					       TrUserData);
 dfp_read_field_def_ItemProductionOffer(<<40,
 					 Rest/binary>>,
 				       Z1, Z2, F@_1, F@_2, F@_3, F@_4, F@_5,
-				       F@_6, TrUserData) ->
+				       TrUserData) ->
     d_field_ItemProductionOffer_period(Rest, Z1, Z2, F@_1,
-				       F@_2, F@_3, F@_4, F@_5, F@_6,
-				       TrUserData);
-dfp_read_field_def_ItemProductionOffer(<<50,
-					 Rest/binary>>,
-				       Z1, Z2, F@_1, F@_2, F@_3, F@_4, F@_5,
-				       F@_6, TrUserData) ->
-    d_field_ItemProductionOffer_manufacturer_name(Rest, Z1,
-						  Z2, F@_1, F@_2, F@_3, F@_4,
-						  F@_5, F@_6, TrUserData);
+				       F@_2, F@_3, F@_4, F@_5, TrUserData);
 dfp_read_field_def_ItemProductionOffer(<<>>, 0, 0, F@_1,
-				       F@_2, F@_3, F@_4, F@_5, F@_6, _) ->
+				       F@_2, F@_3, F@_4, F@_5, _) ->
     #{name => F@_1, unit_price => F@_2,
       minimum_amount => F@_3, maximum_amount => F@_4,
-      period => F@_5, manufacturer_name => F@_6};
+      period => F@_5};
 dfp_read_field_def_ItemProductionOffer(Other, Z1, Z2,
-				       F@_1, F@_2, F@_3, F@_4, F@_5, F@_6,
+				       F@_1, F@_2, F@_3, F@_4, F@_5,
 				       TrUserData) ->
     dg_read_field_def_ItemProductionOffer(Other, Z1, Z2,
-					  F@_1, F@_2, F@_3, F@_4, F@_5, F@_6,
+					  F@_1, F@_2, F@_3, F@_4, F@_5,
 					  TrUserData).
 
 dg_read_field_def_ItemProductionOffer(<<1:1, X:7,
 					Rest/binary>>,
 				      N, Acc, F@_1, F@_2, F@_3, F@_4, F@_5,
-				      F@_6, TrUserData)
+				      TrUserData)
     when N < 32 - 7 ->
     dg_read_field_def_ItemProductionOffer(Rest, N + 7,
 					  X bsl N + Acc, F@_1, F@_2, F@_3, F@_4,
-					  F@_5, F@_6, TrUserData);
+					  F@_5, TrUserData);
 dg_read_field_def_ItemProductionOffer(<<0:1, X:7,
 					Rest/binary>>,
 				      N, Acc, F@_1, F@_2, F@_3, F@_4, F@_5,
-				      F@_6, TrUserData) ->
+				      TrUserData) ->
     Key = X bsl N + Acc,
     case Key of
       10 ->
 	  d_field_ItemProductionOffer_name(Rest, 0, 0, F@_1, F@_2,
-					   F@_3, F@_4, F@_5, F@_6, TrUserData);
+					   F@_3, F@_4, F@_5, TrUserData);
       21 ->
 	  d_field_ItemProductionOffer_unit_price(Rest, 0, 0, F@_1,
-						 F@_2, F@_3, F@_4, F@_5, F@_6,
+						 F@_2, F@_3, F@_4, F@_5,
 						 TrUserData);
       29 ->
 	  d_field_ItemProductionOffer_minimum_amount(Rest, 0, 0,
 						     F@_1, F@_2, F@_3, F@_4,
-						     F@_5, F@_6, TrUserData);
+						     F@_5, TrUserData);
       37 ->
 	  d_field_ItemProductionOffer_maximum_amount(Rest, 0, 0,
 						     F@_1, F@_2, F@_3, F@_4,
-						     F@_5, F@_6, TrUserData);
+						     F@_5, TrUserData);
       40 ->
 	  d_field_ItemProductionOffer_period(Rest, 0, 0, F@_1,
-					     F@_2, F@_3, F@_4, F@_5, F@_6,
+					     F@_2, F@_3, F@_4, F@_5,
 					     TrUserData);
-      50 ->
-	  d_field_ItemProductionOffer_manufacturer_name(Rest, 0,
-							0, F@_1, F@_2, F@_3,
-							F@_4, F@_5, F@_6,
-							TrUserData);
       _ ->
 	  case Key band 7 of
 	    0 ->
 		skip_varint_ItemProductionOffer(Rest, 0, 0, F@_1, F@_2,
-						F@_3, F@_4, F@_5, F@_6,
-						TrUserData);
+						F@_3, F@_4, F@_5, TrUserData);
 	    1 ->
 		skip_64_ItemProductionOffer(Rest, 0, 0, F@_1, F@_2,
-					    F@_3, F@_4, F@_5, F@_6, TrUserData);
+					    F@_3, F@_4, F@_5, TrUserData);
 	    2 ->
 		skip_length_delimited_ItemProductionOffer(Rest, 0, 0,
 							  F@_1, F@_2, F@_3,
-							  F@_4, F@_5, F@_6,
+							  F@_4, F@_5,
 							  TrUserData);
 	    3 ->
 		skip_group_ItemProductionOffer(Rest, Key bsr 3, 0, F@_1,
-					       F@_2, F@_3, F@_4, F@_5, F@_6,
+					       F@_2, F@_3, F@_4, F@_5,
 					       TrUserData);
 	    5 ->
 		skip_32_ItemProductionOffer(Rest, 0, 0, F@_1, F@_2,
-					    F@_3, F@_4, F@_5, F@_6, TrUserData)
+					    F@_3, F@_4, F@_5, TrUserData)
 	  end
     end;
 dg_read_field_def_ItemProductionOffer(<<>>, 0, 0, F@_1,
-				      F@_2, F@_3, F@_4, F@_5, F@_6, _) ->
+				      F@_2, F@_3, F@_4, F@_5, _) ->
     #{name => F@_1, unit_price => F@_2,
       minimum_amount => F@_3, maximum_amount => F@_4,
-      period => F@_5, manufacturer_name => F@_6}.
+      period => F@_5}.
 
 d_field_ItemProductionOffer_name(<<1:1, X:7,
 				   Rest/binary>>,
-				 N, Acc, F@_1, F@_2, F@_3, F@_4, F@_5, F@_6,
+				 N, Acc, F@_1, F@_2, F@_3, F@_4, F@_5,
 				 TrUserData)
     when N < 57 ->
     d_field_ItemProductionOffer_name(Rest, N + 7,
 				     X bsl N + Acc, F@_1, F@_2, F@_3, F@_4,
-				     F@_5, F@_6, TrUserData);
+				     F@_5, TrUserData);
 d_field_ItemProductionOffer_name(<<0:1, X:7,
 				   Rest/binary>>,
-				 N, Acc, _, F@_2, F@_3, F@_4, F@_5, F@_6,
+				 N, Acc, _, F@_2, F@_3, F@_4, F@_5,
 				 TrUserData) ->
     {NewFValue, RestF} = begin
 			   Len = X bsl N + Acc,
@@ -1104,111 +1085,111 @@ d_field_ItemProductionOffer_name(<<0:1, X:7,
 			 end,
     dfp_read_field_def_ItemProductionOffer(RestF, 0, 0,
 					   NewFValue, F@_2, F@_3, F@_4, F@_5,
-					   F@_6, TrUserData).
+					   TrUserData).
 
 d_field_ItemProductionOffer_unit_price(<<0:16, 128, 127,
 					 Rest/binary>>,
-				       Z1, Z2, F@_1, _, F@_3, F@_4, F@_5, F@_6,
+				       Z1, Z2, F@_1, _, F@_3, F@_4, F@_5,
 				       TrUserData) ->
     dfp_read_field_def_ItemProductionOffer(Rest, Z1, Z2,
 					   F@_1, id(infinity, TrUserData), F@_3,
-					   F@_4, F@_5, F@_6, TrUserData);
+					   F@_4, F@_5, TrUserData);
 d_field_ItemProductionOffer_unit_price(<<0:16, 128, 255,
 					 Rest/binary>>,
-				       Z1, Z2, F@_1, _, F@_3, F@_4, F@_5, F@_6,
+				       Z1, Z2, F@_1, _, F@_3, F@_4, F@_5,
 				       TrUserData) ->
     dfp_read_field_def_ItemProductionOffer(Rest, Z1, Z2,
 					   F@_1, id('-infinity', TrUserData),
-					   F@_3, F@_4, F@_5, F@_6, TrUserData);
+					   F@_3, F@_4, F@_5, TrUserData);
 d_field_ItemProductionOffer_unit_price(<<_:16, 1:1, _:7,
 					 _:1, 127:7, Rest/binary>>,
-				       Z1, Z2, F@_1, _, F@_3, F@_4, F@_5, F@_6,
+				       Z1, Z2, F@_1, _, F@_3, F@_4, F@_5,
 				       TrUserData) ->
     dfp_read_field_def_ItemProductionOffer(Rest, Z1, Z2,
 					   F@_1, id(nan, TrUserData), F@_3,
-					   F@_4, F@_5, F@_6, TrUserData);
+					   F@_4, F@_5, TrUserData);
 d_field_ItemProductionOffer_unit_price(<<Value:32/little-float,
 					 Rest/binary>>,
-				       Z1, Z2, F@_1, _, F@_3, F@_4, F@_5, F@_6,
+				       Z1, Z2, F@_1, _, F@_3, F@_4, F@_5,
 				       TrUserData) ->
     dfp_read_field_def_ItemProductionOffer(Rest, Z1, Z2,
 					   F@_1, id(Value, TrUserData), F@_3,
-					   F@_4, F@_5, F@_6, TrUserData).
+					   F@_4, F@_5, TrUserData).
 
 d_field_ItemProductionOffer_minimum_amount(<<0:16, 128,
 					     127, Rest/binary>>,
 					   Z1, Z2, F@_1, F@_2, _, F@_4, F@_5,
-					   F@_6, TrUserData) ->
+					   TrUserData) ->
     dfp_read_field_def_ItemProductionOffer(Rest, Z1, Z2,
 					   F@_1, F@_2, id(infinity, TrUserData),
-					   F@_4, F@_5, F@_6, TrUserData);
+					   F@_4, F@_5, TrUserData);
 d_field_ItemProductionOffer_minimum_amount(<<0:16, 128,
 					     255, Rest/binary>>,
 					   Z1, Z2, F@_1, F@_2, _, F@_4, F@_5,
-					   F@_6, TrUserData) ->
+					   TrUserData) ->
     dfp_read_field_def_ItemProductionOffer(Rest, Z1, Z2,
 					   F@_1, F@_2,
 					   id('-infinity', TrUserData), F@_4,
-					   F@_5, F@_6, TrUserData);
+					   F@_5, TrUserData);
 d_field_ItemProductionOffer_minimum_amount(<<_:16, 1:1,
 					     _:7, _:1, 127:7, Rest/binary>>,
 					   Z1, Z2, F@_1, F@_2, _, F@_4, F@_5,
-					   F@_6, TrUserData) ->
+					   TrUserData) ->
     dfp_read_field_def_ItemProductionOffer(Rest, Z1, Z2,
 					   F@_1, F@_2, id(nan, TrUserData),
-					   F@_4, F@_5, F@_6, TrUserData);
+					   F@_4, F@_5, TrUserData);
 d_field_ItemProductionOffer_minimum_amount(<<Value:32/little-float,
 					     Rest/binary>>,
 					   Z1, Z2, F@_1, F@_2, _, F@_4, F@_5,
-					   F@_6, TrUserData) ->
+					   TrUserData) ->
     dfp_read_field_def_ItemProductionOffer(Rest, Z1, Z2,
 					   F@_1, F@_2, id(Value, TrUserData),
-					   F@_4, F@_5, F@_6, TrUserData).
+					   F@_4, F@_5, TrUserData).
 
 d_field_ItemProductionOffer_maximum_amount(<<0:16, 128,
 					     127, Rest/binary>>,
 					   Z1, Z2, F@_1, F@_2, F@_3, _, F@_5,
-					   F@_6, TrUserData) ->
+					   TrUserData) ->
     dfp_read_field_def_ItemProductionOffer(Rest, Z1, Z2,
 					   F@_1, F@_2, F@_3,
-					   id(infinity, TrUserData), F@_5, F@_6,
+					   id(infinity, TrUserData), F@_5,
 					   TrUserData);
 d_field_ItemProductionOffer_maximum_amount(<<0:16, 128,
 					     255, Rest/binary>>,
 					   Z1, Z2, F@_1, F@_2, F@_3, _, F@_5,
-					   F@_6, TrUserData) ->
+					   TrUserData) ->
     dfp_read_field_def_ItemProductionOffer(Rest, Z1, Z2,
 					   F@_1, F@_2, F@_3,
 					   id('-infinity', TrUserData), F@_5,
-					   F@_6, TrUserData);
+					   TrUserData);
 d_field_ItemProductionOffer_maximum_amount(<<_:16, 1:1,
 					     _:7, _:1, 127:7, Rest/binary>>,
 					   Z1, Z2, F@_1, F@_2, F@_3, _, F@_5,
-					   F@_6, TrUserData) ->
+					   TrUserData) ->
     dfp_read_field_def_ItemProductionOffer(Rest, Z1, Z2,
 					   F@_1, F@_2, F@_3,
-					   id(nan, TrUserData), F@_5, F@_6,
+					   id(nan, TrUserData), F@_5,
 					   TrUserData);
 d_field_ItemProductionOffer_maximum_amount(<<Value:32/little-float,
 					     Rest/binary>>,
 					   Z1, Z2, F@_1, F@_2, F@_3, _, F@_5,
-					   F@_6, TrUserData) ->
+					   TrUserData) ->
     dfp_read_field_def_ItemProductionOffer(Rest, Z1, Z2,
 					   F@_1, F@_2, F@_3,
-					   id(Value, TrUserData), F@_5, F@_6,
+					   id(Value, TrUserData), F@_5,
 					   TrUserData).
 
 d_field_ItemProductionOffer_period(<<1:1, X:7,
 				     Rest/binary>>,
-				   N, Acc, F@_1, F@_2, F@_3, F@_4, F@_5, F@_6,
+				   N, Acc, F@_1, F@_2, F@_3, F@_4, F@_5,
 				   TrUserData)
     when N < 57 ->
     d_field_ItemProductionOffer_period(Rest, N + 7,
 				       X bsl N + Acc, F@_1, F@_2, F@_3, F@_4,
-				       F@_5, F@_6, TrUserData);
+				       F@_5, TrUserData);
 d_field_ItemProductionOffer_period(<<0:1, X:7,
 				     Rest/binary>>,
-				   N, Acc, F@_1, F@_2, F@_3, F@_4, _, F@_6,
+				   N, Acc, F@_1, F@_2, F@_3, F@_4, _,
 				   TrUserData) ->
     {NewFValue, RestF} = {begin
 			    <<Res:64/signed-native>> = <<(X bsl N +
@@ -1218,83 +1199,57 @@ d_field_ItemProductionOffer_period(<<0:1, X:7,
 			  Rest},
     dfp_read_field_def_ItemProductionOffer(RestF, 0, 0,
 					   F@_1, F@_2, F@_3, F@_4, NewFValue,
-					   F@_6, TrUserData).
-
-d_field_ItemProductionOffer_manufacturer_name(<<1:1,
-						X:7, Rest/binary>>,
-					      N, Acc, F@_1, F@_2, F@_3, F@_4,
-					      F@_5, F@_6, TrUserData)
-    when N < 57 ->
-    d_field_ItemProductionOffer_manufacturer_name(Rest,
-						  N + 7, X bsl N + Acc, F@_1,
-						  F@_2, F@_3, F@_4, F@_5, F@_6,
-						  TrUserData);
-d_field_ItemProductionOffer_manufacturer_name(<<0:1,
-						X:7, Rest/binary>>,
-					      N, Acc, F@_1, F@_2, F@_3, F@_4,
-					      F@_5, _, TrUserData) ->
-    {NewFValue, RestF} = begin
-			   Len = X bsl N + Acc,
-			   <<Utf8:Len/binary, Rest2/binary>> = Rest,
-			   {id(unicode:characters_to_list(Utf8, unicode),
-			       TrUserData),
-			    Rest2}
-			 end,
-    dfp_read_field_def_ItemProductionOffer(RestF, 0, 0,
-					   F@_1, F@_2, F@_3, F@_4, F@_5,
-					   NewFValue, TrUserData).
+					   TrUserData).
 
 skip_varint_ItemProductionOffer(<<1:1, _:7,
 				  Rest/binary>>,
-				Z1, Z2, F@_1, F@_2, F@_3, F@_4, F@_5, F@_6,
+				Z1, Z2, F@_1, F@_2, F@_3, F@_4, F@_5,
 				TrUserData) ->
     skip_varint_ItemProductionOffer(Rest, Z1, Z2, F@_1,
-				    F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData);
+				    F@_2, F@_3, F@_4, F@_5, TrUserData);
 skip_varint_ItemProductionOffer(<<0:1, _:7,
 				  Rest/binary>>,
-				Z1, Z2, F@_1, F@_2, F@_3, F@_4, F@_5, F@_6,
+				Z1, Z2, F@_1, F@_2, F@_3, F@_4, F@_5,
 				TrUserData) ->
     dfp_read_field_def_ItemProductionOffer(Rest, Z1, Z2,
-					   F@_1, F@_2, F@_3, F@_4, F@_5, F@_6,
+					   F@_1, F@_2, F@_3, F@_4, F@_5,
 					   TrUserData).
 
 skip_length_delimited_ItemProductionOffer(<<1:1, X:7,
 					    Rest/binary>>,
 					  N, Acc, F@_1, F@_2, F@_3, F@_4, F@_5,
-					  F@_6, TrUserData)
+					  TrUserData)
     when N < 57 ->
     skip_length_delimited_ItemProductionOffer(Rest, N + 7,
 					      X bsl N + Acc, F@_1, F@_2, F@_3,
-					      F@_4, F@_5, F@_6, TrUserData);
+					      F@_4, F@_5, TrUserData);
 skip_length_delimited_ItemProductionOffer(<<0:1, X:7,
 					    Rest/binary>>,
 					  N, Acc, F@_1, F@_2, F@_3, F@_4, F@_5,
-					  F@_6, TrUserData) ->
+					  TrUserData) ->
     Length = X bsl N + Acc,
     <<_:Length/binary, Rest2/binary>> = Rest,
     dfp_read_field_def_ItemProductionOffer(Rest2, 0, 0,
-					   F@_1, F@_2, F@_3, F@_4, F@_5, F@_6,
+					   F@_1, F@_2, F@_3, F@_4, F@_5,
 					   TrUserData).
 
 skip_group_ItemProductionOffer(Bin, FNum, Z2, F@_1,
-			       F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData) ->
+			       F@_2, F@_3, F@_4, F@_5, TrUserData) ->
     {_, Rest} = read_group(Bin, FNum),
     dfp_read_field_def_ItemProductionOffer(Rest, 0, Z2,
-					   F@_1, F@_2, F@_3, F@_4, F@_5, F@_6,
+					   F@_1, F@_2, F@_3, F@_4, F@_5,
 					   TrUserData).
 
 skip_32_ItemProductionOffer(<<_:32, Rest/binary>>, Z1,
-			    Z2, F@_1, F@_2, F@_3, F@_4, F@_5, F@_6,
-			    TrUserData) ->
+			    Z2, F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData) ->
     dfp_read_field_def_ItemProductionOffer(Rest, Z1, Z2,
-					   F@_1, F@_2, F@_3, F@_4, F@_5, F@_6,
+					   F@_1, F@_2, F@_3, F@_4, F@_5,
 					   TrUserData).
 
 skip_64_ItemProductionOffer(<<_:64, Rest/binary>>, Z1,
-			    Z2, F@_1, F@_2, F@_3, F@_4, F@_5, F@_6,
-			    TrUserData) ->
+			    Z2, F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData) ->
     dfp_read_field_def_ItemProductionOffer(Rest, Z1, Z2,
-					   F@_1, F@_2, F@_3, F@_4, F@_5, F@_6,
+					   F@_1, F@_2, F@_3, F@_4, F@_5,
 					   TrUserData).
 
 decode_msg_User(Bin, TrUserData) ->
@@ -1693,11 +1648,11 @@ merge_msg_Message(#{} = PMsg, #{type := NFtype} = NMsg,
 
 -compile({nowarn_unused_function,merge_msg_ItemOrderOffer/3}).
 merge_msg_ItemOrderOffer(#{},
-			 #{manufacter_name := NFmanufacter_name,
+			 #{manufacturer_name := NFmanufacturer_name,
 			   product_name := NFproduct_name,
 			   quantity := NFquantity, unit_price := NFunit_price},
 			 _) ->
-    #{manufacter_name => NFmanufacter_name,
+    #{manufacturer_name => NFmanufacturer_name,
       product_name => NFproduct_name, quantity => NFquantity,
       unit_price => NFunit_price}.
 
@@ -1706,13 +1661,11 @@ merge_msg_ItemProductionOffer(#{},
 			      #{name := NFname, unit_price := NFunit_price,
 				minimum_amount := NFminimum_amount,
 				maximum_amount := NFmaximum_amount,
-				period := NFperiod,
-				manufacturer_name := NFmanufacturer_name},
+				period := NFperiod},
 			      _) ->
     #{name => NFname, unit_price => NFunit_price,
       minimum_amount => NFminimum_amount,
-      maximum_amount => NFmaximum_amount, period => NFperiod,
-      manufacturer_name => NFmanufacturer_name}.
+      maximum_amount => NFmaximum_amount, period => NFperiod}.
 
 -compile({nowarn_unused_function,merge_msg_User/3}).
 merge_msg_User(#{} = PMsg,
@@ -1811,15 +1764,16 @@ v_msg_Message(X, Path, _TrUserData) ->
 
 -compile({nowarn_unused_function,v_msg_ItemOrderOffer/3}).
 -dialyzer({nowarn_function,v_msg_ItemOrderOffer/3}).
-v_msg_ItemOrderOffer(#{manufacter_name := F1,
+v_msg_ItemOrderOffer(#{manufacturer_name := F1,
 		       product_name := F2, quantity := F3, unit_price := F4} =
 			 M,
 		     Path, TrUserData) ->
-    v_type_string(F1, [manufacter_name | Path], TrUserData),
+    v_type_string(F1, [manufacturer_name | Path],
+		  TrUserData),
     v_type_string(F2, [product_name | Path], TrUserData),
     v_type_float(F3, [quantity | Path], TrUserData),
     v_type_float(F4, [unit_price | Path], TrUserData),
-    lists:foreach(fun (manufacter_name) -> ok;
+    lists:foreach(fun (manufacturer_name) -> ok;
 		      (product_name) -> ok;
 		      (quantity) -> ok;
 		      (unit_price) -> ok;
@@ -1831,8 +1785,8 @@ v_msg_ItemOrderOffer(#{manufacter_name := F1,
 v_msg_ItemOrderOffer(M, Path, _TrUserData)
     when is_map(M) ->
     mk_type_error({missing_fields,
-		   [manufacter_name, product_name, quantity, unit_price] --
-		     maps:keys(M),
+		   [manufacturer_name, product_name, quantity, unit_price]
+		     -- maps:keys(M),
 		   'ItemOrderOffer'},
 		  M, Path);
 v_msg_ItemOrderOffer(X, Path, _TrUserData) ->
@@ -1843,8 +1797,7 @@ v_msg_ItemOrderOffer(X, Path, _TrUserData) ->
 -dialyzer({nowarn_function,v_msg_ItemProductionOffer/3}).
 v_msg_ItemProductionOffer(#{name := F1,
 			    unit_price := F2, minimum_amount := F3,
-			    maximum_amount := F4, period := F5,
-			    manufacturer_name := F6} =
+			    maximum_amount := F4, period := F5} =
 			      M,
 			  Path, TrUserData) ->
     v_type_string(F1, [name | Path], TrUserData),
@@ -1852,14 +1805,11 @@ v_msg_ItemProductionOffer(#{name := F1,
     v_type_float(F3, [minimum_amount | Path], TrUserData),
     v_type_float(F4, [maximum_amount | Path], TrUserData),
     v_type_int64(F5, [period | Path], TrUserData),
-    v_type_string(F6, [manufacturer_name | Path],
-		  TrUserData),
     lists:foreach(fun (name) -> ok;
 		      (unit_price) -> ok;
 		      (minimum_amount) -> ok;
 		      (maximum_amount) -> ok;
 		      (period) -> ok;
-		      (manufacturer_name) -> ok;
 		      (OtherKey) ->
 			  mk_type_error({extraneous_key, OtherKey}, M, Path)
 		  end,
@@ -1869,7 +1819,7 @@ v_msg_ItemProductionOffer(M, Path, _TrUserData)
     when is_map(M) ->
     mk_type_error({missing_fields,
 		   [name, unit_price, minimum_amount, maximum_amount,
-		    period, manufacturer_name]
+		    period]
 		     -- maps:keys(M),
 		   'ItemProductionOffer'},
 		  M, Path);
@@ -2070,7 +2020,7 @@ get_msg_defs() ->
 	 type => {msg, 'State'}, occurrence => optional,
 	 opts => []}]},
      {{msg, 'ItemOrderOffer'},
-      [#{name => manufacter_name, fnum => 1, rnum => 2,
+      [#{name => manufacturer_name, fnum => 1, rnum => 2,
 	 type => string, occurrence => required, opts => []},
        #{name => product_name, fnum => 2, rnum => 3,
 	 type => string, occurrence => required, opts => []},
@@ -2088,9 +2038,7 @@ get_msg_defs() ->
        #{name => maximum_amount, fnum => 4, rnum => 5,
 	 type => float, occurrence => required, opts => []},
        #{name => period, fnum => 5, rnum => 6, type => int64,
-	 occurrence => required, opts => []},
-       #{name => manufacturer_name, fnum => 6, rnum => 7,
-	 type => string, occurrence => required, opts => []}]},
+	 occurrence => required, opts => []}]},
      {{msg, 'User'},
       [#{name => username, fnum => 1, rnum => 2,
 	 type => string, occurrence => required, opts => []},
@@ -2152,7 +2100,7 @@ find_msg_def('Message') ->
        type => {msg, 'State'}, occurrence => optional,
        opts => []}];
 find_msg_def('ItemOrderOffer') ->
-    [#{name => manufacter_name, fnum => 1, rnum => 2,
+    [#{name => manufacturer_name, fnum => 1, rnum => 2,
        type => string, occurrence => required, opts => []},
      #{name => product_name, fnum => 2, rnum => 3,
        type => string, occurrence => required, opts => []},
@@ -2170,9 +2118,7 @@ find_msg_def('ItemProductionOffer') ->
      #{name => maximum_amount, fnum => 4, rnum => 5,
        type => float, occurrence => required, opts => []},
      #{name => period, fnum => 5, rnum => 6, type => int64,
-       occurrence => required, opts => []},
-     #{name => manufacturer_name, fnum => 6, rnum => 7,
-       type => string, occurrence => required, opts => []}];
+       occurrence => required, opts => []}];
 find_msg_def('User') ->
     [#{name => username, fnum => 1, rnum => 2,
        type => string, occurrence => required, opts => []},

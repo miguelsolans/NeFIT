@@ -1,9 +1,9 @@
 import org.zeromq.ZMQ;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import Protos.Protocol;
+
 
 public class ProductionOffer {
     
@@ -98,19 +98,16 @@ public class ProductionOffer {
                                                     build();
                 push.send(messageO.toByteArray());
                 push.send(messageP.toByteArray());
+
             }
         }
 
     }
 
     //Getters & Setters
-    public void setActive(Boolean active) {
-        isActive = active;
-    }
+    public void setActive(Boolean active) { isActive = active; }
 
-    public String getFabricantName() {
-        return this.fabricantName;
-    }
+    public String getFabricantName() { return this.fabricantName;}
 
     public String getArticleName() { return this.articleName; }
 

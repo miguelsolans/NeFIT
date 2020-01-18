@@ -1,5 +1,5 @@
 -module(sender_handler).
--export ([sendAuthResponse/3, sendInvalidAuthResponse/2, sendEncoded/2, sendInvalidOperation/2]).
+-export ([sendAuthResponse/3, sendInvalidAuthResponse/2, sendEncoded/2, sendInvalidOperation/2, sendOrderResponse/5]).
 
 % function that sends an authentication response to the correspondent client
 sendAuthResponse(Sock, UserType, Description) ->
@@ -19,3 +19,8 @@ sendEncoded(Sock, Msg) ->
 sendInvalidOperation(Sock, UserType) ->
     Op = protocol:encode_msg(#{user_type => UserType, type => 'RESPONSE', state => #{result => false, description => "YOU HAVE NO PERMISSION"}}, 'Message'),
     gen_tcp:send(Sock, Op).
+
+%
+sendOrderResponse(Sock, UT, T, R, D) ->
+    Msg = protocol:encode_msg(#{user_type => UT, type => T, state => #{result => R, description => D}}, 'Message'),
+    gen_tcp:send(Sock, Msg).
