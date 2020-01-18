@@ -42,8 +42,13 @@ public class ImporterController {
         return Response.ok(ImporterDB.getImporterOrder(name)).build();
     }
 
-//    @PUT
-//    @Path("{name}/order/{}")
+    @POST
+    @Path("/")
+    public void newImporter(
+            @NotNull @QueryParam("name") String name
+    ) {
+        System.out.println("Name: " + name);
+    }
 
     @POST
     @Path("{name}")

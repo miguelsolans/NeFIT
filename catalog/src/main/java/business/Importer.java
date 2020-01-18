@@ -40,14 +40,4 @@ public class Importer {
         this.orders.add(order);
         orderId++;
     }
-
-    public List<ItemOrderOffer> getActiveOrders() {
-        List<ItemOrderOffer> offers = new ArrayList<>();
-        for(ItemOrderOffer offer : this.orders) {
-            if(!offer.isFinished())
-                offers.add(offer);
-        }
-
-        return offers;
-    }
 }

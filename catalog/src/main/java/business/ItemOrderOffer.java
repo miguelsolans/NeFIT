@@ -21,8 +21,6 @@ public class ItemOrderOffer {
     @NotNull
     double unitPrice;
     @NotNull
-    boolean finished;
-    @NotNull
     boolean winner;
 
 
@@ -32,7 +30,6 @@ public class ItemOrderOffer {
         this.quantity = quantity;
         this.unitPrice = unitPrice;
         this.winner = false;
-        this.finished = false;
     }
 
     public String getManufacterName() {
@@ -71,8 +68,8 @@ public class ItemOrderOffer {
         return this.winner;
     }
 
-    public void setWinner(boolean winner) {
-        this.winner = winner;
+    public void setWinner() {
+        this.winner = true;
     }
 
     public void setOrderId(int orderId) {
@@ -81,13 +78,5 @@ public class ItemOrderOffer {
 
     public int getOrderId() {
         return orderId;
-    }
-
-    public void setFinished(boolean finished) {
-        this.finished = finished;
-    }
-
-    public boolean isFinished() {
-        return finished;
     }
 }

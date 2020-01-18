@@ -7,8 +7,10 @@ package Controller;
 
 import db.ImporterDB;
 import db.ItemOrderDB;
+import db.ManufacturerDB;
 
 import javax.validation.Validator;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -28,16 +30,25 @@ public class NegotiationController {
     @GET
     @Path("/")
     public Response getOrders() {
-        return Response.ok(ImporterDB.getAllOrders()).build();
+        return Response.ok(ManufacturerDB.getAllProducts()).build();
     }
 
     @GET
     @Path("/active")
     public Response getActiveOrders() {
-        return Response.ok(ImporterDB.getActiveOrders()).build();
+        return Response.ok(ManufacturerDB.getAvailableProducts()).build();
     }
 
+    @PUT
+    @Path("/winner")
+    public Response setWinner(
+            @NotNull @QueryParam("user") String user,
+            @NotNull @QueryParam("id") int orderId
+    ) {
 
+        ImporterDB.setWinner(user, orderId);
+        return Response.ok().build();
+    }
 //    localhost:8080/negotiations/active -> todas as ativas
 //    localhost:8080/negotiations/ -> historico de todas
 }
