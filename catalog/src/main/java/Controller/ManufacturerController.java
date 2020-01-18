@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 public class ManufacturerController {
     private Validator validator;
 
+
     public ManufacturerController(Validator validator) {
         this.validator = validator;
     }
@@ -31,6 +32,24 @@ public class ManufacturerController {
     ) {
         return Response.ok(ManufacturerDB.getSingleManufacturer(name)).build();
     }
+
+    @GET
+    @Path("{name}/active")
+    public Response getActiveOffers(
+            @NotNull @PathParam("name") String name
+    ) {
+        return Response.ok(ManufacturerDB.getAvailableProducts(name)).build();
+    }
+
+//    @PUT
+//    @Path("{name}/{product}")
+//    public Response updateProduct(
+//            @NotNull @PathParam("name") String name,
+//            @NotNull @PathParam("product") String product
+//
+//    ) {
+//
+//    }
 
     @POST
     @Path("/")

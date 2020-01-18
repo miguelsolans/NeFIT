@@ -41,6 +41,9 @@ public class ImporterController {
         return Response.ok(ImporterDB.getImporterOrder(name)).build();
     }
 
+//    @PUT
+//    @Path("{name}/order/{}")
+
     @POST
     @Path("{name}")
     public Response newImporterOrder(
