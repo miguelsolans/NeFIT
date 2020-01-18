@@ -23,6 +23,7 @@ public class ItemProductionController {
     @Path("/")
     public Response getProducts() {
         return Response.ok(ManufacturerDB.getAvailableProducts()).build();
+
     }
 
     @GET
@@ -30,10 +31,7 @@ public class ItemProductionController {
     public Response getManufacturerProducts(
             @NotNull @PathParam("manufacturer") String manufacturer
     ) {
-        return Response.ok(ManufacturerDB.getManufacturerProducts(manufacturer)).build();
-    }
-
-    @POST
+@POST
     @Path("{manufacturer}")
     public Response addProduct(
             @NotNull @PathParam("manufacturer") String manufacturer,
@@ -49,5 +47,4 @@ public class ItemProductionController {
 
         return Response.ok().build();
     }
-
 }

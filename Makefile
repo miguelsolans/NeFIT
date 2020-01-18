@@ -4,6 +4,10 @@ current_dir = $(shell pwd)
 frontend:
 	dependencies/gpb/bin/protoc-erl -I. -maps -o Frontend/ Protos/protocol.proto
 	erlc -I dependencies/gpb/include -o Frontend/ Frontend/protocol.erl
+	erlc -o Frontend/ Frontend/*.erl
+
+run:
+	erl < MakefileCommands
 
 .PHONY: frontend
 
