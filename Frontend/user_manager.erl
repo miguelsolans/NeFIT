@@ -16,12 +16,15 @@ loop(Sock, User) ->
                 'ITEMPRODUCTIONOFFER' ->
                     case UT of
                         "MANUFACTURER" ->
-                            %IPO = maps:get(item_production_offer, Msg),
                             U = maps:get(user, Msg),
                             Username = maps:get(username, U),
                             NPid = negotiations_manager:findNegotiator(Username),
-                            % Send to NPid the order
-                            % send response to user
+                            case negotiations_producer:newOrder(Msg,NPid) of
+                                ok ->
+                                    sender_handler:sendOrderResponse(Sock,UT,true,"ITEM PRODUCTION OFFER SUCCEDED");
+                                error ->
+                                    sender_handler:sendOrderResponse(Sock,UT,false,"ITEM PRODUCTION OFFER DOES NOT SUCCEDED")
+                            end,
                             loop(Sock, User);
                         _ ->
                             sender_handler:sendInvalidOperation(Sock, UT),
@@ -33,8 +36,12 @@ loop(Sock, User) ->
                             IOO = maps:get(item_order_offer, Msg),
                             Name = maps:get(manufacturer_name, IOO),
                             NPid = negotiations_manager:findNegotiator(Name),
-                            % send to NPid the order
-                            % send response to user
+                            case negotiations_producer:newOrder(Msg,NPid) of
+                                ok ->
+                                    sender_handler:sendOrderResponse(Sock,UT,true,"ITEM ORDER OFFER SUCCEDED");
+                                error ->
+                                    sender_handler:sendOrderResponse(Sock,UT,false,"ITEM ORDER OFFER DOES NOT SUCCEDED")
+                            end,
                             loop(Sock,User);
                         _ ->
                             sender_handler:sendInvalidOperation(Sock, UT),
