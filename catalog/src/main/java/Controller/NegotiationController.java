@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 
 @Path("negotiation")
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class NegotiationController {
 
     private Validator validator;

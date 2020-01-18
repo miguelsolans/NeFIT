@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response;
 
 @Path("importer")
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class ImporterController {
 
     Validator validator;
