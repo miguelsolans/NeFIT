@@ -12,9 +12,10 @@ public class ManufacturerDB {
     static HashMap<String, Manufacturer> manufacturers = new HashMap<>();
 
     static {
-        manufacturers.put("Korg", new Manufacturer("Korg"));
-        manufacturers.put("Peugeot", new Manufacturer("Peugeot"));
-        manufacturers.put("Land Rover", new Manufacturer("Land Rover"));
+        // String portPUSH = "12345", portPULL="12346",portPUB="12347";
+        manufacturers.put("Korg", new Manufacturer("Korg", "127.0.0.1", "12344"));
+        manufacturers.put("Peugeot", new Manufacturer("Peugeot", "127.0.0.1", "12346"));
+        manufacturers.put("Land Rover", new Manufacturer("Land Rover", "127.0.0.1", "1237"));
 
         // String productName, double unitPrice, double minimumAmout, double maximumAmount, int period
         manufacturers.get("Peugeot").addProduct(new ItemProductionOffer("208", 17000.0, 1, 100, 5000));

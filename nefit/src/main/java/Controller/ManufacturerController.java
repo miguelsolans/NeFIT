@@ -9,7 +9,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("manufacturers")
+@Path("manufacturer")
 @Produces(MediaType.APPLICATION_JSON)
 public class ManufacturerController {
     private Validator validator;
@@ -35,9 +35,11 @@ public class ManufacturerController {
     @POST
     @Path("/")
     public Response newManufacturer(
-            @NotNull @QueryParam("name") String name
+            @NotNull @QueryParam("name") String name,
+            @NotNull @QueryParam("host") String host,
+            @NotNull @QueryParam("port") String port
     ) {
-        Manufacturer manufacturer = new Manufacturer(name);
+        Manufacturer manufacturer = new Manufacturer(name, host, port);
 
         ManufacturerDB.addManufacturer(manufacturer);
 

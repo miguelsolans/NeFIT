@@ -1,7 +1,6 @@
 package Controller;
 
 import business.ItemProductionOffer;
-import db.ItemProductionDB;
 import db.ManufacturerDB;
 
 import javax.validation.Validator;

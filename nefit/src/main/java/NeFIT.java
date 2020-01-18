@@ -24,7 +24,6 @@ public class NeFIT extends Application<NefitConfiguration> {
         environment.jersey().register(new ItemOrderController(environment.getValidator()));
         environment.jersey().register(new ItemProductionController(environment.getValidator()));
         environment.jersey().register(new ManufacturerController(environment.getValidator()));
-        environment.jersey().register(new NegotiatorController(environment.getValidator()));
 
     }
 

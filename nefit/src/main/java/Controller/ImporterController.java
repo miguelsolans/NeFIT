@@ -1,6 +1,7 @@
 package Controller;
 
 import business.Importer;
+import business.ItemOrderOffer;
 import db.ImporterDB;
 
 import javax.validation.Validator;
@@ -19,9 +20,9 @@ public class ImporterController {
     }
 
     @GET
-    @Path("{name}")
+    @Path("{username}")
     public Response getImporter(
-            @NotNull @PathParam("name") String name
+            @NotNull @PathParam("username") String name
     ) {
         Importer importer = ImporterDB.getSingleImporter(name);
 
@@ -34,6 +35,22 @@ public class ImporterController {
             @NotNull @QueryParam("name") String name
     ) {
         ImporterDB.addImporter(new Importer(name));
+
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path("/{username}")
+    public Response newOrder(
+            @NotNull @PathParam("username") String username,
+            @NotNull @QueryParam("manufacturer") String manufacturer,
+            @NotNull @QueryParam("product") String product,
+            @NotNull @QueryParam("quantity") double quantity,
+            @NotNull @QueryParam("price") double price
+    ) {
+        ItemOrderOffer order = new ItemOrderOffer(manufacturer, product, quantity, price);
+
+        ImporterDB.newOrder(username, order);
 
         return Response.ok().build();
     }

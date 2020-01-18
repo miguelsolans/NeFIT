@@ -1,7 +1,7 @@
 package db;
 
 import business.Importer;
-
+import business.ItemOrderOffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,5 +35,10 @@ public class ImporterDB {
 
     public static List getImporterOrder(String importer) {
         return importers.get(importer).getOrders();
+    }
+
+    public static void newOrder(String importer, ItemOrderOffer order) {
+        importers.get(importer)
+                .newOrder(order);
     }
 }
