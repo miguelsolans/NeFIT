@@ -20,9 +20,11 @@ public class Negotiator {
         ZMQ.Context context = ZMQ.context(1);
         Sender sender = new Sender();
 
-        String portPUSH = "3000", portPULL="12345";
+        String portPUSH = "3000", portPULL="12345", portPUB="6666";
 
-        if(args.length==1){ portPULL = args[0]; }
+        if(args.length==1){ 
+            portPULL = args[0]; 
+        }
         //Sender side
         ZMQ.Socket push = context.socket(ZMQ.PUSH);
         push.connect("tcp://localhost:"+portPUSH);
@@ -32,8 +34,8 @@ public class Negotiator {
         pull.bind("tcp://*:"+portPULL);
 
         //Notifications
-    //    ZMQ.Socket pub = context.socket(ZMQ.PUB);
-    //    pub.connect("tcp://localhost:"+portPUB);
+       ZMQ.Socket pub = context.socket(ZMQ.PUB);
+       pub.connect("tcp://localhost:"+portPUB);
 
         Negotiator negotiator = new Negotiator(push,pull);
 
@@ -51,11 +53,11 @@ public class Negotiator {
                                 message.getItemProductionOffer().getUnitPrice(),
                                 message.getItemProductionOffer().getMinimumAmount(),
                                 message.getItemProductionOffer().getMaximumAmount(),(int) message.getItemProductionOffer().getPeriod());
-                      //  pub.send("ProductionOffer "+message.getUser().getUsername()+"lançada");
+
+                       pub.send(message.getUser().getUsername()+" has a new offer.");
                     }
                     else {
                         System.out.println("Lançamento de Oferta de Produção" +message.getUser().getUsername()+ "cancelado");
-                      //  pub.send("ProductionOffer "+message.getUser().getUsername()+"não foi lançada");
                     }
                     break;
                 case "IMPORTER":
@@ -65,11 +67,9 @@ public class Negotiator {
                         sender.sendItemOrderOffer(message.getUser().getUsername(),message.getItemOrderOffer().getManufacturerName(),
                                                     message.getItemOrderOffer().getProductName(),message.getItemOrderOffer().getQuantity(),
                                                     message.getItemOrderOffer().getUnitPrice());
-                      //  pub.send("ItemOrderOffer"+message.getUser().getUsername()+"lançada");
                     }
                     else {
                         System.out.println("Lançamento de Oferta "+message.getUser().getUsername()+ "cancelado");
-                      //  pub.send("ItemOrderOffer"+message.getUser().getUsername()+"não foi lançada");
                     }
                     break;
             }
