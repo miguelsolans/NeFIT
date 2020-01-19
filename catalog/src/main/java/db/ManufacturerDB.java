@@ -15,9 +15,9 @@ public class ManufacturerDB {
     static HashMap<String, Negotiator> negotiators = new HashMap<>();
 
     static {
-        negotiators.put("4001", new Negotiator("127.0.0.1", "4001"));
-        negotiators.put("4002", new Negotiator("127.0.0.1", "4002"));
-        negotiators.put("4003", new Negotiator("127.0.0.1", "4003"));
+        negotiators.put("4001", new Negotiator("Neg1", "127.0.0.1", "4001"));
+        negotiators.put("4002", new Negotiator("Neg2", "127.0.0.1", "4002"));
+        negotiators.put("4003", new Negotiator("Neg3", "127.0.0.1", "4003"));
 
         manufacturers.put("Korg", new Manufacturer("Korg", negotiators.get("4001")));
         manufacturers.put("Peugeot", new Manufacturer("Peugeot", negotiators.get("4002")));
