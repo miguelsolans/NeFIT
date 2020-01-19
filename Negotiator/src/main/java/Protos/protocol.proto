@@ -24,16 +24,6 @@ message ItemProductionOffer{
     required float unit_price = 2;
     required float minimum_amount = 3;
     required float maximum_amount = 4;
-    required int32 period = 5;
-    required string manufacturer = 6;
-}
-
-message Sale{
-    optional string manufactureName = 1;
-    optional string articleName = 2;
-    optional string offerName = 3;
-    optional float globalPrice = 4;
-    required string message = 5;
     required int64 period = 5;
 }
 
