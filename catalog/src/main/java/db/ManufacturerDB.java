@@ -17,13 +17,13 @@ public class ManufacturerDB {
         manufacturers.put("Peugeot", new Manufacturer("Peugeot", "127.0.0.1", "12346"));
         manufacturers.put("Land Rover", new Manufacturer("Land Rover", "127.0.0.1", "1237"));
 
-        manufacturers.get("Peugeot").addProduct(new ItemProductionOffer("208", 17000.0, 1, 100, 5000));
-        manufacturers.get("Peugeot").addProduct(new ItemProductionOffer("308", 20000.0, 1, 20, 60));
-        manufacturers.get("Land Rover").addProduct(new ItemProductionOffer("Discovery", 50000.0, 1, 500, 10));
-        manufacturers.get("Land Rover").addProduct(new ItemProductionOffer("Defender", 100000.0, 1, 150, 30));
-        manufacturers.get("Land Rover").addProduct(new ItemProductionOffer("Serie", 105000.0, 3, 2, 90));
+        manufacturers.get("Peugeot").addProduct(new ItemProductionOffer("208", "Peugeot", 17000.0, 1, 100, 5000));
+        manufacturers.get("Peugeot").addProduct(new ItemProductionOffer("308", "Peugeot",20000.0, 1, 20, 60));
+        manufacturers.get("Land Rover").addProduct(new ItemProductionOffer("Discovery", "Land Rover", 50000.0, 1, 500, 10));
+        manufacturers.get("Land Rover").addProduct(new ItemProductionOffer("Defender", "Land Rover", 100000.0, 1, 150, 30));
+        manufacturers.get("Land Rover").addProduct(new ItemProductionOffer("Serie", "Land Rover", 105000.0, 3, 2, 90));
 
-        manufacturers.get("Korg").addProduct(new ItemProductionOffer("Kronos", 25000, 1, 2500, 1));
+        manufacturers.get("Korg").addProduct(new ItemProductionOffer("Kronos", "Korg", 25000, 1, 2500, 1));
 
         manufacturers.get("Korg").getProduct("Kronos").setActive(false);
     }

@@ -45,7 +45,7 @@ public class ItemProductionController {
             @NotNull @QueryParam("maximumAmount") double maximumAmount,
             @NotNull @QueryParam("period") int period
     ) {
-        ItemProductionOffer product = new ItemProductionOffer(productName, unitPrice, minimumAmount, maximumAmount, period);
+        ItemProductionOffer product = new ItemProductionOffer(productName, manufacturer, unitPrice, minimumAmount, maximumAmount, period);
 
         ManufacturerDB.addProduct(manufacturer, product);
 

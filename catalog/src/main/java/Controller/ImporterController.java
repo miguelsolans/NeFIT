@@ -42,8 +42,13 @@ public class ImporterController {
         return Response.ok(ImporterDB.getImporterOrder(name)).build();
     }
 
-//    @PUT
-//    @Path("{name}/order/{}")
+    @POST
+    @Path("/")
+    public void newImporter(
+            @NotNull @QueryParam("name") String name
+    ) {
+        System.out.println("Name: " + name);
+    }
 
     @POST
     @Path("/")
@@ -62,7 +67,6 @@ public class ImporterController {
             @NotNull @QueryParam("quantity") double quantity,
             @NotNull @QueryParam("price") double price
     ) {
-        // String manufacturerName, String productName, double quantity, double unitPrice
         ImporterDB.newOrder(name, new ItemOrderOffer(manufacturer, product, quantity, price));
         return Response.ok().build();
     }

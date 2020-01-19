@@ -42,16 +42,6 @@ public class ManufacturerController {
         return Response.ok(ManufacturerDB.getAvailableProducts(name)).build();
     }
 
-//    @PUT
-//    @Path("{name}/{product}")
-//    public Response updateProduct(
-//            @NotNull @PathParam("name") String name,
-//            @NotNull @PathParam("product") String product
-//
-//    ) {
-//
-//    }
-
     @POST
     @Path("/")
     public Response newManufacturer(
