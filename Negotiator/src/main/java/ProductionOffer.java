@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Timer;
 import Protos.Protocol;
 
-
 public class ProductionOffer {
     
     private String fabricantName;
@@ -15,6 +14,8 @@ public class ProductionOffer {
     private Boolean isActive;
     private ZMQ.Socket push;
     private List<Offer> offers;
+    private Sender sender;
+    private int id;
 
 
     /**
@@ -38,6 +39,7 @@ public class ProductionOffer {
         this.push = push;
         this.offers = new ArrayList<>();
         new Timer().schedule(new Finisher(this),time);
+        this.sender = new Sender();
     }
 
     public void addOrder(Offer offer){
@@ -56,6 +58,9 @@ public class ProductionOffer {
 
             if (quantity>= this.quantMIN) {
                 this.quantMax -= offer.getQuantity();
+
+                sender.sendWinnerOffer(offer.getUserName(),this.id);
+
                 Protocol.User userOffer = Protocol.User.newBuilder().
                                                     setUsername(offer.getUserName()).
                                                     build();
@@ -116,4 +121,8 @@ public class ProductionOffer {
     public boolean getActive() { return this.isActive; }
 
     public Float getQuantMax() { return this.quantMax; }
+
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
 }

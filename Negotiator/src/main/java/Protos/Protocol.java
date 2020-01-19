@@ -3995,8 +3995,58 @@ public final class Protocol {
      */
     java.lang.String getPassword();
     /**
+<<<<<<< HEAD
+     * <code>optional string articleName = 2;</code>
+     * @return The bytes for articleName.
+     */
+    com.google.protobuf.ByteString
+        getArticleNameBytes();
+
+    /**
+     * <code>optional string offerName = 3;</code>
+     * @return Whether the offerName field is set.
+     */
+    boolean hasOfferName();
+    /**
+     * <code>optional string offerName = 3;</code>
+     * @return The offerName.
+     */
+    java.lang.String getOfferName();
+    /**
+     * <code>optional string offerName = 3;</code>
+     * @return The bytes for offerName.
+     */
+    com.google.protobuf.ByteString
+        getOfferNameBytes();
+
+    /**
+     * <code>optional float globalPrice = 4;</code>
+     * @return Whether the globalPrice field is set.
+     */
+    boolean hasGlobalPrice();
+    /**
+     * <code>optional float globalPrice = 4;</code>
+     * @return The globalPrice.
+     */
+    float getGlobalPrice();
+
+    /**
+     * <code>required string message = 5;</code>
+     * @return Whether the message field is set.
+     */
+    boolean hasMessage();
+    /**
+     * <code>required string message = 5;</code>
+     * @return The message.
+     */
+    java.lang.String getMessage();
+    /**
+     * <code>required string message = 5;</code>
+     * @return The bytes for message.
+=======
      * <code>optional string password = 2;</code>
      * @return The bytes for password.
+>>>>>>> master
      */
     com.google.protobuf.ByteString
         getPasswordBytes();
@@ -4013,9 +4063,17 @@ public final class Protocol {
     private User(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+<<<<<<< HEAD
+    private Sale() {
+      manufactureName_ = "";
+      articleName_ = "";
+      offerName_ = "";
+      message_ = "";
+=======
     private User() {
       username_ = "";
       password_ = "";
+>>>>>>> master
     }
 
     @java.lang.Override
@@ -4058,7 +4116,28 @@ public final class Protocol {
             case 18: {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000002;
+<<<<<<< HEAD
+              articleName_ = bs;
+              break;
+            }
+            case 26: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000004;
+              offerName_ = bs;
+              break;
+            }
+            case 37: {
+              bitField0_ |= 0x00000008;
+              globalPrice_ = input.readFloat();
+              break;
+            }
+            case 42: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000010;
+              message_ = bs;
+=======
               password_ = bs;
+>>>>>>> master
               break;
             }
             default: {
@@ -4149,8 +4228,120 @@ public final class Protocol {
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
+<<<<<<< HEAD
+     * <code>optional string articleName = 2;</code>
+     * @return The articleName.
+     */
+    public java.lang.String getArticleName() {
+      java.lang.Object ref = articleName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          articleName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string articleName = 2;</code>
+     * @return The bytes for articleName.
+     */
+    public com.google.protobuf.ByteString
+        getArticleNameBytes() {
+      java.lang.Object ref = articleName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        articleName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int OFFERNAME_FIELD_NUMBER = 3;
+    private volatile java.lang.Object offerName_;
+    /**
+     * <code>optional string offerName = 3;</code>
+     * @return Whether the offerName field is set.
+     */
+    public boolean hasOfferName() {
+      return ((bitField0_ & 0x00000004) != 0);
+    }
+    /**
+     * <code>optional string offerName = 3;</code>
+     * @return The offerName.
+     */
+    public java.lang.String getOfferName() {
+      java.lang.Object ref = offerName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          offerName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string offerName = 3;</code>
+     * @return The bytes for offerName.
+     */
+    public com.google.protobuf.ByteString
+        getOfferNameBytes() {
+      java.lang.Object ref = offerName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        offerName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int GLOBALPRICE_FIELD_NUMBER = 4;
+    private float globalPrice_;
+    /**
+     * <code>optional float globalPrice = 4;</code>
+     * @return Whether the globalPrice field is set.
+     */
+    public boolean hasGlobalPrice() {
+      return ((bitField0_ & 0x00000008) != 0);
+    }
+    /**
+     * <code>optional float globalPrice = 4;</code>
+     * @return The globalPrice.
+     */
+    public float getGlobalPrice() {
+      return globalPrice_;
+    }
+
+    public static final int MESSAGE_FIELD_NUMBER = 5;
+    private volatile java.lang.Object message_;
+    /**
+     * <code>required string message = 5;</code>
+     * @return Whether the message field is set.
+     */
+    public boolean hasMessage() {
+      return ((bitField0_ & 0x00000010) != 0);
+    }
+    /**
+     * <code>required string message = 5;</code>
+     * @return The message.
+=======
      * <code>optional string password = 2;</code>
      * @return The password.
+>>>>>>> master
      */
     public java.lang.String getPassword() {
       java.lang.Object ref = password_;
@@ -4167,8 +4358,13 @@ public final class Protocol {
       }
     }
     /**
+<<<<<<< HEAD
+     * <code>required string message = 5;</code>
+     * @return The bytes for message.
+=======
      * <code>optional string password = 2;</code>
      * @return The bytes for password.
+>>>>>>> master
      */
     public com.google.protobuf.ByteString
         getPasswordBytes() {
@@ -4206,7 +4402,20 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, username_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
+<<<<<<< HEAD
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, articleName_);
+      }
+      if (((bitField0_ & 0x00000004) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, offerName_);
+      }
+      if (((bitField0_ & 0x00000008) != 0)) {
+        output.writeFloat(4, globalPrice_);
+      }
+      if (((bitField0_ & 0x00000010) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, message_);
+=======
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, password_);
+>>>>>>> master
       }
       unknownFields.writeTo(output);
     }
@@ -4221,7 +4430,21 @@ public final class Protocol {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, username_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
+<<<<<<< HEAD
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, articleName_);
+      }
+      if (((bitField0_ & 0x00000004) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, offerName_);
+      }
+      if (((bitField0_ & 0x00000008) != 0)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(4, globalPrice_);
+      }
+      if (((bitField0_ & 0x00000010) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, message_);
+=======
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, password_);
+>>>>>>> master
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -4238,10 +4461,33 @@ public final class Protocol {
       }
       Protos.Protocol.User other = (Protos.Protocol.User) obj;
 
+<<<<<<< HEAD
+      if (hasManufactureName() != other.hasManufactureName()) return false;
+      if (hasManufactureName()) {
+        if (!getManufactureName()
+            .equals(other.getManufactureName())) return false;
+      }
+      if (hasArticleName() != other.hasArticleName()) return false;
+      if (hasArticleName()) {
+        if (!getArticleName()
+            .equals(other.getArticleName())) return false;
+      }
+      if (hasOfferName() != other.hasOfferName()) return false;
+      if (hasOfferName()) {
+        if (!getOfferName()
+            .equals(other.getOfferName())) return false;
+      }
+      if (hasGlobalPrice() != other.hasGlobalPrice()) return false;
+      if (hasGlobalPrice()) {
+        if (java.lang.Float.floatToIntBits(getGlobalPrice())
+            != java.lang.Float.floatToIntBits(
+                other.getGlobalPrice())) return false;
+=======
       if (hasUsername() != other.hasUsername()) return false;
       if (hasUsername()) {
         if (!getUsername()
             .equals(other.getUsername())) return false;
+>>>>>>> master
       }
       if (hasPassword() != other.hasPassword()) return false;
       if (hasPassword()) {
@@ -4259,9 +4505,28 @@ public final class Protocol {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
+<<<<<<< HEAD
+      if (hasManufactureName()) {
+        hash = (37 * hash) + MANUFACTURENAME_FIELD_NUMBER;
+        hash = (53 * hash) + getManufactureName().hashCode();
+      }
+      if (hasArticleName()) {
+        hash = (37 * hash) + ARTICLENAME_FIELD_NUMBER;
+        hash = (53 * hash) + getArticleName().hashCode();
+      }
+      if (hasOfferName()) {
+        hash = (37 * hash) + OFFERNAME_FIELD_NUMBER;
+        hash = (53 * hash) + getOfferName().hashCode();
+      }
+      if (hasGlobalPrice()) {
+        hash = (37 * hash) + GLOBALPRICE_FIELD_NUMBER;
+        hash = (53 * hash) + java.lang.Float.floatToIntBits(
+            getGlobalPrice());
+=======
       if (hasUsername()) {
         hash = (37 * hash) + USERNAME_FIELD_NUMBER;
         hash = (53 * hash) + getUsername().hashCode();
+>>>>>>> master
       }
       if (hasPassword()) {
         hash = (37 * hash) + PASSWORD_FIELD_NUMBER;
@@ -4404,6 +4669,15 @@ public final class Protocol {
         bitField0_ = (bitField0_ & ~0x00000001);
         password_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
+<<<<<<< HEAD
+        offerName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000004);
+        globalPrice_ = 0F;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        message_ = "";
+        bitField0_ = (bitField0_ & ~0x00000010);
+=======
+>>>>>>> master
         return this;
       }
 
@@ -4439,7 +4713,23 @@ public final class Protocol {
         if (((from_bitField0_ & 0x00000002) != 0)) {
           to_bitField0_ |= 0x00000002;
         }
+<<<<<<< HEAD
+        result.articleName_ = articleName_;
+        if (((from_bitField0_ & 0x00000004) != 0)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.offerName_ = offerName_;
+        if (((from_bitField0_ & 0x00000008) != 0)) {
+          result.globalPrice_ = globalPrice_;
+          to_bitField0_ |= 0x00000008;
+        }
+        if (((from_bitField0_ & 0x00000010) != 0)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.message_ = message_;
+=======
         result.password_ = password_;
+>>>>>>> master
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -4496,7 +4786,24 @@ public final class Protocol {
         }
         if (other.hasPassword()) {
           bitField0_ |= 0x00000002;
+<<<<<<< HEAD
+          articleName_ = other.articleName_;
+          onChanged();
+        }
+        if (other.hasOfferName()) {
+          bitField0_ |= 0x00000004;
+          offerName_ = other.offerName_;
+          onChanged();
+        }
+        if (other.hasGlobalPrice()) {
+          setGlobalPrice(other.getGlobalPrice());
+        }
+        if (other.hasMessage()) {
+          bitField0_ |= 0x00000010;
+          message_ = other.message_;
+=======
           password_ = other.password_;
+>>>>>>> master
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -4695,7 +5002,216 @@ public final class Protocol {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000002;
+<<<<<<< HEAD
+        articleName_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object offerName_ = "";
+      /**
+       * <code>optional string offerName = 3;</code>
+       * @return Whether the offerName field is set.
+       */
+      public boolean hasOfferName() {
+        return ((bitField0_ & 0x00000004) != 0);
+      }
+      /**
+       * <code>optional string offerName = 3;</code>
+       * @return The offerName.
+       */
+      public java.lang.String getOfferName() {
+        java.lang.Object ref = offerName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            offerName_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string offerName = 3;</code>
+       * @return The bytes for offerName.
+       */
+      public com.google.protobuf.ByteString
+          getOfferNameBytes() {
+        java.lang.Object ref = offerName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          offerName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string offerName = 3;</code>
+       * @param value The offerName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setOfferName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        offerName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string offerName = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearOfferName() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        offerName_ = getDefaultInstance().getOfferName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string offerName = 3;</code>
+       * @param value The bytes for offerName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setOfferNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        offerName_ = value;
+        onChanged();
+        return this;
+      }
+
+      private float globalPrice_ ;
+      /**
+       * <code>optional float globalPrice = 4;</code>
+       * @return Whether the globalPrice field is set.
+       */
+      public boolean hasGlobalPrice() {
+        return ((bitField0_ & 0x00000008) != 0);
+      }
+      /**
+       * <code>optional float globalPrice = 4;</code>
+       * @return The globalPrice.
+       */
+      public float getGlobalPrice() {
+        return globalPrice_;
+      }
+      /**
+       * <code>optional float globalPrice = 4;</code>
+       * @param value The globalPrice to set.
+       * @return This builder for chaining.
+       */
+      public Builder setGlobalPrice(float value) {
+        bitField0_ |= 0x00000008;
+        globalPrice_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional float globalPrice = 4;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearGlobalPrice() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        globalPrice_ = 0F;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object message_ = "";
+      /**
+       * <code>required string message = 5;</code>
+       * @return Whether the message field is set.
+       */
+      public boolean hasMessage() {
+        return ((bitField0_ & 0x00000010) != 0);
+      }
+      /**
+       * <code>required string message = 5;</code>
+       * @return The message.
+       */
+      public java.lang.String getMessage() {
+        java.lang.Object ref = message_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            message_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string message = 5;</code>
+       * @return The bytes for message.
+       */
+      public com.google.protobuf.ByteString
+          getMessageBytes() {
+        java.lang.Object ref = message_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          message_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string message = 5;</code>
+       * @param value The message to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMessage(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        message_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string message = 5;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearMessage() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        message_ = getDefaultInstance().getMessage();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string message = 5;</code>
+       * @param value The bytes for message to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMessageBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        message_ = value;
+=======
         password_ = value;
+>>>>>>> master
         onChanged();
         return this;
       }
@@ -4768,18 +5284,33 @@ public final class Protocol {
     boolean getResult();
 
     /**
+<<<<<<< HEAD
+     * <code>optional string password = 2;</code>
+     * @return Whether the password field is set.
+=======
      * <code>optional string description = 2;</code>
      * @return Whether the description field is set.
+>>>>>>> master
      */
     boolean hasDescription();
     /**
+<<<<<<< HEAD
+     * <code>optional string password = 2;</code>
+     * @return The password.
+=======
      * <code>optional string description = 2;</code>
      * @return The description.
+>>>>>>> master
      */
     java.lang.String getDescription();
     /**
+<<<<<<< HEAD
+     * <code>optional string password = 2;</code>
+     * @return The bytes for password.
+=======
      * <code>optional string description = 2;</code>
      * @return The bytes for description.
+>>>>>>> master
      */
     com.google.protobuf.ByteString
         getDescriptionBytes();
@@ -4895,15 +5426,25 @@ public final class Protocol {
     public static final int DESCRIPTION_FIELD_NUMBER = 2;
     private volatile java.lang.Object description_;
     /**
+<<<<<<< HEAD
+     * <code>optional string password = 2;</code>
+     * @return Whether the password field is set.
+=======
      * <code>optional string description = 2;</code>
      * @return Whether the description field is set.
+>>>>>>> master
      */
     public boolean hasDescription() {
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
+<<<<<<< HEAD
+     * <code>optional string password = 2;</code>
+     * @return The password.
+=======
      * <code>optional string description = 2;</code>
      * @return The description.
+>>>>>>> master
      */
     public java.lang.String getDescription() {
       java.lang.Object ref = description_;
@@ -4920,8 +5461,13 @@ public final class Protocol {
       }
     }
     /**
+<<<<<<< HEAD
+     * <code>optional string password = 2;</code>
+     * @return The bytes for password.
+=======
      * <code>optional string description = 2;</code>
      * @return The bytes for description.
+>>>>>>> master
      */
     public com.google.protobuf.ByteString
         getDescriptionBytes() {
@@ -4944,6 +5490,13 @@ public final class Protocol {
       if (isInitialized == 1) return true;
       if (isInitialized == 0) return false;
 
+<<<<<<< HEAD
+      if (!hasUsername()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+=======
+>>>>>>> master
       memoizedIsInitialized = 1;
       return true;
     }
@@ -5255,6 +5808,12 @@ public final class Protocol {
 
       @java.lang.Override
       public final boolean isInitialized() {
+<<<<<<< HEAD
+        if (!hasUsername()) {
+          return false;
+        }
+=======
+>>>>>>> master
         return true;
       }
 
@@ -5377,15 +5936,108 @@ public final class Protocol {
        * <code>optional string description = 2;</code>
        * @return This builder for chaining.
        */
+<<<<<<< HEAD
+      public Builder clearUsername() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        username_ = getDefaultInstance().getUsername();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string username = 1;</code>
+       * @param value The bytes for username to set.
+       * @return This builder for chaining.
+       */
+      public Builder setUsernameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        username_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object password_ = "";
+      /**
+       * <code>optional string password = 2;</code>
+       * @return Whether the password field is set.
+       */
+      public boolean hasPassword() {
+        return ((bitField0_ & 0x00000002) != 0);
+      }
+      /**
+       * <code>optional string password = 2;</code>
+       * @return The password.
+       */
+      public java.lang.String getPassword() {
+        java.lang.Object ref = password_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            password_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string password = 2;</code>
+       * @return The bytes for password.
+       */
+      public com.google.protobuf.ByteString
+          getPasswordBytes() {
+        java.lang.Object ref = password_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          password_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string password = 2;</code>
+       * @param value The password to set.
+       * @return This builder for chaining.
+       */
+      public Builder setPassword(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        password_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string password = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearPassword() {
+=======
       public Builder clearDescription() {
+>>>>>>> master
         bitField0_ = (bitField0_ & ~0x00000002);
         description_ = getDefaultInstance().getDescription();
         onChanged();
         return this;
       }
       /**
+<<<<<<< HEAD
+       * <code>optional string password = 2;</code>
+       * @param value The bytes for password to set.
+=======
        * <code>optional string description = 2;</code>
        * @param value The bytes for description to set.
+>>>>>>> master
        * @return This builder for chaining.
        */
       public Builder setDescriptionBytes(
@@ -6734,6 +7386,28 @@ public final class Protocol {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
+<<<<<<< HEAD
+      "\n\016protocol.proto\022\004java\"\360\001\n\007Message\022\021\n\tus" +
+      "er_type\030\001 \001(\t\022.\n\020item_order_offer\030\002 \001(\0132" +
+      "\024.java.ItemOrderOffer\0228\n\025item_production" +
+      "_offer\030\003 \001(\0132\031.java.ItemProductionOffer\022" +
+      "\030\n\004user\030\004 \001(\0132\n.java.User\022\030\n\004type\030\005 \002(\0162" +
+      "\n.java.Type\022\032\n\005state\030\006 \001(\0132\013.java.State\022" +
+      "\030\n\004sale\030\007 \001(\0132\n.java.Sale\"f\n\016ItemOrderOf" +
+      "fer\022\030\n\020manufacture_name\030\001 \002(\t\022\024\n\014product" +
+      "_name\030\002 \002(\t\022\020\n\010quantity\030\003 \002(\002\022\022\n\nunit_pr" +
+      "ice\030\004 \002(\002\"\224\001\n\023ItemProductionOffer\022\023\n\013art" +
+      "icleName\030\001 \002(\t\022\022\n\nunit_price\030\002 \002(\002\022\026\n\016mi" +
+      "nimum_amount\030\003 \002(\002\022\026\n\016maximum_amount\030\004 \002" +
+      "(\002\022\016\n\006period\030\005 \002(\005\022\024\n\014manufacturer\030\006 \002(\t" +
+      "\"m\n\004Sale\022\027\n\017manufactureName\030\001 \001(\t\022\023\n\013art" +
+      "icleName\030\002 \001(\t\022\021\n\tofferName\030\003 \001(\t\022\023\n\013glo" +
+      "balPrice\030\004 \001(\002\022\017\n\007message\030\005 \002(\t\"*\n\004User\022" +
+      "\020\n\010username\030\001 \002(\t\022\020\n\010password\030\002 \001(\t\",\n\005S" +
+      "tate\022\016\n\006result\030\001 \001(\010\022\023\n\013description\030\002 \001(" +
+      "\t*9\n\004Type\022\t\n\005LOGIN\020\000\022\n\n\006LOGOUT\020\001\022\014\n\010REGI" +
+      "STER\020\002\022\014\n\010RESPONSE\020\003"
+=======
       "\n\016protocol.proto\022\006Protos\"\374\001\n\007Message\022\021\n\t" +
       "user_type\030\001 \001(\t\0220\n\020item_order_offer\030\002 \001(" +
       "\0132\026.Protos.ItemOrderOffer\022:\n\025item_produc" +
@@ -6755,6 +7429,7 @@ public final class Protocol {
       "GIN\020\000\022\n\n\006LOGOUT\020\001\022\014\n\010REGISTER\020\002\022\014\n\010RESPO" +
       "NSE\020\003\022\022\n\016ITEMORDEROFFER\020\004\022\027\n\023ITEMPRODUCT" +
       "IONOFFER\020\005"
+>>>>>>> master
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -6782,9 +7457,15 @@ public final class Protocol {
       getDescriptor().getMessageTypes().get(3);
     internal_static_Protos_User_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+<<<<<<< HEAD
+        internal_static_java_Sale_descriptor,
+        new java.lang.String[] { "ManufactureName", "ArticleName", "OfferName", "GlobalPrice", "Message", });
+    internal_static_java_User_descriptor =
+=======
         internal_static_Protos_User_descriptor,
         new java.lang.String[] { "Username", "Password", });
     internal_static_Protos_State_descriptor =
+>>>>>>> master
       getDescriptor().getMessageTypes().get(4);
     internal_static_Protos_State_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
