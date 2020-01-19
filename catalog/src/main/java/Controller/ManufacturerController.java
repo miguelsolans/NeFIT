@@ -31,7 +31,9 @@ public class ManufacturerController {
     public Response getSingleManufacturer(
             @NotNull @PathParam("name") String name
     ) {
-        return Response.ok(ManufacturerDB.getSingleManufacturer(name)).build();
+        Manufacturer manufacturer = ManufacturerDB.getSingleManufacturer(name);
+
+        return Response.ok(manufacturer).build();
     }
 
     @GET
@@ -42,16 +44,6 @@ public class ManufacturerController {
         return Response.ok(ManufacturerDB.getAvailableProducts(name)).build();
     }
 
-//    @PUT
-//    @Path("{name}/{product}")
-//    public Response updateProduct(
-//            @NotNull @PathParam("name") String name,
-//            @NotNull @PathParam("product") String product
-//
-//    ) {
-//
-//    }
-
     @POST
     @Path("/")
     public Response newManufacturer(
@@ -59,9 +51,9 @@ public class ManufacturerController {
             @NotNull @QueryParam("host") String host,
             @NotNull @QueryParam("port") String port
     ) {
-        Manufacturer manufacturer = new Manufacturer(name, host, port);
+        Manufacturer manufacturer = new Manufacturer(name);
 
-        ManufacturerDB.addManufacturer(manufacturer);
+        ManufacturerDB.addManufacturer(manufacturer, host, port);
 
         return Response.ok().build();
     }

@@ -49,6 +49,4 @@ public class NegotiationController {
         ImporterDB.setWinner(user, orderId);
         return Response.ok().build();
     }
-//    localhost:8080/negotiations/active -> todas as ativas
-//    localhost:8080/negotiations/ -> historico de todas
 }
