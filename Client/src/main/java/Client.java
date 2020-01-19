@@ -6,29 +6,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URL;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.zeromq.ZMQ;
-
-
-class NotificationHandler implements Runnable {
-    private ZMQ.Socket sub;
-
-    NotificationHandler(ZMQ.Socket sub) {
-        this.sub = sub;
-    }
-
-    @Override
-    public void run() {
-        String msg;
-        while (true) {
-            byte[] b = sub.recv();
-            msg = new String(b);
-            System.out.println("NEW NOTIFICATION: " +msg);
-        }
-    }
-}
+import java.util.*;
 
 public class Client implements Runnable {
     private Socket cs;
@@ -38,9 +19,12 @@ public class Client implements Runnable {
     private String type; // Producer, Consumer
     private String username;
     private boolean notifications;
+    private NotificationHandler handler;
+    private SubscriptionHandler subHandler;
 
     private ZMQ.Socket sub;
-    private Thread notificationsHandler;
+
+    private Queue<Message> responses = new ArrayDeque<Message>();
 
     Client(Socket cs, int subPort) throws IOException {
         this.cs = cs;
@@ -50,11 +34,18 @@ public class Client implements Runnable {
         this.type = "";
         this.username = "";
         this.notifications = true;
+        this.handler = new NotificationHandler(sm, responses, true);
 
         ZMQ.Context context = ZMQ.context(1);
         sub = context.socket(ZMQ.SUB);
         sub.connect("tcp://localhost:"+subPort);
-        notificationsHandler = new Thread(new NotificationHandler(sub));
+
+        this.subHandler = new SubscriptionHandler(sub, true);
+
+        Thread subscriptionsHandler = new Thread(subHandler);
+        Thread notificationsHandler = new Thread(handler);
+
+        subscriptionsHandler.start();
         notificationsHandler.start();
     }
 
@@ -117,18 +108,16 @@ public class Client implements Runnable {
         this.sm.write(msg);
 
         // Wait for the response message
-        Message res = this.sm.getMessage();
-        if (res != null &&
-                res.hasType() &&
-                res.getType().equals(Type.RESPONSE) &&
-                res.hasState() &&
+        Message res;
+        while((res = responses.poll()) == null);
+        if ( res.hasState() &&
                 res.getState().getResult() &&
                 res.hasUserType()
         ) {
             this.type = res.getUserType();
             this.username = username;
             return true;
-        } else if (res != null && res.hasState() && res.getState().hasDescription()) {
+        } else if (res.hasState() && res.getState().hasDescription()) {
             System.out.println(res.getState().getDescription());
         }
         return false;
@@ -172,11 +161,9 @@ public class Client implements Runnable {
 
         this.sm.write(msg);
 
-        Message res = this.sm.getMessage();
-        if (res != null &&
-                res.hasType() &&
-                res.getType().equals(Type.RESPONSE) &&
-                res.hasState() &&
+        Message res;
+        while((res = responses.poll()) == null);
+        if ( res.hasState() &&
                 res.getState().getResult()
         ) {
             Message login = Message.newBuilder()
@@ -194,23 +181,21 @@ public class Client implements Runnable {
             this.sm.write(login);
 
             // Wait for the response message
-            Message loginRes = this.sm.getMessage();
-            if (loginRes != null &&
-                    loginRes.hasType() &&
-                    loginRes.getType().equals(Type.RESPONSE) &&
-                    loginRes.hasState() &&
+            Message loginRes;
+            while((loginRes = responses.poll()) == null);
+            if ( loginRes.hasState() &&
                     loginRes.getState().getResult() &&
                     loginRes.hasUserType()
             ) {
                 this.type = loginRes.getUserType();
                 this.username = username;
                 return true;
-            } else if (loginRes != null && loginRes.hasState() && loginRes.getState().hasDescription()) {
+            } else if (loginRes.hasState() && loginRes.getState().hasDescription()) {
                 System.out.println(loginRes.getState().getDescription());
                 System.out.println("Please try to login again.");
                 return false;
             }
-        } else if (res != null && res.hasState() && res.getState().hasDescription()) {
+        } else if (res.hasState() && res.getState().hasDescription()) {
             System.out.println(res.getState().getDescription());
         }
         return false;
@@ -377,21 +362,25 @@ public class Client implements Runnable {
                 .setPeriod(Long.parseLong(period))
                 .build();
 
+        User u = User.newBuilder()
+                .setUsername(this.username)
+                .build();
+
         Message msg = Message.newBuilder()
+                .setUserType(this.type)
                 .setItemProductionOffer(offer)
                 .setType(Type.ITEMPRODUCTIONOFFER)
+                .setUser(u)
                 .build();
 
         this.sm.write(msg);
 
-        Message res = this.sm.getMessage();
-        if (res != null &&
-                res.hasType() &&
-                res.getType().equals(Type.RESPONSE) &&
-                res.hasState() &&
+        Message res;
+        while((res = responses.poll()) == null);
+        if ( res.hasState() &&
                 res.getState().getResult()) {
             return true;
-        } else if (res != null && res.hasState() && res.getState().hasDescription()) {
+        } else if (res.hasState() && res.getState().hasDescription()) {
             System.out.println(res.getState().getDescription());
         }
         return false;
@@ -403,7 +392,7 @@ public class Client implements Runnable {
         System.out.print("Manufacturer name: ");
         String name = this.sin.readLine();
 
-        sub.subscribe(name);
+        sub.subscribe(name.getBytes());
         return true;
     }
 
@@ -413,17 +402,19 @@ public class Client implements Runnable {
         System.out.print("Manufacturer name: ");
         String name = this.sin.readLine();
 
-        sub.unsubscribe(name);
+        sub.unsubscribe(name.getBytes());
         return true;
     }
 
     private boolean notifications(boolean value) {
         if (value) {
             System.out.println("Turning on the notifications!");
-            notificationsHandler.start();
+            handler.setOn(true);
+            subHandler.setOn(true);
         } else {
             System.out.println("Turning off the notifications!");
-            notificationsHandler.interrupt();
+            handler.setOn(false);
+            subHandler.setOn(false);
         }
 
         this.notifications = value;
@@ -447,21 +438,25 @@ public class Client implements Runnable {
                 .setUnitPrice(Float.parseFloat(price))
                 .build();
 
+        User u = User.newBuilder()
+                .setUsername(this.username)
+                .build();
+
         Message msg = Message.newBuilder()
+                .setUserType(this.type)
                 .setItemOrderOffer(order)
                 .setType(Type.ITEMORDEROFFER)
+                .setUser(u)
                 .build();
 
         this.sm.write(msg);
 
-        Message res = this.sm.getMessage();
-        if (res != null &&
-                res.hasType() &&
-                res.getType().equals(Type.RESPONSE) &&
-                res.hasState() &&
+        Message res;
+        while((res = responses.poll()) == null);
+        if ( res.hasState() &&
                 res.getState().getResult()) {
             return true;
-        } else if (res != null && res.hasState() && res.getState().hasDescription()) {
+        } else if (res.hasState() && res.getState().hasDescription()) {
             System.out.println(res.getState().getDescription());
         }
         return false;
@@ -514,14 +509,12 @@ public class Client implements Runnable {
 
         this.sm.write(msg);
 
-        Message res = this.sm.getMessage();
-        if (res != null &&
-                res.hasType() &&
-                res.getType().equals(Type.RESPONSE) &&
-                res.hasState() &&
+        Message res;
+        while((res = responses.poll()) == null);
+        if ( res.hasState() &&
                 res.getState().getResult()) {
             return true;
-        } else if (res != null && res.hasState() && res.getState().hasDescription()) {
+        } else if (res.hasState() && res.getState().hasDescription()) {
             System.out.println(res.getState().getDescription());
         }
         return false;

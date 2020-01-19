@@ -5,8 +5,8 @@
 run(Host, Port) ->
 	{ok, Context} = erlzmq:context(1),
 	{ok, Sock} = erlzmq:socket(Context, [push, {active, false}]),
-	ok = erlzmq:connect(Sock, "tcp://" ++ Host ++ ":" ++ integer_to_list(Port)),
-	io:format("ZMQ connect " ++ Host ++ ":" ++ integer_to_list(Port)),
+	ok = erlzmq:connect(Sock, "tcp://" ++ Host ++ ":" ++ Port),
+	io:format("ZMQ connect " ++ Host ++ ":" ++ Port ++ "~n"),
 	spawn( fun() -> negotiationsProducer(Sock) end).
 
 % function that sends an order to a negotiator
@@ -21,7 +21,9 @@ negotiationsProducer(Sock) ->
 	receive
 		{order, Msg, From} ->
 			case erlzmq:send(Sock, Msg) of
-				ok -> From ! ok;
+				ok ->
+					io:put_chars("Send Msg to Negotiator\n"),
+					From ! ok;
 				_ -> From ! error
 			end,
 			negotiationsProducer(Sock)

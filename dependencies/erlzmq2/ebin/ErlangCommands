@@ -10,5 +10,5 @@ code:load_abs("../../../Frontend/bin/supervisor_manager").
 code:load_abs("../../../Frontend/bin/negotiations_manager").
 code:load_abs("../../../Frontend/bin/negotiations_producer").
 code:load_abs("../../../Frontend/bin/negotiations_consumer").
-code:load_abs("../../../Frontend/bin/mochijson2").
+code:load_abs("../../../Frontend/bin/mochijson").
 frontend_server:server(9999).
