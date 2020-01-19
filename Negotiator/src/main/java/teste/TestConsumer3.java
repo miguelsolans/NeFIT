@@ -1,8 +1,7 @@
 package teste;
 
-import org.zeromq.ZMQ;
-
 import Protos.Protocol;
+import org.zeromq.ZMQ;
 
 public class TestConsumer3 {
 
@@ -10,17 +9,22 @@ public class TestConsumer3 {
         ZMQ.Context context = ZMQ.context(1);
 
         ZMQ.Socket push = context.socket(ZMQ.PUSH);
-        push.connect("tcp://localhost:12346");
+        push.connect("tcp://localhost:12345");
+
+        Protocol.User user = Protocol.User.newBuilder().
+                setUsername("Armindo").
+                build();
 
 
 
         Protocol.ItemOrderOffer itemOrderOffer = Protocol.ItemOrderOffer.newBuilder().
                                                 setQuantity(20).
                                                 setUnitPrice((float)1.5).
-                                                setManufactureName("Tifany").
+                                                setManufacturerName("Tifany").
                                                 setProductName("Bananas").
                                                 build();
         Protocol.Message message = Protocol.Message.newBuilder().
+                                    setUser(user).
                                     setUserType("Consumer").
                                     setItemOrderOffer(itemOrderOffer).
                                     setType(Protocol.Type.REGISTER).
