@@ -11,7 +11,7 @@ public class SubscriptionHandler implements Runnable {
     void setOn(boolean value) {
         on = value;
     }
-
+  
     @Override
     public void run() {
         String msg;
