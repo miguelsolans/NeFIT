@@ -3,7 +3,7 @@ package teste;
 import Protos.Protocol;
 import org.zeromq.ZMQ;
 
-tConsumer3 {
+public class TestConsumer3 {
 
     public static void main(String[] args){
         ZMQ.Context context = ZMQ.context(1);
@@ -20,7 +20,7 @@ tConsumer3 {
         Protocol.ItemOrderOffer itemOrderOffer = Protocol.ItemOrderOffer.newBuilder().
                                                 setQuantity(20).
                                                 setUnitPrice((float)1.5).
-                                                setManufactureName("Tifany").
+                                                setManufacturerName("Tifany").
                                                 setProductName("Bananas").
                                                 build();
         Protocol.Message message = Protocol.Message.newBuilder().
