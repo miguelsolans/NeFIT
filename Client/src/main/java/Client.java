@@ -7,6 +7,8 @@ import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URL;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.zeromq.ZMQ;
 
 
@@ -465,7 +467,15 @@ public class Client implements Runnable {
         return false;
     }
 
-    private void getRequest(String path) throws IOException {
+    private static void parseJson(String jsonStr){
+        JSONArray jsonarray = new JSONArray(jsonStr);
+        for (int i = 0; i < jsonarray.length(); i++) {
+            JSONObject jsonobject = jsonarray.getJSONObject(i);
+            System.out.println(jsonobject.toString());
+        }
+    }
+
+    private static void getRequest(String path) throws IOException {
         URL url = new URL(path);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
@@ -480,17 +490,19 @@ public class Client implements Runnable {
             reply.append(inputLine);
         }
         in.close();
-        System.out.println(reply.toString());
+        parseJson(reply.toString());
     }
 
-    private void listOffers() throws Exception {
+    private static void listOffers() throws Exception {
         String path = "http://localhost:8080/negotiation/active";
+        System.out.println("\nList of active offers:");
         getRequest(path);
     }
 
 
-    private void listHistory() throws Exception {
+    private static void listHistory() throws Exception {
         String path = "http://localhost:8080/negotiation/";
+        System.out.println("\nHistory of offers:");
         getRequest(path);
     }
 
