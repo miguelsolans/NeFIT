@@ -1,7 +1,6 @@
 package teste;
 
 import org.zeromq.ZMQ;
-
 import Protos.Protocol;
 
 public class TestConsumer2 {

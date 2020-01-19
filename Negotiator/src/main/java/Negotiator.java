@@ -1,6 +1,5 @@
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.zeromq.ZMQ;
-
 import Protos.Protocol;
 
 public class Negotiator {
@@ -18,7 +17,7 @@ public class Negotiator {
     public static void main(String[] args) {
 
         ZMQ.Context context = ZMQ.context(1);
-
+        Sender sender = new Sender();
 
         String portPUSH = "3000", portPULL="12345";
 
@@ -42,9 +41,20 @@ public class Negotiator {
 
                 case "Producer":
                     result =negotiator.addProducionOffer(message,push);
+                    if (result) {
+                        sender.sendProductionOffer(message.getUser().getUsername(),message.getItemProductionOffer().getArticleName(),
+                                message.getItemProductionOffer().getUnitPrice(),
+                                message.getItemProductionOffer().getMinimumAmount(),
+                                message.getItemProductionOffer().getMaximumAmount(),(int) message.getItemProductionOffer().getPeriod());
+                    }
                     break;
                 case "Consumer":
                     result = negotiator.addOffer(message);
+                    if (result){
+                        sender.sendItemOrderOffer(message.getUser().getUsername(),message.getItemOrderOffer().getManufactureName(),
+                                                    message.getItemOrderOffer().getProductName(),message.getItemOrderOffer().getQuantity(),
+                                                    message.getItemOrderOffer().getUnitPrice());
+                    }
                     break;
             }
             //Send message with the result of the offer (true or false)
@@ -88,7 +98,8 @@ public class Negotiator {
 
     private boolean addProducionOffer(Protocol.Message message,ZMQ.Socket socket){
         Protocol.ItemProductionOffer itemProductionOffer = message.getItemProductionOffer();
-        ProductionOffer productionOffer = new ProductionOffer(itemProductionOffer.getManufacturer(),itemProductionOffer.getArticleName(),itemProductionOffer.getMinimumAmount(),itemProductionOffer.getMaximumAmount(),itemProductionOffer.getUnitPrice(),itemProductionOffer.getPeriod(),true,socket);
+        Protocol.User user = message.getUser();
+        ProductionOffer productionOffer = new ProductionOffer(user.getUsername(),itemProductionOffer.getArticleName(),itemProductionOffer.getMinimumAmount(),itemProductionOffer.getMaximumAmount(),itemProductionOffer.getUnitPrice(),(int)itemProductionOffer.getPeriod(),true,socket);
        return (this.productionMap.insertProductionOffert(productionOffer));
     }
 
