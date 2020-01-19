@@ -8,6 +8,8 @@ public class ItemProductionOffer {
     @NotNull
     String productName;
     @NotNull
+    String manufacturer;
+    @NotNull
     double unitPrice;
     @NotNull
     double minimumAmount;
@@ -21,8 +23,9 @@ public class ItemProductionOffer {
     boolean active;
 
 
-    public ItemProductionOffer(String productName, double unitPrice, double minimumAmount, double maximumAmount, int period) {
+    public ItemProductionOffer(String productName, String manufacturer, double unitPrice, double minimumAmount, double maximumAmount, int period) {
         this.productName = productName;
+        this.manufacturer = manufacturer;
         this.unitPrice = unitPrice;
         this.minimumAmount = minimumAmount;
         this.maximumAmount = maximumAmount;
