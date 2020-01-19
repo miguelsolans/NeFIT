@@ -390,7 +390,7 @@ public class Client implements Runnable {
         System.out.print("Manufacturer name: ");
         String name = this.sin.readLine();
 
-        sub.subscribe(name);
+        sub.subscribe(name.getBytes());
         return true;
     }
 
@@ -400,7 +400,7 @@ public class Client implements Runnable {
         System.out.print("Manufacturer name: ");
         String name = this.sin.readLine();
 
-        sub.unsubscribe(name);
+        sub.unsubscribe(name.getBytes());
         return true;
     }
 
