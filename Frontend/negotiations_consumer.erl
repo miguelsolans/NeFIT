@@ -12,6 +12,7 @@ start() ->
 negotiationsConsumer(Sock) ->
 	case erlzmq:recv(Sock) of
 		{ok, M} ->
+            io:put_chars("Receive Msg from Negotiator\n"),
 			Msg = protocol:decode_msg(M, 'Message'),
 			User = maps:get(user, Msg),
 			Username = maps:get(username, User),
