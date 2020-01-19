@@ -3,7 +3,9 @@ import Protos.Protocol.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.Socket;
+import java.net.URL;
 
 import org.zeromq.ZMQ;
 
@@ -217,7 +219,8 @@ public class Client implements Runnable {
         System.out.println("What do you want to do, " + username + "? \nNotifications are on!");
         while (true) {
             System.out.println("\n1) New order \n2) Subscribe manufacturer");
-            System.out.println("3) Unsubscribe manufacturer \n4) Toggle order notifications \n5) Logout");
+            System.out.println("3) Unsubscribe manufacturer \n4) Toggle order notifications");
+            System.out.println("5) List active offers \n 6) Show transaction history \n7) Logout");
             System.out.print("-> ");
 
             switch (this.sin.readLine()) {
@@ -258,6 +261,24 @@ public class Client implements Runnable {
                     break;
 
                 case "5":
+                    try {
+                        listOffers();
+                        return true;
+                    } catch (Exception e) {
+                        System.out.println("ERROR FETCHING THE OFFERS: "+e.getMessage());
+                        return false;
+                    }
+
+                case "6":
+                    try {
+                        listHistory();
+                        return true;
+                    } catch (Exception e) {
+                        System.out.println("ERROR FETCHING THE HISTORY: "+e.getMessage());
+                        return false;
+                    }
+
+                case "7":
                     if (!logout())
                         System.out.println("\nLOGOUT UNSUCCESSFUL\n");
                     else {
@@ -277,7 +298,8 @@ public class Client implements Runnable {
     private boolean manufacturerMenu() throws IOException {
         System.out.println("What do you want to do, " + username + "? \nNotifications are on!");
         while (true) {
-            System.out.println("\n1) New offer \n2) Toggle order notifications \n3) Logout");
+            System.out.println("\n1) New offer \n2) Toggle order notifications");
+            System.out.println("3) List active offers \n 4) Show transaction history \n5) Logout");
             System.out.print("-> ");
 
             switch (this.sin.readLine()) {
@@ -300,6 +322,24 @@ public class Client implements Runnable {
                     break;
 
                 case "3":
+                    try {
+                        listOffers();
+                        return true;
+                    } catch (Exception e) {
+                        System.out.println("ERROR FETCHING THE OFFERS: "+e.getMessage());
+                        return false;
+                    }
+
+                case "4":
+                    try {
+                        listHistory();
+                        return true;
+                    } catch (Exception e) {
+                        System.out.println("ERROR FETCHING THE HISTORY: "+e.getMessage());
+                        return false;
+                    }
+
+                case "5":
                     if (!logout())
                         System.out.println("\nLOGOUT UNSUCCESSFUL\n");
                     else {
@@ -423,6 +463,35 @@ public class Client implements Runnable {
             System.out.println(res.getState().getDescription());
         }
         return false;
+    }
+
+    private void getRequest(String path) throws IOException {
+        URL url = new URL(path);
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+
+        int response = con.getResponseCode();
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuilder reply = new StringBuilder();
+
+        while ((inputLine = in.readLine()) != null) {
+            reply.append(inputLine);
+        }
+        in.close();
+        System.out.println(reply.toString());
+    }
+
+    private void listOffers() throws Exception {
+        String path = "http://localhost:8080/negotiation/active";
+        getRequest(path);
+    }
+
+
+    private void listHistory() throws Exception {
+        String path = "http://localhost:8080/negotiation/";
+        getRequest(path);
     }
 
     private boolean logout() throws IOException {
