@@ -1,5 +1,6 @@
 package Controller;
 
+import business.Importer;
 import business.ItemOrderOffer;
 import db.ImporterDB;
 
@@ -44,10 +45,13 @@ public class ImporterController {
 
     @POST
     @Path("/")
-    public void newImporter(
+    public Response newImporter(
             @NotNull @QueryParam("name") String name
     ) {
         System.out.println("Name: " + name);
+        ImporterDB.addImporter(new Importer(name));
+
+        return Response.ok().build();
     }
 
     @POST
