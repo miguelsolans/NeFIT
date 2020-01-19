@@ -3,6 +3,7 @@ package db;
 import business.ItemOrderOffer;
 import business.ItemProductionOffer;
 import business.Manufacturer;
+import business.Negotiator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,17 +12,23 @@ import java.util.List;
 public class ManufacturerDB {
 
     static HashMap<String, Manufacturer> manufacturers = new HashMap<>();
+    static HashMap<String, Negotiator> negotiators = new HashMap<>();
 
     static {
-        manufacturers.put("Korg", new Manufacturer("Korg", "127.0.0.1", "12344"));
-        manufacturers.put("Peugeot", new Manufacturer("Peugeot", "127.0.0.1", "12346"));
-        manufacturers.put("Land Rover", new Manufacturer("Land Rover", "127.0.0.1", "1237"));
+        negotiators.put("4001", new Negotiator("127.0.0.1", "4001"));
+        negotiators.put("4002", new Negotiator("127.0.0.1", "4002"));
+        negotiators.put("4003", new Negotiator("127.0.0.1", "4003"));
+
+        manufacturers.put("Korg", new Manufacturer("Korg", negotiators.get("4001")));
+        manufacturers.put("Peugeot", new Manufacturer("Peugeot", negotiators.get("4002")));
+        manufacturers.put("Land Rover", new Manufacturer("Land Rover", negotiators.get("4003")));
 
         manufacturers.get("Peugeot").addProduct(new ItemProductionOffer("208", "Peugeot", 17000.0, 1, 100, 5000));
         manufacturers.get("Peugeot").addProduct(new ItemProductionOffer("308", "Peugeot",20000.0, 1, 20, 60));
         manufacturers.get("Land Rover").addProduct(new ItemProductionOffer("Discovery", "Land Rover", 50000.0, 1, 500, 10));
         manufacturers.get("Land Rover").addProduct(new ItemProductionOffer("Defender", "Land Rover", 100000.0, 1, 150, 30));
         manufacturers.get("Land Rover").addProduct(new ItemProductionOffer("Serie", "Land Rover", 105000.0, 3, 2, 90));
+
 
         manufacturers.get("Korg").addProduct(new ItemProductionOffer("Kronos", "Korg", 25000, 1, 2500, 1));
 
@@ -78,7 +85,9 @@ public class ManufacturerDB {
         return manufacturers.get(manufacturer);
     }
 
-    public static void addManufacturer(Manufacturer manufacturer) {
+    public static void addManufacturer(Manufacturer manufacturer, String host, String port) {
+        manufacturer.setNegotiator(negotiators.get(port));
+
         manufacturers.put(manufacturer.getName(), manufacturer);
     }
 

@@ -1,54 +1,100 @@
-package Controller;
+package business;
 
-import business.ItemProductionOffer;
-import db.ManufacturerDB;
+import org.joda.time.DateTime;
 
-import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
-@Path("product")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
-public class ItemProductionController {
+public class ItemProductionOffer {
+    @NotNull
+    String productName;
+    @NotNull
+    String manufacturer;
+    @NotNull
+    double unitPrice;
+    @NotNull
+    double minimumAmount;
+    @NotNull
+    double maximumAmount;
+    @NotNull
+    DateTime start;
+    @NotNull
+    DateTime end;
+    @NotNull
+    boolean active;
 
-    private Validator validator;
 
-    public ItemProductionController(Validator validator) {
-        this.validator = validator;
+    public ItemProductionOffer(String productName, String manufacturer, double unitPrice, double minimumAmount, double maximumAmount, int period) {
+        this.productName = productName;
+        this.manufacturer = manufacturer;
+        this.unitPrice = unitPrice;
+        this.minimumAmount = minimumAmount;
+        this.maximumAmount = maximumAmount;
+        this.active = true;
+        this.start = new DateTime();
+        this.end = new DateTime().plusSeconds(period);
     }
 
-    @GET
-    @Path("/")
-    public Response getProducts() {
-        return Response.ok(ManufacturerDB.getAvailableProducts()).build();
-
+    public String getName() {
+        return this.productName;
     }
 
-    @GET
-    @Path("{manufacturer}")
-    public Response getManufacturerProducts(
-            @NotNull @PathParam("manufacturer") String manufacturer
-    ) {
-        return Response.ok(ManufacturerDB.getManufacturerProducts(manufacturer)).build();
+    public void setName(String name) {
+        this.productName = name;
     }
 
-    @POST
-    @Path("{manufacturer}")
-    public Response addProduct(
-            @NotNull @PathParam("manufacturer") String manufacturer,
-            @NotNull @QueryParam("productName") String productName,
-            @NotNull @QueryParam("unitPrice") double unitPrice,
-            @NotNull @QueryParam("minimumAmount") double minimumAmount,
-            @NotNull @QueryParam("maximumAmount") double maximumAmount,
-            @NotNull @QueryParam("period") int period
-    ) {
-        ItemProductionOffer product = new ItemProductionOffer(productName, manufacturer, unitPrice, minimumAmount, maximumAmount, period);
+    public String getProductName() {
+        return this.productName;
+    }
 
-        ManufacturerDB.addProduct(manufacturer, product);
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
 
-        return Response.ok().build();
+    public double getUnitPrice() {
+        return this.unitPrice;
+    }
+
+    public void setUnitPrice(float unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public double getMinimumAmout() {
+        return this.minimumAmount;
+    }
+
+    public void setMinimumAmout(float minimumAmout) {
+        this.minimumAmount = minimumAmout;
+    }
+
+    public double getMaximumAmount() {
+        return this.maximumAmount;
+    }
+
+    public void setMaximumAmount(float maximumAmount) {
+        this.maximumAmount = maximumAmount;
+    }
+
+    public DateTime getStart() {
+        return this.start;
+    }
+
+    public void setStart(DateTime start) {
+        this.start = start;
+    }
+
+    public DateTime getEnd() {
+        return this.end;
+    }
+
+    public void setEnd(DateTime end) {
+        this.end = end;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
