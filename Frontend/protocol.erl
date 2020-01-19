@@ -47,7 +47,7 @@
 
 
 %% enumerated types
--type 'Type'() :: 'LOGIN' | 'LOGOUT' | 'REGISTER' | 'RESPONSE' | 'ITEMORDEROFFER' | 'ITEMPRODUCTIONOFFER'.
+-type 'Type'() :: 'LOGIN' | 'LOGOUT' | 'REGISTER' | 'RESPONSE' | 'ITEMORDEROFFER' | 'ITEMPRODUCTIONOFFER' | 'SUBSCRIPTION'.
 -export_type(['Type'/0]).
 
 %% message types
@@ -56,7 +56,7 @@
         item_order_offer        => 'ItemOrderOffer'(), % = 2
         item_production_offer   => 'ItemProductionOffer'(), % = 3
         user                    => 'User'(),        % = 4
-        type                    := 'LOGIN' | 'LOGOUT' | 'REGISTER' | 'RESPONSE' | 'ITEMORDEROFFER' | 'ITEMPRODUCTIONOFFER' | integer(), % = 5, enum Type
+        type                    := 'LOGIN' | 'LOGOUT' | 'REGISTER' | 'RESPONSE' | 'ITEMORDEROFFER' | 'ITEMPRODUCTIONOFFER' | 'SUBSCRIPTION' | integer(), % = 5, enum Type
         state                   => 'State'(),       % = 6
         sale                    => 'Sale'()         % = 7
        }.
@@ -370,6 +370,8 @@ e_enum_Type('ITEMORDEROFFER', Bin, _TrUserData) ->
     <<Bin/binary, 4>>;
 e_enum_Type('ITEMPRODUCTIONOFFER', Bin, _TrUserData) ->
     <<Bin/binary, 5>>;
+e_enum_Type('SUBSCRIPTION', Bin, _TrUserData) ->
+    <<Bin/binary, 6>>;
 e_enum_Type(V, Bin, _TrUserData) -> e_varint(V, Bin).
 
 -compile({nowarn_unused_function,e_type_sint/3}).
@@ -1867,6 +1869,7 @@ d_enum_Type(2) -> 'REGISTER';
 d_enum_Type(3) -> 'RESPONSE';
 d_enum_Type(4) -> 'ITEMORDEROFFER';
 d_enum_Type(5) -> 'ITEMPRODUCTIONOFFER';
+d_enum_Type(6) -> 'SUBSCRIPTION';
 d_enum_Type(V) -> V.
 
 read_group(Bin, FieldNum) ->
@@ -2327,6 +2330,7 @@ v_enum_Type('ITEMORDEROFFER', _Path, _TrUserData) -> ok;
 v_enum_Type('ITEMPRODUCTIONOFFER', _Path,
 	    _TrUserData) ->
     ok;
+v_enum_Type('SUBSCRIPTION', _Path, _TrUserData) -> ok;
 v_enum_Type(V, Path, TrUserData) when is_integer(V) ->
     v_type_sint32(V, Path, TrUserData);
 v_enum_Type(X, Path, _TrUserData) ->
@@ -2440,7 +2444,7 @@ get_msg_defs() ->
     [{{enum, 'Type'},
       [{'LOGIN', 0}, {'LOGOUT', 1}, {'REGISTER', 2},
        {'RESPONSE', 3}, {'ITEMORDEROFFER', 4},
-       {'ITEMPRODUCTIONOFFER', 5}]},
+       {'ITEMPRODUCTIONOFFER', 5}, {'SUBSCRIPTION', 6}]},
      {{msg, 'Message'},
       [#{name => user_type, fnum => 1, rnum => 2,
 	 type => string, occurrence => optional, opts => []},
@@ -2603,7 +2607,7 @@ find_msg_def(_) -> error.
 find_enum_def('Type') ->
     [{'LOGIN', 0}, {'LOGOUT', 1}, {'REGISTER', 2},
      {'RESPONSE', 3}, {'ITEMORDEROFFER', 4},
-     {'ITEMPRODUCTIONOFFER', 5}];
+     {'ITEMPRODUCTIONOFFER', 5}, {'SUBSCRIPTION', 6}];
 find_enum_def(_) -> error.
 
 
@@ -2620,7 +2624,8 @@ enum_symbol_by_value_Type(1) -> 'LOGOUT';
 enum_symbol_by_value_Type(2) -> 'REGISTER';
 enum_symbol_by_value_Type(3) -> 'RESPONSE';
 enum_symbol_by_value_Type(4) -> 'ITEMORDEROFFER';
-enum_symbol_by_value_Type(5) -> 'ITEMPRODUCTIONOFFER'.
+enum_symbol_by_value_Type(5) -> 'ITEMPRODUCTIONOFFER';
+enum_symbol_by_value_Type(6) -> 'SUBSCRIPTION'.
 
 
 enum_value_by_symbol_Type('LOGIN') -> 0;
@@ -2628,7 +2633,8 @@ enum_value_by_symbol_Type('LOGOUT') -> 1;
 enum_value_by_symbol_Type('REGISTER') -> 2;
 enum_value_by_symbol_Type('RESPONSE') -> 3;
 enum_value_by_symbol_Type('ITEMORDEROFFER') -> 4;
-enum_value_by_symbol_Type('ITEMPRODUCTIONOFFER') -> 5.
+enum_value_by_symbol_Type('ITEMPRODUCTIONOFFER') -> 5;
+enum_value_by_symbol_Type('SUBSCRIPTION') -> 6.
 
 
 get_service_names() -> [].

@@ -39,6 +39,7 @@ enum Type{
     RESPONSE = 3;
     ITEMORDEROFFER = 4;
     ITEMPRODUCTIONOFFER = 5;
+    NOTIFICATION = 6;
 }
 
 message State {
