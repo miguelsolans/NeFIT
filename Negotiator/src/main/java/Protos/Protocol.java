@@ -44,9 +44,9 @@ public final class Protocol {
      */
     ITEMPRODUCTIONOFFER(5),
     /**
-     * <code>SUBSCRIPTION = 6;</code>
+     * <code>NOTIFICATION = 6;</code>
      */
-    SUBSCRIPTION(6),
+    NOTIFICATION(6),
     ;
 
     /**
@@ -74,9 +74,9 @@ public final class Protocol {
      */
     public static final int ITEMPRODUCTIONOFFER_VALUE = 5;
     /**
-     * <code>SUBSCRIPTION = 6;</code>
+     * <code>NOTIFICATION = 6;</code>
      */
-    public static final int SUBSCRIPTION_VALUE = 6;
+    public static final int NOTIFICATION_VALUE = 6;
 
 
     public final int getNumber() {
@@ -105,7 +105,7 @@ public final class Protocol {
         case 3: return RESPONSE;
         case 4: return ITEMORDEROFFER;
         case 5: return ITEMPRODUCTIONOFFER;
-        case 6: return SUBSCRIPTION;
+        case 6: return NOTIFICATION;
         default: return null;
       }
     }
@@ -6763,7 +6763,7 @@ public final class Protocol {
       "ice\030\004 \001(\002\022\017\n\007message\030\005 \002(\t*x\n\004Type\022\t\n\005LO" +
       "GIN\020\000\022\n\n\006LOGOUT\020\001\022\014\n\010REGISTER\020\002\022\014\n\010RESPO" +
       "NSE\020\003\022\022\n\016ITEMORDEROFFER\020\004\022\027\n\023ITEMPRODUCT" +
-      "IONOFFER\020\005\022\020\n\014SUBSCRIPTION\020\006"
+      "IONOFFER\020\005\022\020\n\014NOTIFICATION\020\006"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
