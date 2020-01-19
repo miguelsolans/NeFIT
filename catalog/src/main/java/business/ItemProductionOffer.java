@@ -31,7 +31,7 @@ public class ItemProductionOffer {
         this.maximumAmount = maximumAmount;
         this.active = true;
         this.start = new DateTime();
-        this.end = new DateTime().plusSeconds(period);
+        this.end = new DateTime().plusMillis(period);
     }
 
     public String getName() {

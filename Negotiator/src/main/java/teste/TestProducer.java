@@ -2,9 +2,7 @@ package teste;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.zeromq.ZMQ;
-
 import Protos.Protocol;
-
 
 public class TestProducer {
 
