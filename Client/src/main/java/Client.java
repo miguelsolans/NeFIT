@@ -427,6 +427,7 @@ public class Client implements Runnable {
 
     private boolean logout() throws IOException {
         Message msg = Message.newBuilder()
+                .setUserType(this.type)
                 .setType(Type.LOGOUT)
                 .build();
 

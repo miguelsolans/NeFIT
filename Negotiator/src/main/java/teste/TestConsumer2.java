@@ -21,7 +21,7 @@ public class TestConsumer2 {
         Protocol.ItemOrderOffer itemOrderOffer = Protocol.ItemOrderOffer.newBuilder().
                                                 setQuantity(15).
                                                 setUnitPrice((float)2.5).
-                                                setManufactureName("Tifany").
+                                                setManufacturerName("Tifany").
                                                 setProductName("Bananas").
                                                 build();
         Protocol.Message message = Protocol.Message.newBuilder().

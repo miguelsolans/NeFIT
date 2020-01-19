@@ -9,6 +9,7 @@ message Message{
     optional User user = 4;
     required Type type = 5;
     optional State state = 6;
+    optional Sale sale = 7;
 }
 
 message ItemOrderOffer{
@@ -43,4 +44,12 @@ enum Type{
 message State {
     optional bool result = 1;
     optional string description = 2;
+}
+
+message Sale{
+    optional string manufactureName = 1;
+    optional string articleName = 2;
+    optional string offerName = 3;
+    optional float globalPrice = 4;
+    required string message = 5;
 }
