@@ -10,17 +10,22 @@ public class Manufacturer {
     @NotNull
     private String name;
     @NotNull
-    String host;
-    @NotNull
-    String port;
+    private Negotiator negotiator;
+//    @NotNull
+//    private String host;
+//    @NotNull
+//    private String port;
+
     private HashMap<String, ItemProductionOffer> products;
     private static int productId;
 
-
-    public Manufacturer(String name, String host, String port) {
+    public Manufacturer(String name) {
         this.name = name;
-        this.host = host;
-        this.port = port;
+    }
+
+    public Manufacturer(String name, Negotiator negotiator) {
+        this.name = name;
+        this.negotiator = negotiator;
         this.products = new HashMap<>();
         productId = 0;
     }
@@ -58,4 +63,11 @@ public class Manufacturer {
         return this.products.get(name);
     }
 
+    public Negotiator getNegotiator() {
+        return this.negotiator;
+    }
+
+    public void setNegotiator(Negotiator negotiator) {
+        this.negotiator = negotiator;
+    }
 }
