@@ -12,8 +12,8 @@ public class Sender {
     public void sendProductionOffer(String name,String productName,float unitPrice,float minimumAmount,float maximumAmount,int period) {
         //post
         try{
-            String urlProduction = "http://localhost:8080/product/"+name+"?productName="+productName+"&unitPrice"+unitPrice+"&minimumAmount="+minimumAmount+"&maximumAmount="+maximumAmount+"&period="+period;
-            request("POST",urlProduction);
+            String urlProduction = "http://localhost:8080/product/"+name+"?productName="+productName+"&unitPrice="+unitPrice+"&minimumAmount="+minimumAmount+"&maximumAmount="+maximumAmount+"&period="+period;
+            this.request("POST",urlProduction);
         }catch (IOException ex){
             ex.printStackTrace();
         }
@@ -24,7 +24,7 @@ public class Sender {
         //post
         try{
             String urlImporter = "http://localhost:8080/importer/"+nameImporter+"?manufacturer="+manufacturer+"&product="+productName+"&quantity="+quantity+"&price="+unitPrice;
-            request("POST",urlImporter);
+            this.request("POST",urlImporter);
         }catch (IOException ex){
             ex.printStackTrace();
         }
@@ -33,8 +33,8 @@ public class Sender {
 
     public void sendWinnerOffer(String name,int id){
         try{
-            String urlWinner = "http://localhost:8080/negotiation?user="+name+"id="+id;
-            request("PUT",urlWinner);
+            String urlWinner = "http://localhost:8080/negotiation/winner?user="+name+"&id="+id;
+            this.request("PUT",urlWinner);
         }
         catch (IOException ex){
             ex.printStackTrace();

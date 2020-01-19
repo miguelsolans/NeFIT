@@ -5,6 +5,7 @@ public class Offer {
     private Float quantity;
     private Float unitPrice;
     private Float globalPrice;
+    private int id;
 
     public Offer(String fabricantName, String articleName, Float quantity, Float unitPrice,String userName) {
 
@@ -28,4 +29,7 @@ public class Offer {
 
     public String getUserName() { return userName;}
 
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id;  }
 }

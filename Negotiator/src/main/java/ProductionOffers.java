@@ -8,17 +8,13 @@ public class ProductionOffers {
     private Map<String, Map<String,ProductionOffer>> productionOffers;
     private int id;
 
-    public ProductionOffers(){
-        this.productionOffers = new HashMap<>();
-        this.id = 0;
-    }
+    public ProductionOffers(){ this.productionOffers = new HashMap<>(); }
 
 
     //Insert new productionOffer
     public boolean insertProductionOffert(ProductionOffer productionOffer){
         if(!this.productionOffers.containsKey(productionOffer.getFabricantName())){
             Map<String,ProductionOffer> offers = new HashMap<>();
-            productionOffer.setId(this.id++);
             offers.put(productionOffer.getArticleName(),productionOffer);
             this.productionOffers.put(productionOffer.getFabricantName(),offers);
             return true;
@@ -26,14 +22,12 @@ public class ProductionOffers {
         else {
             Map<String,ProductionOffer> offers = this.productionOffers.get(productionOffer.getFabricantName());
             if (!offers.containsKey(productionOffer.getArticleName()) ){
-                productionOffer.setId(this.id++);
                 offers.put(productionOffer.getArticleName(),productionOffer);
                 this.productionOffers.put(productionOffer.getFabricantName(),offers);
                 return true;
             }
             ProductionOffer offer = offers.get(productionOffer.getArticleName());
             if (offer!= null && !offer.getActive()){
-                productionOffer.setId(this.id++);
                 offers.replace(productionOffer.getArticleName(),productionOffer);
                 this.productionOffers.replace(productionOffer.getFabricantName(),offers);
                 return true;
