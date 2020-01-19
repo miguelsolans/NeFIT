@@ -61,9 +61,10 @@ public class ImporterController {
             @NotNull @QueryParam("manufacturer") String manufacturer,
             @NotNull @QueryParam("product") String product,
             @NotNull @QueryParam("quantity") double quantity,
-            @NotNull @QueryParam("price") double price
+            @NotNull @QueryParam("price") double price,
+            @NotNull @QueryParam("id") int id
     ) {
-        ImporterDB.newOrder(name, new ItemOrderOffer(manufacturer, product, quantity, price));
+        ImporterDB.newOrder(name, new ItemOrderOffer(manufacturer, product, quantity, price, id));
         return Response.ok().build();
     }
 }

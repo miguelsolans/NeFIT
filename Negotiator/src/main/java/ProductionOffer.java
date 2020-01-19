@@ -4,9 +4,8 @@ import java.util.List;
 import java.util.Timer;
 import Protos.Protocol;
 
-
 public class ProductionOffer {
-    
+
     private String fabricantName;
     private String articleName;
     private Float quantMIN;
@@ -15,6 +14,8 @@ public class ProductionOffer {
     private Boolean isActive;
     private ZMQ.Socket push;
     private List<Offer> offers;
+    private Sender sender;
+    private int id;
 
 
     /**
@@ -38,9 +39,12 @@ public class ProductionOffer {
         this.push = push;
         this.offers = new ArrayList<>();
         new Timer().schedule(new Finisher(this),time);
+        this.sender = new Sender();
+        this.id = 0;
     }
 
     public void addOrder(Offer offer){
+        // offer.setId(this.id++);
         offers.add(offer);
     }
 
@@ -48,59 +52,66 @@ public class ProductionOffer {
         this.setActive(false);
         this.offers.sort(new ComparatorOffers());
         float quantity;
+        int winners = 0, losers=0;
         Protocol.User manufactureUser = Protocol.User.newBuilder().
-                                                setUsername(this.fabricantName).
-                                                build();
+                setUsername(this.fabricantName).
+                build();
         for (Offer offer : this.offers){
             quantity = this.quantMax - offer.getQuantity();
 
             if (quantity>= this.quantMIN) {
+                winners++;
                 this.quantMax -= offer.getQuantity();
-                Protocol.User userOffer = Protocol.User.newBuilder().
-                                                    setUsername(offer.getUserName()).
-                                                    build();
-                Protocol.Sale sale = Protocol.Sale.newBuilder().
-                                                    setArticleName(this.articleName).
-                                                    setManufactureName(this.fabricantName).
-                                                    setOfferName(offer.getUserName()).
-                                                    setGlobalPrice((float)offer.getGlobalPrice()).
-                                                    setMessage("Winner").build();
-                Protocol.Message messageO = Protocol.Message.newBuilder().
-                                                    setUser(userOffer).
-                                                    setType(Protocol.Type.RESPONSE).
-                                                    setSale(sale).
-                                                    build();
-                Protocol.Message messageP = Protocol.Message.newBuilder().
-                                                    setUser(manufactureUser).
-                                                    setType(Protocol.Type.RESPONSE).
-                                                    setSale(sale).
-                                                    build();
-                push.send(messageP.toByteArray());
-                push.send(messageO.toByteArray());
-            }
-            else {
+
+                sender.sendWinnerOffer(offer.getUserName(), offer.getId());
+
                 Protocol.User userOffer = Protocol.User.newBuilder().
                         setUsername(offer.getUserName()).
                         build();
                 Protocol.Sale sale = Protocol.Sale.newBuilder().
-                                                setOfferName(offer.getUserName()).
-                                                setMessage("Loser").
-                                                build();
+                        setArticleName(this.articleName).
+                        setManufactureName(this.fabricantName).
+                        setOfferName(offer.getUserName()).
+                        setGlobalPrice((float)offer.getGlobalPrice()).
+                        setMessage("Winner").build();
                 Protocol.Message messageO = Protocol.Message.newBuilder().
-                                                    setUser(userOffer).
-                                                    setSale(sale).
-                                                    setType(Protocol.Type.RESPONSE).
-                                                    build();
+                        setUser(userOffer).
+                        setType(Protocol.Type.RESPONSE).
+                        setSale(sale).
+                        build();
                 Protocol.Message messageP = Protocol.Message.newBuilder().
-                                                    setUser(manufactureUser).
-                                                    setType(Protocol.Type.RESPONSE).
-                                                    setSale(sale).
-                                                    build();
+                        setUser(manufactureUser).
+                        setType(Protocol.Type.RESPONSE).
+                        setSale(sale).
+                        build();
+                push.send(messageP.toByteArray());
+                push.send(messageO.toByteArray());
+            }
+            else {
+                losers++;
+                Protocol.User userOffer = Protocol.User.newBuilder().
+                        setUsername(offer.getUserName()).
+                        build();
+                Protocol.Sale sale = Protocol.Sale.newBuilder().
+                        setOfferName(offer.getUserName()).
+                        setMessage("Loser").
+                        build();
+                Protocol.Message messageO = Protocol.Message.newBuilder().
+                        setUser(userOffer).
+                        setSale(sale).
+                        setType(Protocol.Type.RESPONSE).
+                        build();
+                Protocol.Message messageP = Protocol.Message.newBuilder().
+                        setUser(manufactureUser).
+                        setType(Protocol.Type.RESPONSE).
+                        setSale(sale).
+                        build();
                 push.send(messageO.toByteArray());
                 push.send(messageP.toByteArray());
 
             }
         }
+        System.out.println("Lnçamento de produção finalizado com "+winners+" vencedores e com " +losers);
 
     }
 
@@ -116,4 +127,12 @@ public class ProductionOffer {
     public boolean getActive() { return this.isActive; }
 
     public Float getQuantMax() { return this.quantMax; }
+
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
+
+    public List<Offer> getOffers() {
+        return offers;
+    }
 }
