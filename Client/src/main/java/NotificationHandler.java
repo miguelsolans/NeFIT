@@ -23,9 +23,8 @@ public class NotificationHandler implements Runnable {
 
             if (on && msg != null &&
                     msg.hasType() &&
-                    msg.getType().equals(Type.LOGIN) &&
-                    msg.hasState() &&
-                    msg.getState().hasDescription())
+                    msg.getType().equals(Type.NOTIFICATION) &&
+                    msg.hasState() && msg.getState().getDescription())
                 System.out.println("NOTIFICATION: "+ msg.getState().getDescription());
 
             else if (msg != null && msg.hasType() && msg.getType().equals(Type.RESPONSE))
