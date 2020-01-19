@@ -377,9 +377,15 @@ public class Client implements Runnable {
                 .setPeriod(Long.parseLong(period))
                 .build();
 
+        User u = User.newBuilder()
+                .setUsername(this.username)
+                .build();
+
         Message msg = Message.newBuilder()
+                .setUserType(this.type)
                 .setItemProductionOffer(offer)
                 .setType(Type.ITEMPRODUCTIONOFFER)
+                .setUser(u)
                 .build();
 
         this.sm.write(msg);
@@ -447,9 +453,15 @@ public class Client implements Runnable {
                 .setUnitPrice(Float.parseFloat(price))
                 .build();
 
+        User u = User.newBuilder()
+                .setUsername(this.username)
+                .build();
+
         Message msg = Message.newBuilder()
+                .setUserType(this.type)
                 .setItemOrderOffer(order)
                 .setType(Type.ITEMORDEROFFER)
+                .setUser(u)
                 .build();
 
         this.sm.write(msg);
