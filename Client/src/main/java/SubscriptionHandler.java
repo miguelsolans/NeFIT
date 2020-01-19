@@ -2,9 +2,14 @@ import org.zeromq.ZMQ;
 
 public class SubscriptionHandler implements Runnable {
     private ZMQ.Socket sub;
+    private boolean on;
 
     SubscriptionHandler(ZMQ.Socket sub) {
         this.sub = sub;
+    }
+
+    void setOn(boolean value) {
+        on = value;
     }
 
     @Override
@@ -13,7 +18,7 @@ public class SubscriptionHandler implements Runnable {
         while (true) {
             byte[] b = sub.recv();
             msg = new String(b);
-            System.out.println("NEW NOTIFICATION: " +msg);
+            if (on) System.out.println("NEW NOTIFICATION: " +msg);
         }
     }
 }
