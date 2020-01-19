@@ -24,12 +24,13 @@ public class ItemOrderOffer {
     boolean winner;
 
 
-    public ItemOrderOffer(String manufacturerName, String productName, double quantity, double unitPrice) {
+    public ItemOrderOffer(String manufacturerName, String productName, double quantity, double unitPrice, int orderId) {
         this.manufacturerName = manufacturerName;
         this.productName = productName;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
         this.winner = false;
+        this.orderId = orderId;
     }
 
     public String getManufacterName() {

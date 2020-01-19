@@ -20,10 +20,10 @@ public class Sender {
 
     }
 
-    public void sendItemOrderOffer(String nameImporter,String manufacturer,String productName,float quantity, float unitPrice)  {
+    public void sendItemOrderOffer(String nameImporter,String manufacturer,String productName,float quantity, float unitPrice, int id)  {
         //post
         try{
-            String urlImporter = "http://localhost:8080/importer/"+nameImporter+"?manufacturer="+manufacturer+"&product="+productName+"&quantity="+quantity+"&price="+unitPrice;
+            String urlImporter = "http://localhost:8080/importer/"+nameImporter+"?manufacturer="+manufacturer+"&product="+productName+"&quantity="+quantity+"&price="+unitPrice + "&id=" + id;
             this.request("POST",urlImporter);
         }catch (IOException ex){
             ex.printStackTrace();
@@ -31,7 +31,7 @@ public class Sender {
 
     }
 
-    public void sendWinnerOffer(String name,int id){
+    public void sendWinnerOffer(String name, int id) {
         try{
             String urlWinner = "http://localhost:8080/negotiation/winner?user="+name+"&id="+id;
             this.request("PUT",urlWinner);

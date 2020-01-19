@@ -12,18 +12,18 @@ public class TestConsumer {
         push.connect("tcp://localhost:12345");
 
         Protocol.User user = Protocol.User.newBuilder().
-                setUsername("Guiga").
+                setUsername("miguelsolans").
                 build();
 
         Protocol.ItemOrderOffer itemOrderOffer = Protocol.ItemOrderOffer.newBuilder().
                                                 setQuantity(15).
                                                 setUnitPrice((float)2.5).
-                                                setManufacturerName("Tifany").
-                                                setProductName("Bananas").
+                                                setManufacturerName("Peugeot").
+                                                setProductName("3008").
                                                 build();
         Protocol.Message message = Protocol.Message.newBuilder().
                                     setUser(user).
-                                    setUserType("Consumer").
+                                    setUserType("IMPORTER").
                                     setItemOrderOffer(itemOrderOffer).
                                     setType(Protocol.Type.REGISTER).
                                     build();

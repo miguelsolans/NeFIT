@@ -1,6 +1,8 @@
 import org.zeromq.ZMQ;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ProductionOffers {
@@ -8,7 +10,10 @@ public class ProductionOffers {
     private Map<String, Map<String,ProductionOffer>> productionOffers;
     private int id;
 
-    public ProductionOffers(){ this.productionOffers = new HashMap<>(); }
+    public ProductionOffers() {
+        this.productionOffers = new HashMap<>();
+        this.id = 0;
+    }
 
 
     //Insert new productionOffer
@@ -43,6 +48,7 @@ public class ProductionOffers {
             if (offers.containsKey(offer.getArticleName()) ){
                 ProductionOffer productionOffer = offers.get(offer.getArticleName());
                 if (productionOffer.getActive() && !(offer.getQuantity()<productionOffer.getQuantMIN()) && offer.getQuantity()<=productionOffer.getQuantMax()) {
+                    offer.setId(this.id++);
                     productionOffer.addOrder(offer);
                     this.productionOffers.replace(offer.getFabricantName(), offers);
                     return true;
@@ -50,6 +56,30 @@ public class ProductionOffers {
             }
         }
         return false;
+    }
+
+    public int getProductionOrderId (String manufacturer, String product, String username) {
+
+        if(this.productionOffers.containsKey(manufacturer)) {
+
+            Map<String, ProductionOffer> offer = this.productionOffers.get(manufacturer);
+
+            if(offer.containsKey(product)) {
+                ProductionOffer productionOfferAux = offer.get(product);
+
+                List<Offer> offerList = productionOfferAux.getOffers();
+
+                for(Offer offerSingle : offerList) {
+
+                    if(offerSingle.getFabricantName().equals(manufacturer) && offerSingle.getUserName().equals(username)) {
+                        return offerSingle.getId();
+                    }
+                }
+                // return offerAux.getId();
+            }
+        }
+
+        return -1;
     }
 
 }

@@ -19,13 +19,6 @@ public class ImporterDB {
         addImporter( new Importer("tifanysilva") );
         addImporter( new Importer("henriquepereira") );
         addImporter( new Importer("joaosilva") );
-
-        importers.get("miguelsolans").newOrder(new ItemOrderOffer("Land Rover", "Defender", 10, 10));
-        importers.get("miguelsolans").newOrder(new ItemOrderOffer("Korg", "Kronos", 2, 20));
-
-        importers.get("miguelsolans").getOrder(0);
-        importers.get("miguelsolans").getOrder(0).setWinner();
-
     }
 
     public static void addImporter(Importer importer) {
@@ -64,9 +57,15 @@ public class ImporterDB {
     }
 
     public static void setWinner(String user, int orderId) {
-        importers.get(user)
+
+
+        ItemOrderOffer t = importers.get(user).getOrder(orderId);
+
+        t.setWinner();
+
+        /*importers.get(user)
                 .getOrder(orderId)
-                .setWinner();
+                .setWinner();*/
     }
 
 }

@@ -6,14 +6,14 @@ import java.util.List;
 
 public class Importer {
     private String username;
-    private List<ItemOrderOffer> orders;
+    private HashMap<Integer, ItemOrderOffer> orders;
     // private List<ItemOrderOffer> orders;
-    private static int orderId;
+    // private static int orderId;
 
     public Importer(String username) {
         this.username = username;
-        this.orders = new ArrayList<>();
-        orderId = 0;
+        this.orders = new HashMap<>();
+        // orderId = 0;
         // this.orders = new ArrayList<>();
     }
 
@@ -26,18 +26,22 @@ public class Importer {
     }
 
     public List<ItemOrderOffer> getOrders() {
-        return this.orders;
+        List<ItemOrderOffer> item = new ArrayList<>();
+
+        for(Integer key : this.orders.keySet()) {
+            item.add(this.orders.get(key));
+        }
+
+        return item;
     }
 
     public ItemOrderOffer getOrder(int id) {
-        if( id < this.orders.size() )
-            return this.orders.get(id);
-        return null;
+        return this.orders.get(id);
     }
 
     public void newOrder(ItemOrderOffer order) {
-        order.setOrderId(orderId);
-        this.orders.add(order);
-        orderId++;
+        // order.setOrderId(orderId);
+        this.orders.put(order.getOrderId(), order);
+        // orderId++;
     }
 }

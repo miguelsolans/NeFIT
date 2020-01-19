@@ -18,12 +18,12 @@ public class TestProducer {
         pull.bind("tcp://*:3000");
 
         Protocol.User user = Protocol.User.newBuilder().
-                                            setUsername("Tifany").
+                                            setUsername("Peugeot").
                                             build();
 
 
         Protocol.ItemProductionOffer productionOffer = Protocol.ItemProductionOffer.newBuilder().
-                                                                setName("Bananas").
+                                                                setName("3008").
                                                                 setPeriod(30000).
                                                                 setMaximumAmount(30).
                                                                 setMinimumAmount(5).
@@ -31,7 +31,7 @@ public class TestProducer {
                                                                 build();
         Protocol.Message message = Protocol.Message.newBuilder().
                                             setUser(user).
-                                            setUserType("Producer").
+                                            setUserType("MANUFACTURER").
                                             setItemProductionOffer(productionOffer).
                                             setType(Protocol.Type.REGISTER).
                                             build();
