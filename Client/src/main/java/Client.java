@@ -20,10 +20,9 @@ public class Client implements Runnable {
     private String username;
     private boolean notifications;
     private NotificationHandler handler;
+    private SubscriptionHandler subHandler;
 
     private ZMQ.Socket sub;
-    private Thread subscriptionsHandler;
-    private Thread notificationsHandler;
 
     private Queue<Message> responses = new ArrayDeque<Message>();
 
@@ -35,13 +34,16 @@ public class Client implements Runnable {
         this.type = "";
         this.username = "";
         this.notifications = true;
-        this.handler = new NotificationHandler(sm, responses, notifications);
+        this.handler = new NotificationHandler(sm, responses, true);
 
         ZMQ.Context context = ZMQ.context(1);
         sub = context.socket(ZMQ.SUB);
         sub.connect("tcp://localhost:"+subPort);
-        subscriptionsHandler = new Thread(new SubscriptionHandler(sub));
-        notificationsHandler = new Thread(handler);
+
+        this.subHandler = new SubscriptionHandler(sub, true);
+
+        Thread subscriptionsHandler = new Thread(subHandler);
+        Thread notificationsHandler = new Thread(handler);
 
         subscriptionsHandler.start();
         notificationsHandler.start();
@@ -408,11 +410,11 @@ public class Client implements Runnable {
         if (value) {
             System.out.println("Turning on the notifications!");
             handler.setOn(true);
-            subscriptionsHandler.start();
+            subHandler.setOn(true);
         } else {
             System.out.println("Turning off the notifications!");
             handler.setOn(false);
-            subscriptionsHandler.interrupt();
+            subHandler.setOn(false);
         }
 
         this.notifications = value;
