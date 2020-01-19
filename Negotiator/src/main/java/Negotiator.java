@@ -21,7 +21,8 @@ public class Negotiator {
 
         String portPUSH = "3000", portPULL="12345";
 
-        if(args.length==1){ portPULL = args[1]; }
+
+        if(args.length==1){ portPULL = args[0]; }
         //Sender side
         ZMQ.Socket push = context.socket(ZMQ.PUSH);
         push.connect("tcp://localhost:"+portPUSH);
@@ -55,6 +56,9 @@ public class Negotiator {
                                                     message.getItemOrderOffer().getProductName(),message.getItemOrderOffer().getQuantity(),
                                                     message.getItemOrderOffer().getUnitPrice());
                     }
+                    break;
+                case "Consumer":
+                    result = negotiator.addOffer(message);
                     break;
             }
             //Send message with the result of the offer (true or false)
@@ -93,6 +97,7 @@ public class Negotiator {
         Protocol.User user = message.getUser();
         Protocol.ItemOrderOffer itemOrderOffer = message.getItemOrderOffer();
         Offer offer = new Offer(itemOrderOffer.getManufactureName(),itemOrderOffer.getProductName(),itemOrderOffer.getQuantity(),itemOrderOffer.getUnitPrice(),user.getUsername());
+        Offer offer = new Offer(itemOrderOffer.getManufacturerName(),itemOrderOffer.getProductName(),itemOrderOffer.getQuantity(),itemOrderOffer.getUnitPrice(),user.getUsername());
         return (this.productionMap.insertItemOrderOffer(offer));
     }
 
@@ -100,6 +105,7 @@ public class Negotiator {
         Protocol.ItemProductionOffer itemProductionOffer = message.getItemProductionOffer();
         Protocol.User user = message.getUser();
         ProductionOffer productionOffer = new ProductionOffer(user.getUsername(),itemProductionOffer.getArticleName(),itemProductionOffer.getMinimumAmount(),itemProductionOffer.getMaximumAmount(),itemProductionOffer.getUnitPrice(),(int)itemProductionOffer.getPeriod(),true,socket);
+        ProductionOffer productionOffer = new ProductionOffer(user.getUsername(),itemProductionOffer.getName(),itemProductionOffer.getMinimumAmount(),itemProductionOffer.getMaximumAmount(),itemProductionOffer.getUnitPrice(),(int)itemProductionOffer.getPeriod(),true,socket);
        return (this.productionMap.insertProductionOffert(productionOffer));
     }
 

@@ -46,7 +46,11 @@ loop(Sock, User) ->
                         _ ->
                             sender_handler:sendInvalidOperation(Sock, UT),
                             loop(Sock, User)
-                    end
+                    end;
+                'LOGOUT' ->
+                    clients_state_manager:logout(User),
+                    sender_handler:sendAuthResponse(Sock, UT, "SIGN OUT"),
+                    authentication_handler:authentication(Sock)
             end;
         {send_msg, Data} ->
             sender_handler:sendEncoded(Sock, Data),

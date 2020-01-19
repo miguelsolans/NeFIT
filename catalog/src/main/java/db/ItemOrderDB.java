@@ -9,12 +9,6 @@ public class ItemOrderDB {
 
     static List<ItemOrderOffer> itemOrders = new ArrayList<>();
 
-    // For Debugging, delete afterwards
-    static {
-        addOrder(new ItemOrderOffer("manufacturerName", "productName", 1.0, 1.0));
-        addOrder(new ItemOrderOffer("Company", "Some product", 5.0, 23.3));
-    }
-
     public static List<ItemOrderOffer> getOrders() {
         return itemOrders;
     }

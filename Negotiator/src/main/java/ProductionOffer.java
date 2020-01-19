@@ -88,7 +88,7 @@ public class ProductionOffer {
                         setUsername(offer.getUserName()).
                         build();
                 Protocol.Sale sale = Protocol.Sale.newBuilder().
-
+                                                setOfferName(offer.getUserName()).
                                                 setMessage("Loser").
                                                 build();
                 Protocol.Message messageO = Protocol.Message.newBuilder().

@@ -23,8 +23,7 @@ public class TestProducer {
 
 
         Protocol.ItemProductionOffer productionOffer = Protocol.ItemProductionOffer.newBuilder().
-                                                                setArticleName("Bananas").
-                                                                setManufacturer("Tifany").
+                                                                setName("Bananas").
                                                                 setPeriod(30000).
                                                                 setMaximumAmount(30).
                                                                 setMinimumAmount(5).

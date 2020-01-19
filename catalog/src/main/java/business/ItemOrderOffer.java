@@ -9,6 +9,9 @@ package business;
 import javax.validation.constraints.NotNull;
 
 public class ItemOrderOffer {
+
+    @NotNull
+    int orderId;
     @NotNull
     String manufacturerName;
     @NotNull
@@ -17,12 +20,16 @@ public class ItemOrderOffer {
     double quantity;
     @NotNull
     double unitPrice;
+    @NotNull
+    boolean winner;
+
 
     public ItemOrderOffer(String manufacturerName, String productName, double quantity, double unitPrice) {
         this.manufacturerName = manufacturerName;
         this.productName = productName;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
+        this.winner = false;
     }
 
     public String getManufacterName() {
@@ -55,5 +62,21 @@ public class ItemOrderOffer {
 
     public void setUnitPrice(float unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public boolean getWinner() {
+        return this.winner;
+    }
+
+    public void setWinner() {
+        this.winner = true;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
+
+    public int getOrderId() {
+        return orderId;
     }
 }

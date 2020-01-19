@@ -4,6 +4,7 @@
 % fuction for starts running the frontend server with somo configurations
 server(Port) ->
     clients_state_manager:start(),
+    negotiations_manager:start(),
     {ok, LSock} = gen_tcp:listen(Port, [binary, {packet, 0}, {reuseaddr, true}, {active, true}]),
     spawn(fun() -> acceptor(LSock) end),
     supervisor_manager:start().

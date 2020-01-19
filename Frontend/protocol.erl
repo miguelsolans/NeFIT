@@ -57,7 +57,8 @@
         item_production_offer   => 'ItemProductionOffer'(), % = 3
         user                    => 'User'(),        % = 4
         type                    := 'LOGIN' | 'LOGOUT' | 'REGISTER' | 'RESPONSE' | 'ITEMORDEROFFER' | 'ITEMPRODUCTIONOFFER' | integer(), % = 5, enum Type
-        state                   => 'State'()        % = 6
+        state                   => 'State'(),       % = 6
+        sale                    => 'Sale'()         % = 7
        }.
 
 -type 'ItemOrderOffer'() ::
@@ -85,13 +86,21 @@
         description             => iodata()         % = 2
        }.
 
--export_type(['Message'/0, 'ItemOrderOffer'/0, 'ItemProductionOffer'/0, 'User'/0, 'State'/0]).
+-type 'Sale'() ::
+      #{manufactureName         => iodata(),        % = 1
+        articleName             => iodata(),        % = 2
+        offerName               => iodata(),        % = 3
+        globalPrice             => float() | integer() | infinity | '-infinity' | nan, % = 4
+        message                 := iodata()         % = 5
+       }.
 
--spec encode_msg('Message'() | 'ItemOrderOffer'() | 'ItemProductionOffer'() | 'User'() | 'State'(), atom()) -> binary().
+-export_type(['Message'/0, 'ItemOrderOffer'/0, 'ItemProductionOffer'/0, 'User'/0, 'State'/0, 'Sale'/0]).
+
+-spec encode_msg('Message'() | 'ItemOrderOffer'() | 'ItemProductionOffer'() | 'User'() | 'State'() | 'Sale'(), atom()) -> binary().
 encode_msg(Msg, MsgName) when is_atom(MsgName) ->
     encode_msg(Msg, MsgName, []).
 
--spec encode_msg('Message'() | 'ItemOrderOffer'() | 'ItemProductionOffer'() | 'User'() | 'State'(), atom(), list()) -> binary().
+-spec encode_msg('Message'() | 'ItemOrderOffer'() | 'ItemProductionOffer'() | 'User'() | 'State'() | 'Sale'(), atom(), list()) -> binary().
 encode_msg(Msg, MsgName, Opts) ->
     case proplists:get_bool(verify, Opts) of
       true -> verify_msg(Msg, MsgName, Opts);
@@ -110,7 +119,9 @@ encode_msg(Msg, MsgName, Opts) ->
       'User' ->
 	  encode_msg_User(id(Msg, TrUserData), TrUserData);
       'State' ->
-	  encode_msg_State(id(Msg, TrUserData), TrUserData)
+	  encode_msg_State(id(Msg, TrUserData), TrUserData);
+      'Sale' ->
+	  encode_msg_Sale(id(Msg, TrUserData), TrUserData)
     end.
 
 
@@ -161,14 +172,23 @@ encode_msg_Message(#{type := F5} = M, Bin,
 	   TrF5 = id(F5, TrUserData),
 	   e_enum_Type(TrF5, <<B4/binary, 40>>, TrUserData)
 	 end,
+    B6 = case M of
+	   #{state := F6} ->
+	       begin
+		 TrF6 = id(F6, TrUserData),
+		 e_mfield_Message_state(TrF6, <<B5/binary, 50>>,
+					TrUserData)
+	       end;
+	   _ -> B5
+	 end,
     case M of
-      #{state := F6} ->
+      #{sale := F7} ->
 	  begin
-	    TrF6 = id(F6, TrUserData),
-	    e_mfield_Message_state(TrF6, <<B5/binary, 50>>,
-				   TrUserData)
+	    TrF7 = id(F7, TrUserData),
+	    e_mfield_Message_sale(TrF7, <<B6/binary, 58>>,
+				  TrUserData)
 	  end;
-      _ -> B5
+      _ -> B6
     end.
 
 encode_msg_ItemOrderOffer(Msg, TrUserData) ->
@@ -266,6 +286,49 @@ encode_msg_State(#{} = M, Bin, TrUserData) ->
       _ -> B1
     end.
 
+encode_msg_Sale(Msg, TrUserData) ->
+    encode_msg_Sale(Msg, <<>>, TrUserData).
+
+
+encode_msg_Sale(#{message := F5} = M, Bin,
+		TrUserData) ->
+    B1 = case M of
+	   #{manufactureName := F1} ->
+	       begin
+		 TrF1 = id(F1, TrUserData),
+		 e_type_string(TrF1, <<Bin/binary, 10>>, TrUserData)
+	       end;
+	   _ -> Bin
+	 end,
+    B2 = case M of
+	   #{articleName := F2} ->
+	       begin
+		 TrF2 = id(F2, TrUserData),
+		 e_type_string(TrF2, <<B1/binary, 18>>, TrUserData)
+	       end;
+	   _ -> B1
+	 end,
+    B3 = case M of
+	   #{offerName := F3} ->
+	       begin
+		 TrF3 = id(F3, TrUserData),
+		 e_type_string(TrF3, <<B2/binary, 26>>, TrUserData)
+	       end;
+	   _ -> B2
+	 end,
+    B4 = case M of
+	   #{globalPrice := F4} ->
+	       begin
+		 TrF4 = id(F4, TrUserData),
+		 e_type_float(TrF4, <<B3/binary, 37>>, TrUserData)
+	       end;
+	   _ -> B3
+	 end,
+    begin
+      TrF5 = id(F5, TrUserData),
+      e_type_string(TrF5, <<B4/binary, 42>>, TrUserData)
+    end.
+
 e_mfield_Message_item_order_offer(Msg, Bin,
 				  TrUserData) ->
     SubBin = encode_msg_ItemOrderOffer(Msg, <<>>,
@@ -287,6 +350,11 @@ e_mfield_Message_user(Msg, Bin, TrUserData) ->
 
 e_mfield_Message_state(Msg, Bin, TrUserData) ->
     SubBin = encode_msg_State(Msg, <<>>, TrUserData),
+    Bin2 = e_varint(byte_size(SubBin), Bin),
+    <<Bin2/binary, SubBin/binary>>.
+
+e_mfield_Message_sale(Msg, Bin, TrUserData) ->
+    SubBin = encode_msg_Sale(Msg, <<>>, TrUserData),
     Bin2 = e_varint(byte_size(SubBin), Bin),
     <<Bin2/binary, SubBin/binary>>.
 
@@ -430,7 +498,9 @@ decode_msg_2_doit('ItemProductionOffer', Bin,
 decode_msg_2_doit('User', Bin, TrUserData) ->
     id(decode_msg_User(Bin, TrUserData), TrUserData);
 decode_msg_2_doit('State', Bin, TrUserData) ->
-    id(decode_msg_State(Bin, TrUserData), TrUserData).
+    id(decode_msg_State(Bin, TrUserData), TrUserData);
+decode_msg_2_doit('Sale', Bin, TrUserData) ->
+    id(decode_msg_Sale(Bin, TrUserData), TrUserData).
 
 
 
@@ -441,35 +511,48 @@ decode_msg_Message(Bin, TrUserData) ->
 			       id('$undef', TrUserData),
 			       id('$undef', TrUserData),
 			       id('$undef', TrUserData),
+			       id('$undef', TrUserData),
 			       id('$undef', TrUserData), TrUserData).
 
 dfp_read_field_def_Message(<<10, Rest/binary>>, Z1, Z2,
-			   F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData) ->
+			   F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, F@_7,
+			   TrUserData) ->
     d_field_Message_user_type(Rest, Z1, Z2, F@_1, F@_2,
-			      F@_3, F@_4, F@_5, F@_6, TrUserData);
+			      F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData);
 dfp_read_field_def_Message(<<18, Rest/binary>>, Z1, Z2,
-			   F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData) ->
+			   F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, F@_7,
+			   TrUserData) ->
     d_field_Message_item_order_offer(Rest, Z1, Z2, F@_1,
-				     F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData);
+				     F@_2, F@_3, F@_4, F@_5, F@_6, F@_7,
+				     TrUserData);
 dfp_read_field_def_Message(<<26, Rest/binary>>, Z1, Z2,
-			   F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData) ->
+			   F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, F@_7,
+			   TrUserData) ->
     d_field_Message_item_production_offer(Rest, Z1, Z2,
 					  F@_1, F@_2, F@_3, F@_4, F@_5, F@_6,
-					  TrUserData);
+					  F@_7, TrUserData);
 dfp_read_field_def_Message(<<34, Rest/binary>>, Z1, Z2,
-			   F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData) ->
+			   F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, F@_7,
+			   TrUserData) ->
     d_field_Message_user(Rest, Z1, Z2, F@_1, F@_2, F@_3,
-			 F@_4, F@_5, F@_6, TrUserData);
+			 F@_4, F@_5, F@_6, F@_7, TrUserData);
 dfp_read_field_def_Message(<<40, Rest/binary>>, Z1, Z2,
-			   F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData) ->
+			   F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, F@_7,
+			   TrUserData) ->
     d_field_Message_type(Rest, Z1, Z2, F@_1, F@_2, F@_3,
-			 F@_4, F@_5, F@_6, TrUserData);
+			 F@_4, F@_5, F@_6, F@_7, TrUserData);
 dfp_read_field_def_Message(<<50, Rest/binary>>, Z1, Z2,
-			   F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData) ->
+			   F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, F@_7,
+			   TrUserData) ->
     d_field_Message_state(Rest, Z1, Z2, F@_1, F@_2, F@_3,
-			  F@_4, F@_5, F@_6, TrUserData);
+			  F@_4, F@_5, F@_6, F@_7, TrUserData);
+dfp_read_field_def_Message(<<58, Rest/binary>>, Z1, Z2,
+			   F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, F@_7,
+			   TrUserData) ->
+    d_field_Message_sale(Rest, Z1, Z2, F@_1, F@_2, F@_3,
+			 F@_4, F@_5, F@_6, F@_7, TrUserData);
 dfp_read_field_def_Message(<<>>, 0, 0, F@_1, F@_2, F@_3,
-			   F@_4, F@_5, F@_6, _) ->
+			   F@_4, F@_5, F@_6, F@_7, _) ->
     S1 = #{type => F@_5},
     S2 = if F@_1 == '$undef' -> S1;
 	    true -> S1#{user_type => F@_1}
@@ -483,65 +566,74 @@ dfp_read_field_def_Message(<<>>, 0, 0, F@_1, F@_2, F@_3,
     S5 = if F@_4 == '$undef' -> S4;
 	    true -> S4#{user => F@_4}
 	 end,
-    if F@_6 == '$undef' -> S5;
-       true -> S5#{state => F@_6}
+    S6 = if F@_6 == '$undef' -> S5;
+	    true -> S5#{state => F@_6}
+	 end,
+    if F@_7 == '$undef' -> S6;
+       true -> S6#{sale => F@_7}
     end;
 dfp_read_field_def_Message(Other, Z1, Z2, F@_1, F@_2,
-			   F@_3, F@_4, F@_5, F@_6, TrUserData) ->
+			   F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData) ->
     dg_read_field_def_Message(Other, Z1, Z2, F@_1, F@_2,
-			      F@_3, F@_4, F@_5, F@_6, TrUserData).
+			      F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData).
 
 dg_read_field_def_Message(<<1:1, X:7, Rest/binary>>, N,
-			  Acc, F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData)
+			  Acc, F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, F@_7,
+			  TrUserData)
     when N < 32 - 7 ->
     dg_read_field_def_Message(Rest, N + 7, X bsl N + Acc,
-			      F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData);
+			      F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, F@_7,
+			      TrUserData);
 dg_read_field_def_Message(<<0:1, X:7, Rest/binary>>, N,
-			  Acc, F@_1, F@_2, F@_3, F@_4, F@_5, F@_6,
+			  Acc, F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, F@_7,
 			  TrUserData) ->
     Key = X bsl N + Acc,
     case Key of
       10 ->
 	  d_field_Message_user_type(Rest, 0, 0, F@_1, F@_2, F@_3,
-				    F@_4, F@_5, F@_6, TrUserData);
+				    F@_4, F@_5, F@_6, F@_7, TrUserData);
       18 ->
 	  d_field_Message_item_order_offer(Rest, 0, 0, F@_1, F@_2,
-					   F@_3, F@_4, F@_5, F@_6, TrUserData);
+					   F@_3, F@_4, F@_5, F@_6, F@_7,
+					   TrUserData);
       26 ->
 	  d_field_Message_item_production_offer(Rest, 0, 0, F@_1,
 						F@_2, F@_3, F@_4, F@_5, F@_6,
-						TrUserData);
+						F@_7, TrUserData);
       34 ->
 	  d_field_Message_user(Rest, 0, 0, F@_1, F@_2, F@_3, F@_4,
-			       F@_5, F@_6, TrUserData);
+			       F@_5, F@_6, F@_7, TrUserData);
       40 ->
 	  d_field_Message_type(Rest, 0, 0, F@_1, F@_2, F@_3, F@_4,
-			       F@_5, F@_6, TrUserData);
+			       F@_5, F@_6, F@_7, TrUserData);
       50 ->
 	  d_field_Message_state(Rest, 0, 0, F@_1, F@_2, F@_3,
-				F@_4, F@_5, F@_6, TrUserData);
+				F@_4, F@_5, F@_6, F@_7, TrUserData);
+      58 ->
+	  d_field_Message_sale(Rest, 0, 0, F@_1, F@_2, F@_3, F@_4,
+			       F@_5, F@_6, F@_7, TrUserData);
       _ ->
 	  case Key band 7 of
 	    0 ->
 		skip_varint_Message(Rest, 0, 0, F@_1, F@_2, F@_3, F@_4,
-				    F@_5, F@_6, TrUserData);
+				    F@_5, F@_6, F@_7, TrUserData);
 	    1 ->
 		skip_64_Message(Rest, 0, 0, F@_1, F@_2, F@_3, F@_4,
-				F@_5, F@_6, TrUserData);
+				F@_5, F@_6, F@_7, TrUserData);
 	    2 ->
 		skip_length_delimited_Message(Rest, 0, 0, F@_1, F@_2,
-					      F@_3, F@_4, F@_5, F@_6,
+					      F@_3, F@_4, F@_5, F@_6, F@_7,
 					      TrUserData);
 	    3 ->
 		skip_group_Message(Rest, Key bsr 3, 0, F@_1, F@_2, F@_3,
-				   F@_4, F@_5, F@_6, TrUserData);
+				   F@_4, F@_5, F@_6, F@_7, TrUserData);
 	    5 ->
 		skip_32_Message(Rest, 0, 0, F@_1, F@_2, F@_3, F@_4,
-				F@_5, F@_6, TrUserData)
+				F@_5, F@_6, F@_7, TrUserData)
 	  end
     end;
 dg_read_field_def_Message(<<>>, 0, 0, F@_1, F@_2, F@_3,
-			  F@_4, F@_5, F@_6, _) ->
+			  F@_4, F@_5, F@_6, F@_7, _) ->
     S1 = #{type => F@_5},
     S2 = if F@_1 == '$undef' -> S1;
 	    true -> S1#{user_type => F@_1}
@@ -555,17 +647,23 @@ dg_read_field_def_Message(<<>>, 0, 0, F@_1, F@_2, F@_3,
     S5 = if F@_4 == '$undef' -> S4;
 	    true -> S4#{user => F@_4}
 	 end,
-    if F@_6 == '$undef' -> S5;
-       true -> S5#{state => F@_6}
+    S6 = if F@_6 == '$undef' -> S5;
+	    true -> S5#{state => F@_6}
+	 end,
+    if F@_7 == '$undef' -> S6;
+       true -> S6#{sale => F@_7}
     end.
 
 d_field_Message_user_type(<<1:1, X:7, Rest/binary>>, N,
-			  Acc, F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData)
+			  Acc, F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, F@_7,
+			  TrUserData)
     when N < 57 ->
     d_field_Message_user_type(Rest, N + 7, X bsl N + Acc,
-			      F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData);
+			      F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, F@_7,
+			      TrUserData);
 d_field_Message_user_type(<<0:1, X:7, Rest/binary>>, N,
-			  Acc, _, F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData) ->
+			  Acc, _, F@_2, F@_3, F@_4, F@_5, F@_6, F@_7,
+			  TrUserData) ->
     {NewFValue, RestF} = begin
 			   Len = X bsl N + Acc,
 			   <<Utf8:Len/binary, Rest2/binary>> = Rest,
@@ -574,20 +672,20 @@ d_field_Message_user_type(<<0:1, X:7, Rest/binary>>, N,
 			    Rest2}
 			 end,
     dfp_read_field_def_Message(RestF, 0, 0, NewFValue, F@_2,
-			       F@_3, F@_4, F@_5, F@_6, TrUserData).
+			       F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData).
 
 d_field_Message_item_order_offer(<<1:1, X:7,
 				   Rest/binary>>,
 				 N, Acc, F@_1, F@_2, F@_3, F@_4, F@_5, F@_6,
-				 TrUserData)
+				 F@_7, TrUserData)
     when N < 57 ->
     d_field_Message_item_order_offer(Rest, N + 7,
 				     X bsl N + Acc, F@_1, F@_2, F@_3, F@_4,
-				     F@_5, F@_6, TrUserData);
+				     F@_5, F@_6, F@_7, TrUserData);
 d_field_Message_item_order_offer(<<0:1, X:7,
 				   Rest/binary>>,
 				 N, Acc, F@_1, Prev, F@_3, F@_4, F@_5, F@_6,
-				 TrUserData) ->
+				 F@_7, TrUserData) ->
     {NewFValue, RestF} = begin
 			   Len = X bsl N + Acc,
 			   <<Bs:Len/binary, Rest2/binary>> = Rest,
@@ -601,20 +699,20 @@ d_field_Message_item_order_offer(<<0:1, X:7,
 				      merge_msg_ItemOrderOffer(Prev, NewFValue,
 							       TrUserData)
 			       end,
-			       F@_3, F@_4, F@_5, F@_6, TrUserData).
+			       F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData).
 
 d_field_Message_item_production_offer(<<1:1, X:7,
 					Rest/binary>>,
 				      N, Acc, F@_1, F@_2, F@_3, F@_4, F@_5,
-				      F@_6, TrUserData)
+				      F@_6, F@_7, TrUserData)
     when N < 57 ->
     d_field_Message_item_production_offer(Rest, N + 7,
 					  X bsl N + Acc, F@_1, F@_2, F@_3, F@_4,
-					  F@_5, F@_6, TrUserData);
+					  F@_5, F@_6, F@_7, TrUserData);
 d_field_Message_item_production_offer(<<0:1, X:7,
 					Rest/binary>>,
 				      N, Acc, F@_1, F@_2, Prev, F@_4, F@_5,
-				      F@_6, TrUserData) ->
+				      F@_6, F@_7, TrUserData) ->
     {NewFValue, RestF} = begin
 			   Len = X bsl N + Acc,
 			   <<Bs:Len/binary, Rest2/binary>> = Rest,
@@ -629,15 +727,15 @@ d_field_Message_item_production_offer(<<0:1, X:7,
 								    NewFValue,
 								    TrUserData)
 			       end,
-			       F@_4, F@_5, F@_6, TrUserData).
+			       F@_4, F@_5, F@_6, F@_7, TrUserData).
 
 d_field_Message_user(<<1:1, X:7, Rest/binary>>, N, Acc,
-		     F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData)
+		     F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData)
     when N < 57 ->
     d_field_Message_user(Rest, N + 7, X bsl N + Acc, F@_1,
-			 F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData);
+			 F@_2, F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData);
 d_field_Message_user(<<0:1, X:7, Rest/binary>>, N, Acc,
-		     F@_1, F@_2, F@_3, Prev, F@_5, F@_6, TrUserData) ->
+		     F@_1, F@_2, F@_3, Prev, F@_5, F@_6, F@_7, TrUserData) ->
     {NewFValue, RestF} = begin
 			   Len = X bsl N + Acc,
 			   <<Bs:Len/binary, Rest2/binary>> = Rest,
@@ -651,15 +749,15 @@ d_field_Message_user(<<0:1, X:7, Rest/binary>>, N, Acc,
 				      merge_msg_User(Prev, NewFValue,
 						     TrUserData)
 			       end,
-			       F@_5, F@_6, TrUserData).
+			       F@_5, F@_6, F@_7, TrUserData).
 
 d_field_Message_type(<<1:1, X:7, Rest/binary>>, N, Acc,
-		     F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData)
+		     F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData)
     when N < 57 ->
     d_field_Message_type(Rest, N + 7, X bsl N + Acc, F@_1,
-			 F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData);
+			 F@_2, F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData);
 d_field_Message_type(<<0:1, X:7, Rest/binary>>, N, Acc,
-		     F@_1, F@_2, F@_3, F@_4, _, F@_6, TrUserData) ->
+		     F@_1, F@_2, F@_3, F@_4, _, F@_6, F@_7, TrUserData) ->
     {NewFValue, RestF} = {id(d_enum_Type(begin
 					   <<Res:32/signed-native>> = <<(X bsl N
 									   +
@@ -669,15 +767,15 @@ d_field_Message_type(<<0:1, X:7, Rest/binary>>, N, Acc,
 			     TrUserData),
 			  Rest},
     dfp_read_field_def_Message(RestF, 0, 0, F@_1, F@_2,
-			       F@_3, F@_4, NewFValue, F@_6, TrUserData).
+			       F@_3, F@_4, NewFValue, F@_6, F@_7, TrUserData).
 
 d_field_Message_state(<<1:1, X:7, Rest/binary>>, N, Acc,
-		      F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData)
+		      F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData)
     when N < 57 ->
     d_field_Message_state(Rest, N + 7, X bsl N + Acc, F@_1,
-			  F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData);
+			  F@_2, F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData);
 d_field_Message_state(<<0:1, X:7, Rest/binary>>, N, Acc,
-		      F@_1, F@_2, F@_3, F@_4, F@_5, Prev, TrUserData) ->
+		      F@_1, F@_2, F@_3, F@_4, F@_5, Prev, F@_7, TrUserData) ->
     {NewFValue, RestF} = begin
 			   Len = X bsl N + Acc,
 			   <<Bs:Len/binary, Rest2/binary>> = Rest,
@@ -691,47 +789,69 @@ d_field_Message_state(<<0:1, X:7, Rest/binary>>, N, Acc,
 				      merge_msg_State(Prev, NewFValue,
 						      TrUserData)
 			       end,
+			       F@_7, TrUserData).
+
+d_field_Message_sale(<<1:1, X:7, Rest/binary>>, N, Acc,
+		     F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData)
+    when N < 57 ->
+    d_field_Message_sale(Rest, N + 7, X bsl N + Acc, F@_1,
+			 F@_2, F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData);
+d_field_Message_sale(<<0:1, X:7, Rest/binary>>, N, Acc,
+		     F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, Prev, TrUserData) ->
+    {NewFValue, RestF} = begin
+			   Len = X bsl N + Acc,
+			   <<Bs:Len/binary, Rest2/binary>> = Rest,
+			   {id(decode_msg_Sale(Bs, TrUserData), TrUserData),
+			    Rest2}
+			 end,
+    dfp_read_field_def_Message(RestF, 0, 0, F@_1, F@_2,
+			       F@_3, F@_4, F@_5, F@_6,
+			       if Prev == '$undef' -> NewFValue;
+				  true ->
+				      merge_msg_Sale(Prev, NewFValue,
+						     TrUserData)
+			       end,
 			       TrUserData).
 
 skip_varint_Message(<<1:1, _:7, Rest/binary>>, Z1, Z2,
-		    F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData) ->
+		    F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData) ->
     skip_varint_Message(Rest, Z1, Z2, F@_1, F@_2, F@_3,
-			F@_4, F@_5, F@_6, TrUserData);
+			F@_4, F@_5, F@_6, F@_7, TrUserData);
 skip_varint_Message(<<0:1, _:7, Rest/binary>>, Z1, Z2,
-		    F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData) ->
+		    F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData) ->
     dfp_read_field_def_Message(Rest, Z1, Z2, F@_1, F@_2,
-			       F@_3, F@_4, F@_5, F@_6, TrUserData).
+			       F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData).
 
 skip_length_delimited_Message(<<1:1, X:7, Rest/binary>>,
-			      N, Acc, F@_1, F@_2, F@_3, F@_4, F@_5, F@_6,
+			      N, Acc, F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, F@_7,
 			      TrUserData)
     when N < 57 ->
     skip_length_delimited_Message(Rest, N + 7,
 				  X bsl N + Acc, F@_1, F@_2, F@_3, F@_4, F@_5,
-				  F@_6, TrUserData);
+				  F@_6, F@_7, TrUserData);
 skip_length_delimited_Message(<<0:1, X:7, Rest/binary>>,
-			      N, Acc, F@_1, F@_2, F@_3, F@_4, F@_5, F@_6,
+			      N, Acc, F@_1, F@_2, F@_3, F@_4, F@_5, F@_6, F@_7,
 			      TrUserData) ->
     Length = X bsl N + Acc,
     <<_:Length/binary, Rest2/binary>> = Rest,
     dfp_read_field_def_Message(Rest2, 0, 0, F@_1, F@_2,
-			       F@_3, F@_4, F@_5, F@_6, TrUserData).
+			       F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData).
 
 skip_group_Message(Bin, FNum, Z2, F@_1, F@_2, F@_3,
-		   F@_4, F@_5, F@_6, TrUserData) ->
+		   F@_4, F@_5, F@_6, F@_7, TrUserData) ->
     {_, Rest} = read_group(Bin, FNum),
     dfp_read_field_def_Message(Rest, 0, Z2, F@_1, F@_2,
-			       F@_3, F@_4, F@_5, F@_6, TrUserData).
+			       F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData).
 
 skip_32_Message(<<_:32, Rest/binary>>, Z1, Z2, F@_1,
-		F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData) ->
+		F@_2, F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData) ->
     dfp_read_field_def_Message(Rest, Z1, Z2, F@_1, F@_2,
-			       F@_3, F@_4, F@_5, F@_6, TrUserData).
+			       F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData).
 
 skip_64_Message(<<_:64, Rest/binary>>, Z1, Z2, F@_1,
-		F@_2, F@_3, F@_4, F@_5, F@_6, TrUserData) ->
+		F@_2, F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData) ->
     dfp_read_field_def_Message(Rest, Z1, Z2, F@_1, F@_2,
-			       F@_3, F@_4, F@_5, F@_6, TrUserData).
+			       F@_3, F@_4, F@_5, F@_6, F@_7, TrUserData).
 
 decode_msg_ItemOrderOffer(Bin, TrUserData) ->
     dfp_read_field_def_ItemOrderOffer(Bin, 0, 0,
@@ -1510,6 +1630,237 @@ skip_64_State(<<_:64, Rest/binary>>, Z1, Z2, F@_1, F@_2,
     dfp_read_field_def_State(Rest, Z1, Z2, F@_1, F@_2,
 			     TrUserData).
 
+decode_msg_Sale(Bin, TrUserData) ->
+    dfp_read_field_def_Sale(Bin, 0, 0,
+			    id('$undef', TrUserData), id('$undef', TrUserData),
+			    id('$undef', TrUserData), id('$undef', TrUserData),
+			    id('$undef', TrUserData), TrUserData).
+
+dfp_read_field_def_Sale(<<10, Rest/binary>>, Z1, Z2,
+			F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData) ->
+    d_field_Sale_manufactureName(Rest, Z1, Z2, F@_1, F@_2,
+				 F@_3, F@_4, F@_5, TrUserData);
+dfp_read_field_def_Sale(<<18, Rest/binary>>, Z1, Z2,
+			F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData) ->
+    d_field_Sale_articleName(Rest, Z1, Z2, F@_1, F@_2, F@_3,
+			     F@_4, F@_5, TrUserData);
+dfp_read_field_def_Sale(<<26, Rest/binary>>, Z1, Z2,
+			F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData) ->
+    d_field_Sale_offerName(Rest, Z1, Z2, F@_1, F@_2, F@_3,
+			   F@_4, F@_5, TrUserData);
+dfp_read_field_def_Sale(<<37, Rest/binary>>, Z1, Z2,
+			F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData) ->
+    d_field_Sale_globalPrice(Rest, Z1, Z2, F@_1, F@_2, F@_3,
+			     F@_4, F@_5, TrUserData);
+dfp_read_field_def_Sale(<<42, Rest/binary>>, Z1, Z2,
+			F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData) ->
+    d_field_Sale_message(Rest, Z1, Z2, F@_1, F@_2, F@_3,
+			 F@_4, F@_5, TrUserData);
+dfp_read_field_def_Sale(<<>>, 0, 0, F@_1, F@_2, F@_3,
+			F@_4, F@_5, _) ->
+    S1 = #{message => F@_5},
+    S2 = if F@_1 == '$undef' -> S1;
+	    true -> S1#{manufactureName => F@_1}
+	 end,
+    S3 = if F@_2 == '$undef' -> S2;
+	    true -> S2#{articleName => F@_2}
+	 end,
+    S4 = if F@_3 == '$undef' -> S3;
+	    true -> S3#{offerName => F@_3}
+	 end,
+    if F@_4 == '$undef' -> S4;
+       true -> S4#{globalPrice => F@_4}
+    end;
+dfp_read_field_def_Sale(Other, Z1, Z2, F@_1, F@_2, F@_3,
+			F@_4, F@_5, TrUserData) ->
+    dg_read_field_def_Sale(Other, Z1, Z2, F@_1, F@_2, F@_3,
+			   F@_4, F@_5, TrUserData).
+
+dg_read_field_def_Sale(<<1:1, X:7, Rest/binary>>, N,
+		       Acc, F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData)
+    when N < 32 - 7 ->
+    dg_read_field_def_Sale(Rest, N + 7, X bsl N + Acc, F@_1,
+			   F@_2, F@_3, F@_4, F@_5, TrUserData);
+dg_read_field_def_Sale(<<0:1, X:7, Rest/binary>>, N,
+		       Acc, F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData) ->
+    Key = X bsl N + Acc,
+    case Key of
+      10 ->
+	  d_field_Sale_manufactureName(Rest, 0, 0, F@_1, F@_2,
+				       F@_3, F@_4, F@_5, TrUserData);
+      18 ->
+	  d_field_Sale_articleName(Rest, 0, 0, F@_1, F@_2, F@_3,
+				   F@_4, F@_5, TrUserData);
+      26 ->
+	  d_field_Sale_offerName(Rest, 0, 0, F@_1, F@_2, F@_3,
+				 F@_4, F@_5, TrUserData);
+      37 ->
+	  d_field_Sale_globalPrice(Rest, 0, 0, F@_1, F@_2, F@_3,
+				   F@_4, F@_5, TrUserData);
+      42 ->
+	  d_field_Sale_message(Rest, 0, 0, F@_1, F@_2, F@_3, F@_4,
+			       F@_5, TrUserData);
+      _ ->
+	  case Key band 7 of
+	    0 ->
+		skip_varint_Sale(Rest, 0, 0, F@_1, F@_2, F@_3, F@_4,
+				 F@_5, TrUserData);
+	    1 ->
+		skip_64_Sale(Rest, 0, 0, F@_1, F@_2, F@_3, F@_4, F@_5,
+			     TrUserData);
+	    2 ->
+		skip_length_delimited_Sale(Rest, 0, 0, F@_1, F@_2, F@_3,
+					   F@_4, F@_5, TrUserData);
+	    3 ->
+		skip_group_Sale(Rest, Key bsr 3, 0, F@_1, F@_2, F@_3,
+				F@_4, F@_5, TrUserData);
+	    5 ->
+		skip_32_Sale(Rest, 0, 0, F@_1, F@_2, F@_3, F@_4, F@_5,
+			     TrUserData)
+	  end
+    end;
+dg_read_field_def_Sale(<<>>, 0, 0, F@_1, F@_2, F@_3,
+		       F@_4, F@_5, _) ->
+    S1 = #{message => F@_5},
+    S2 = if F@_1 == '$undef' -> S1;
+	    true -> S1#{manufactureName => F@_1}
+	 end,
+    S3 = if F@_2 == '$undef' -> S2;
+	    true -> S2#{articleName => F@_2}
+	 end,
+    S4 = if F@_3 == '$undef' -> S3;
+	    true -> S3#{offerName => F@_3}
+	 end,
+    if F@_4 == '$undef' -> S4;
+       true -> S4#{globalPrice => F@_4}
+    end.
+
+d_field_Sale_manufactureName(<<1:1, X:7, Rest/binary>>,
+			     N, Acc, F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData)
+    when N < 57 ->
+    d_field_Sale_manufactureName(Rest, N + 7, X bsl N + Acc,
+				 F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData);
+d_field_Sale_manufactureName(<<0:1, X:7, Rest/binary>>,
+			     N, Acc, _, F@_2, F@_3, F@_4, F@_5, TrUserData) ->
+    {NewFValue, RestF} = begin
+			   Len = X bsl N + Acc,
+			   <<Utf8:Len/binary, Rest2/binary>> = Rest,
+			   {id(unicode:characters_to_list(Utf8, unicode),
+			       TrUserData),
+			    Rest2}
+			 end,
+    dfp_read_field_def_Sale(RestF, 0, 0, NewFValue, F@_2,
+			    F@_3, F@_4, F@_5, TrUserData).
+
+d_field_Sale_articleName(<<1:1, X:7, Rest/binary>>, N,
+			 Acc, F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData)
+    when N < 57 ->
+    d_field_Sale_articleName(Rest, N + 7, X bsl N + Acc,
+			     F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData);
+d_field_Sale_articleName(<<0:1, X:7, Rest/binary>>, N,
+			 Acc, F@_1, _, F@_3, F@_4, F@_5, TrUserData) ->
+    {NewFValue, RestF} = begin
+			   Len = X bsl N + Acc,
+			   <<Utf8:Len/binary, Rest2/binary>> = Rest,
+			   {id(unicode:characters_to_list(Utf8, unicode),
+			       TrUserData),
+			    Rest2}
+			 end,
+    dfp_read_field_def_Sale(RestF, 0, 0, F@_1, NewFValue,
+			    F@_3, F@_4, F@_5, TrUserData).
+
+d_field_Sale_offerName(<<1:1, X:7, Rest/binary>>, N,
+		       Acc, F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData)
+    when N < 57 ->
+    d_field_Sale_offerName(Rest, N + 7, X bsl N + Acc, F@_1,
+			   F@_2, F@_3, F@_4, F@_5, TrUserData);
+d_field_Sale_offerName(<<0:1, X:7, Rest/binary>>, N,
+		       Acc, F@_1, F@_2, _, F@_4, F@_5, TrUserData) ->
+    {NewFValue, RestF} = begin
+			   Len = X bsl N + Acc,
+			   <<Utf8:Len/binary, Rest2/binary>> = Rest,
+			   {id(unicode:characters_to_list(Utf8, unicode),
+			       TrUserData),
+			    Rest2}
+			 end,
+    dfp_read_field_def_Sale(RestF, 0, 0, F@_1, F@_2,
+			    NewFValue, F@_4, F@_5, TrUserData).
+
+d_field_Sale_globalPrice(<<0:16, 128, 127,
+			   Rest/binary>>,
+			 Z1, Z2, F@_1, F@_2, F@_3, _, F@_5, TrUserData) ->
+    dfp_read_field_def_Sale(Rest, Z1, Z2, F@_1, F@_2, F@_3,
+			    id(infinity, TrUserData), F@_5, TrUserData);
+d_field_Sale_globalPrice(<<0:16, 128, 255,
+			   Rest/binary>>,
+			 Z1, Z2, F@_1, F@_2, F@_3, _, F@_5, TrUserData) ->
+    dfp_read_field_def_Sale(Rest, Z1, Z2, F@_1, F@_2, F@_3,
+			    id('-infinity', TrUserData), F@_5, TrUserData);
+d_field_Sale_globalPrice(<<_:16, 1:1, _:7, _:1, 127:7,
+			   Rest/binary>>,
+			 Z1, Z2, F@_1, F@_2, F@_3, _, F@_5, TrUserData) ->
+    dfp_read_field_def_Sale(Rest, Z1, Z2, F@_1, F@_2, F@_3,
+			    id(nan, TrUserData), F@_5, TrUserData);
+d_field_Sale_globalPrice(<<Value:32/little-float,
+			   Rest/binary>>,
+			 Z1, Z2, F@_1, F@_2, F@_3, _, F@_5, TrUserData) ->
+    dfp_read_field_def_Sale(Rest, Z1, Z2, F@_1, F@_2, F@_3,
+			    id(Value, TrUserData), F@_5, TrUserData).
+
+d_field_Sale_message(<<1:1, X:7, Rest/binary>>, N, Acc,
+		     F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData)
+    when N < 57 ->
+    d_field_Sale_message(Rest, N + 7, X bsl N + Acc, F@_1,
+			 F@_2, F@_3, F@_4, F@_5, TrUserData);
+d_field_Sale_message(<<0:1, X:7, Rest/binary>>, N, Acc,
+		     F@_1, F@_2, F@_3, F@_4, _, TrUserData) ->
+    {NewFValue, RestF} = begin
+			   Len = X bsl N + Acc,
+			   <<Utf8:Len/binary, Rest2/binary>> = Rest,
+			   {id(unicode:characters_to_list(Utf8, unicode),
+			       TrUserData),
+			    Rest2}
+			 end,
+    dfp_read_field_def_Sale(RestF, 0, 0, F@_1, F@_2, F@_3,
+			    F@_4, NewFValue, TrUserData).
+
+skip_varint_Sale(<<1:1, _:7, Rest/binary>>, Z1, Z2,
+		 F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData) ->
+    skip_varint_Sale(Rest, Z1, Z2, F@_1, F@_2, F@_3, F@_4,
+		     F@_5, TrUserData);
+skip_varint_Sale(<<0:1, _:7, Rest/binary>>, Z1, Z2,
+		 F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData) ->
+    dfp_read_field_def_Sale(Rest, Z1, Z2, F@_1, F@_2, F@_3,
+			    F@_4, F@_5, TrUserData).
+
+skip_length_delimited_Sale(<<1:1, X:7, Rest/binary>>, N,
+			   Acc, F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData)
+    when N < 57 ->
+    skip_length_delimited_Sale(Rest, N + 7, X bsl N + Acc,
+			       F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData);
+skip_length_delimited_Sale(<<0:1, X:7, Rest/binary>>, N,
+			   Acc, F@_1, F@_2, F@_3, F@_4, F@_5, TrUserData) ->
+    Length = X bsl N + Acc,
+    <<_:Length/binary, Rest2/binary>> = Rest,
+    dfp_read_field_def_Sale(Rest2, 0, 0, F@_1, F@_2, F@_3,
+			    F@_4, F@_5, TrUserData).
+
+skip_group_Sale(Bin, FNum, Z2, F@_1, F@_2, F@_3, F@_4,
+		F@_5, TrUserData) ->
+    {_, Rest} = read_group(Bin, FNum),
+    dfp_read_field_def_Sale(Rest, 0, Z2, F@_1, F@_2, F@_3,
+			    F@_4, F@_5, TrUserData).
+
+skip_32_Sale(<<_:32, Rest/binary>>, Z1, Z2, F@_1, F@_2,
+	     F@_3, F@_4, F@_5, TrUserData) ->
+    dfp_read_field_def_Sale(Rest, Z1, Z2, F@_1, F@_2, F@_3,
+			    F@_4, F@_5, TrUserData).
+
+skip_64_Sale(<<_:64, Rest/binary>>, Z1, Z2, F@_1, F@_2,
+	     F@_3, F@_4, F@_5, TrUserData) ->
+    dfp_read_field_def_Sale(Rest, Z1, Z2, F@_1, F@_2, F@_3,
+			    F@_4, F@_5, TrUserData).
+
 d_enum_Type(0) -> 'LOGIN';
 d_enum_Type(1) -> 'LOGOUT';
 d_enum_Type(2) -> 'REGISTER';
@@ -1588,7 +1939,8 @@ merge_msgs(Prev, New, MsgName, Opts) ->
       'ItemProductionOffer' ->
 	  merge_msg_ItemProductionOffer(Prev, New, TrUserData);
       'User' -> merge_msg_User(Prev, New, TrUserData);
-      'State' -> merge_msg_State(Prev, New, TrUserData)
+      'State' -> merge_msg_State(Prev, New, TrUserData);
+      'Sale' -> merge_msg_Sale(Prev, New, TrUserData)
     end.
 
 -compile({nowarn_unused_function,merge_msg_Message/3}).
@@ -1637,13 +1989,20 @@ merge_msg_Message(#{} = PMsg, #{type := NFtype} = NMsg,
 	   {#{user := PFuser}, _} -> S4#{user => PFuser};
 	   {_, _} -> S4
 	 end,
+    S6 = case {PMsg, NMsg} of
+	   {#{state := PFstate}, #{state := NFstate}} ->
+	       S5#{state =>
+		       merge_msg_State(PFstate, NFstate, TrUserData)};
+	   {_, #{state := NFstate}} -> S5#{state => NFstate};
+	   {#{state := PFstate}, _} -> S5#{state => PFstate};
+	   {_, _} -> S5
+	 end,
     case {PMsg, NMsg} of
-      {#{state := PFstate}, #{state := NFstate}} ->
-	  S5#{state =>
-		  merge_msg_State(PFstate, NFstate, TrUserData)};
-      {_, #{state := NFstate}} -> S5#{state => NFstate};
-      {#{state := PFstate}, _} -> S5#{state => PFstate};
-      {_, _} -> S5
+      {#{sale := PFsale}, #{sale := NFsale}} ->
+	  S6#{sale => merge_msg_Sale(PFsale, NFsale, TrUserData)};
+      {_, #{sale := NFsale}} -> S6#{sale => NFsale};
+      {#{sale := PFsale}, _} -> S6#{sale => PFsale};
+      {_, _} -> S6
     end.
 
 -compile({nowarn_unused_function,merge_msg_ItemOrderOffer/3}).
@@ -1695,6 +2054,39 @@ merge_msg_State(PMsg, NMsg, _) ->
       _ -> S2
     end.
 
+-compile({nowarn_unused_function,merge_msg_Sale/3}).
+merge_msg_Sale(#{} = PMsg,
+	       #{message := NFmessage} = NMsg, _) ->
+    S1 = #{message => NFmessage},
+    S2 = case {PMsg, NMsg} of
+	   {_, #{manufactureName := NFmanufactureName}} ->
+	       S1#{manufactureName => NFmanufactureName};
+	   {#{manufactureName := PFmanufactureName}, _} ->
+	       S1#{manufactureName => PFmanufactureName};
+	   _ -> S1
+	 end,
+    S3 = case {PMsg, NMsg} of
+	   {_, #{articleName := NFarticleName}} ->
+	       S2#{articleName => NFarticleName};
+	   {#{articleName := PFarticleName}, _} ->
+	       S2#{articleName => PFarticleName};
+	   _ -> S2
+	 end,
+    S4 = case {PMsg, NMsg} of
+	   {_, #{offerName := NFofferName}} ->
+	       S3#{offerName => NFofferName};
+	   {#{offerName := PFofferName}, _} ->
+	       S3#{offerName => PFofferName};
+	   _ -> S3
+	 end,
+    case {PMsg, NMsg} of
+      {_, #{globalPrice := NFglobalPrice}} ->
+	  S4#{globalPrice => NFglobalPrice};
+      {#{globalPrice := PFglobalPrice}, _} ->
+	  S4#{globalPrice => PFglobalPrice};
+      _ -> S4
+    end.
+
 
 verify_msg(Msg, MsgName) when is_atom(MsgName) ->
     verify_msg(Msg, MsgName, []).
@@ -1709,6 +2101,7 @@ verify_msg(Msg, MsgName, Opts) ->
 	  v_msg_ItemProductionOffer(Msg, [MsgName], TrUserData);
       'User' -> v_msg_User(Msg, [MsgName], TrUserData);
       'State' -> v_msg_State(Msg, [MsgName], TrUserData);
+      'Sale' -> v_msg_Sale(Msg, [MsgName], TrUserData);
       _ -> mk_type_error(not_a_known_message, Msg, [])
     end.
 
@@ -1744,12 +2137,18 @@ v_msg_Message(#{type := F5} = M, Path, TrUserData) ->
 	  v_msg_State(F6, [state | Path], TrUserData);
       _ -> ok
     end,
+    case M of
+      #{sale := F7} ->
+	  v_msg_Sale(F7, [sale | Path], TrUserData);
+      _ -> ok
+    end,
     lists:foreach(fun (user_type) -> ok;
 		      (item_order_offer) -> ok;
 		      (item_production_offer) -> ok;
 		      (user) -> ok;
 		      (type) -> ok;
 		      (state) -> ok;
+		      (sale) -> ok;
 		      (OtherKey) ->
 			  mk_type_error({extraneous_key, OtherKey}, M, Path)
 		  end,
@@ -1876,6 +2275,47 @@ v_msg_State(M, Path, _TrUserData) when is_map(M) ->
 		  M, Path);
 v_msg_State(X, Path, _TrUserData) ->
     mk_type_error({expected_msg, 'State'}, X, Path).
+
+-compile({nowarn_unused_function,v_msg_Sale/3}).
+-dialyzer({nowarn_function,v_msg_Sale/3}).
+v_msg_Sale(#{message := F5} = M, Path, TrUserData) ->
+    case M of
+      #{manufactureName := F1} ->
+	  v_type_string(F1, [manufactureName | Path], TrUserData);
+      _ -> ok
+    end,
+    case M of
+      #{articleName := F2} ->
+	  v_type_string(F2, [articleName | Path], TrUserData);
+      _ -> ok
+    end,
+    case M of
+      #{offerName := F3} ->
+	  v_type_string(F3, [offerName | Path], TrUserData);
+      _ -> ok
+    end,
+    case M of
+      #{globalPrice := F4} ->
+	  v_type_float(F4, [globalPrice | Path], TrUserData);
+      _ -> ok
+    end,
+    v_type_string(F5, [message | Path], TrUserData),
+    lists:foreach(fun (manufactureName) -> ok;
+		      (articleName) -> ok;
+		      (offerName) -> ok;
+		      (globalPrice) -> ok;
+		      (message) -> ok;
+		      (OtherKey) ->
+			  mk_type_error({extraneous_key, OtherKey}, M, Path)
+		  end,
+		  maps:keys(M)),
+    ok;
+v_msg_Sale(M, Path, _TrUserData) when is_map(M) ->
+    mk_type_error({missing_fields,
+		   [message] -- maps:keys(M), 'Sale'},
+		  M, Path);
+v_msg_Sale(X, Path, _TrUserData) ->
+    mk_type_error({expected_msg, 'Sale'}, X, Path).
 
 -compile({nowarn_unused_function,v_enum_Type/3}).
 -dialyzer({nowarn_function,v_enum_Type/3}).
@@ -2018,6 +2458,9 @@ get_msg_defs() ->
 	 opts => []},
        #{name => state, fnum => 6, rnum => 7,
 	 type => {msg, 'State'}, occurrence => optional,
+	 opts => []},
+       #{name => sale, fnum => 7, rnum => 8,
+	 type => {msg, 'Sale'}, occurrence => optional,
 	 opts => []}]},
      {{msg, 'ItemOrderOffer'},
       [#{name => manufacturer_name, fnum => 1, rnum => 2,
@@ -2048,12 +2491,23 @@ get_msg_defs() ->
       [#{name => result, fnum => 1, rnum => 2, type => bool,
 	 occurrence => optional, opts => []},
        #{name => description, fnum => 2, rnum => 3,
-	 type => string, occurrence => optional, opts => []}]}].
+	 type => string, occurrence => optional, opts => []}]},
+     {{msg, 'Sale'},
+      [#{name => manufactureName, fnum => 1, rnum => 2,
+	 type => string, occurrence => optional, opts => []},
+       #{name => articleName, fnum => 2, rnum => 3,
+	 type => string, occurrence => optional, opts => []},
+       #{name => offerName, fnum => 3, rnum => 4,
+	 type => string, occurrence => optional, opts => []},
+       #{name => globalPrice, fnum => 4, rnum => 5,
+	 type => float, occurrence => optional, opts => []},
+       #{name => message, fnum => 5, rnum => 6, type => string,
+	 occurrence => required, opts => []}]}].
 
 
 get_msg_names() ->
     ['Message', 'ItemOrderOffer', 'ItemProductionOffer',
-     'User', 'State'].
+     'User', 'State', 'Sale'].
 
 
 get_group_names() -> [].
@@ -2061,7 +2515,7 @@ get_group_names() -> [].
 
 get_msg_or_group_names() ->
     ['Message', 'ItemOrderOffer', 'ItemProductionOffer',
-     'User', 'State'].
+     'User', 'State', 'Sale'].
 
 
 get_enum_names() -> ['Type'].
@@ -2098,6 +2552,9 @@ find_msg_def('Message') ->
        opts => []},
      #{name => state, fnum => 6, rnum => 7,
        type => {msg, 'State'}, occurrence => optional,
+       opts => []},
+     #{name => sale, fnum => 7, rnum => 8,
+       type => {msg, 'Sale'}, occurrence => optional,
        opts => []}];
 find_msg_def('ItemOrderOffer') ->
     [#{name => manufacturer_name, fnum => 1, rnum => 2,
@@ -2129,6 +2586,17 @@ find_msg_def('State') ->
        occurrence => optional, opts => []},
      #{name => description, fnum => 2, rnum => 3,
        type => string, occurrence => optional, opts => []}];
+find_msg_def('Sale') ->
+    [#{name => manufactureName, fnum => 1, rnum => 2,
+       type => string, occurrence => optional, opts => []},
+     #{name => articleName, fnum => 2, rnum => 3,
+       type => string, occurrence => optional, opts => []},
+     #{name => offerName, fnum => 3, rnum => 4,
+       type => string, occurrence => optional, opts => []},
+     #{name => globalPrice, fnum => 4, rnum => 5,
+       type => float, occurrence => optional, opts => []},
+     #{name => message, fnum => 5, rnum => 6, type => string,
+       occurrence => required, opts => []}];
 find_msg_def(_) -> error.
 
 
@@ -2216,6 +2684,7 @@ fqbin_to_msg_name(<<"Protos.ItemOrderOffer">>) -> 'ItemOrderOffer';
 fqbin_to_msg_name(<<"Protos.ItemProductionOffer">>) -> 'ItemProductionOffer';
 fqbin_to_msg_name(<<"Protos.User">>) -> 'User';
 fqbin_to_msg_name(<<"Protos.State">>) -> 'State';
+fqbin_to_msg_name(<<"Protos.Sale">>) -> 'Sale';
 fqbin_to_msg_name(E) -> error({gpb_error, {badmsg, E}}).
 
 
@@ -2224,6 +2693,7 @@ msg_name_to_fqbin('ItemOrderOffer') -> <<"Protos.ItemOrderOffer">>;
 msg_name_to_fqbin('ItemProductionOffer') -> <<"Protos.ItemProductionOffer">>;
 msg_name_to_fqbin('User') -> <<"Protos.User">>;
 msg_name_to_fqbin('State') -> <<"Protos.State">>;
+msg_name_to_fqbin('Sale') -> <<"Protos.Sale">>;
 msg_name_to_fqbin(E) -> error({gpb_error, {badmsg, E}}).
 
 
@@ -2266,7 +2736,7 @@ get_all_proto_names() -> ["protocol"].
 
 get_msg_containment("protocol") ->
     ['ItemOrderOffer', 'ItemProductionOffer', 'Message',
-     'State', 'User'];
+     'Sale', 'State', 'User'];
 get_msg_containment(P) ->
     error({gpb_error, {badproto, P}}).
 
@@ -2295,6 +2765,7 @@ get_proto_by_msg_name_as_fqbin(<<"Protos.User">>) -> "protocol";
 get_proto_by_msg_name_as_fqbin(<<"Protos.ItemProductionOffer">>) -> "protocol";
 get_proto_by_msg_name_as_fqbin(<<"Protos.ItemOrderOffer">>) -> "protocol";
 get_proto_by_msg_name_as_fqbin(<<"Protos.State">>) -> "protocol";
+get_proto_by_msg_name_as_fqbin(<<"Protos.Sale">>) -> "protocol";
 get_proto_by_msg_name_as_fqbin(<<"Protos.Message">>) -> "protocol";
 get_proto_by_msg_name_as_fqbin(E) ->
     error({gpb_error, {badmsg, E}}).

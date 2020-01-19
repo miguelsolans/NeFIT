@@ -1,34 +1,34 @@
 package business;
 
-import java.util.Date;
+import org.joda.time.DateTime;
+
+import javax.validation.constraints.NotNull;
 
 public class ItemProductionOffer {
+    @NotNull
     String productName;
-    String manufacturerName;
+    @NotNull
     double unitPrice;
-    double minimumAmout;
+    @NotNull
+    double minimumAmount;
+    @NotNull
     double maximumAmount;
-    Date start;
-    Date end;
+    @NotNull
+    DateTime start;
+    @NotNull
+    DateTime end;
+    @NotNull
+    boolean active;
 
 
-    public ItemProductionOffer(String productName, String manufacturerName, double unitPrice, double minimumAmout, double maximumAmount, int period) {
+    public ItemProductionOffer(String productName, double unitPrice, double minimumAmount, double maximumAmount, int period) {
         this.productName = productName;
-        this.manufacturerName = manufacturerName;
         this.unitPrice = unitPrice;
-        this.minimumAmout = minimumAmout;
-        this.minimumAmout = maximumAmount;
-
-        this.start = new Date();
-        // this.end = new Date // Calc last day of offer
-    }
-
-    public String getManufacturerName() {
-        return manufacturerName;
-    }
-
-    public void setManufacturerName(String manufacturerName) {
-        this.manufacturerName = manufacturerName;
+        this.minimumAmount = minimumAmount;
+        this.maximumAmount = maximumAmount;
+        this.active = true;
+        this.start = new DateTime();
+        this.end = new DateTime().plusSeconds(period);
     }
 
     public String getName() {
@@ -56,11 +56,11 @@ public class ItemProductionOffer {
     }
 
     public double getMinimumAmout() {
-        return this.minimumAmout;
+        return this.minimumAmount;
     }
 
     public void setMinimumAmout(float minimumAmout) {
-        this.minimumAmout = minimumAmout;
+        this.minimumAmount = minimumAmout;
     }
 
     public double getMaximumAmount() {
@@ -71,19 +71,27 @@ public class ItemProductionOffer {
         this.maximumAmount = maximumAmount;
     }
 
-    public Date getStart() {
+    public DateTime getStart() {
         return this.start;
     }
 
-    public void setStart(Date start) {
+    public void setStart(DateTime start) {
         this.start = start;
     }
 
-    public Date getEnd() {
+    public DateTime getEnd() {
         return this.end;
     }
 
-    public void setEnd(Date end) {
+    public void setEnd(DateTime end) {
         this.end = end;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
