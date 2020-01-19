@@ -34,13 +34,13 @@ public class Client implements Runnable {
         this.type = "";
         this.username = "";
         this.notifications = true;
-        this.handler = new NotificationHandler(sm, responses, notifications);
+        this.handler = new NotificationHandler(sm, responses, true);
 
         ZMQ.Context context = ZMQ.context(1);
         sub = context.socket(ZMQ.SUB);
         sub.connect("tcp://localhost:"+subPort);
 
-        this.subHandler = new SubscriptionHandler(sub);
+        this.subHandler = new SubscriptionHandler(sub, true);
 
         Thread subscriptionsHandler = new Thread(subHandler);
         Thread notificationsHandler = new Thread(handler);

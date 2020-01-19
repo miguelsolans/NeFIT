@@ -4,8 +4,9 @@ public class SubscriptionHandler implements Runnable {
     private ZMQ.Socket sub;
     private boolean on;
 
-    SubscriptionHandler(ZMQ.Socket sub) {
+    SubscriptionHandler(ZMQ.Socket sub, boolean notifications) {
         this.sub = sub;
+        this.on = notifications;
     }
 
     void setOn(boolean value) {
