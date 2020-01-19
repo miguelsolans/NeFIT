@@ -40,9 +40,11 @@ public class ProductionOffer {
         this.offers = new ArrayList<>();
         new Timer().schedule(new Finisher(this),time);
         this.sender = new Sender();
+        this.id = 0;
     }
 
     public void addOrder(Offer offer){
+        offer.setId(this.id++);
         offers.add(offer);
     }
 
@@ -50,6 +52,7 @@ public class ProductionOffer {
         this.setActive(false);
         this.offers.sort(new ComparatorOffers());
         float quantity;
+        int winners = 0, losers=0;
         Protocol.User manufactureUser = Protocol.User.newBuilder().
                                                 setUsername(this.fabricantName).
                                                 build();
@@ -57,6 +60,7 @@ public class ProductionOffer {
             quantity = this.quantMax - offer.getQuantity();
 
             if (quantity>= this.quantMIN) {
+                winners++;
                 this.quantMax -= offer.getQuantity();
 
                 sender.sendWinnerOffer(offer.getUserName(),this.id);
@@ -84,6 +88,7 @@ public class ProductionOffer {
                 push.send(messageO.toByteArray());
             }
             else {
+                losers++;
                 Protocol.User userOffer = Protocol.User.newBuilder().
                         setUsername(offer.getUserName()).
                         build();
@@ -106,6 +111,7 @@ public class ProductionOffer {
 
             }
         }
+        System.out.println("Lnçamento de produção finalizado com "+winners+" vencedores e com " +losers);
 
     }
 
