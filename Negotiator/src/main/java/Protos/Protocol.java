@@ -43,6 +43,10 @@ public final class Protocol {
      * <code>ITEMPRODUCTIONOFFER = 5;</code>
      */
     ITEMPRODUCTIONOFFER(5),
+    /**
+     * <code>SUBSCRIPTION = 6;</code>
+     */
+    SUBSCRIPTION(6),
     ;
 
     /**
@@ -69,6 +73,10 @@ public final class Protocol {
      * <code>ITEMPRODUCTIONOFFER = 5;</code>
      */
     public static final int ITEMPRODUCTIONOFFER_VALUE = 5;
+    /**
+     * <code>SUBSCRIPTION = 6;</code>
+     */
+    public static final int SUBSCRIPTION_VALUE = 6;
 
 
     public final int getNumber() {
@@ -97,6 +105,7 @@ public final class Protocol {
         case 3: return RESPONSE;
         case 4: return ITEMORDEROFFER;
         case 5: return ITEMPRODUCTIONOFFER;
+        case 6: return SUBSCRIPTION;
         default: return null;
       }
     }
@@ -6751,10 +6760,10 @@ public final class Protocol {
       "\n\006result\030\001 \001(\010\022\023\n\013description\030\002 \001(\t\"m\n\004S" +
       "ale\022\027\n\017manufactureName\030\001 \001(\t\022\023\n\013articleN" +
       "ame\030\002 \001(\t\022\021\n\tofferName\030\003 \001(\t\022\023\n\013globalPr" +
-      "ice\030\004 \001(\002\022\017\n\007message\030\005 \002(\t*f\n\004Type\022\t\n\005LO" +
+      "ice\030\004 \001(\002\022\017\n\007message\030\005 \002(\t*x\n\004Type\022\t\n\005LO" +
       "GIN\020\000\022\n\n\006LOGOUT\020\001\022\014\n\010REGISTER\020\002\022\014\n\010RESPO" +
       "NSE\020\003\022\022\n\016ITEMORDEROFFER\020\004\022\027\n\023ITEMPRODUCT" +
-      "IONOFFER\020\005"
+      "IONOFFER\020\005\022\020\n\014SUBSCRIPTION\020\006"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
