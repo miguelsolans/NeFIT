@@ -36,6 +36,7 @@ public class Client implements Runnable {
         this.notifications = true;
         this.handler = new NotificationHandler(sm, responses, notifications);
 
+
         ZMQ.Context context = ZMQ.context(1);
         sub = context.socket(ZMQ.SUB);
         sub.connect("tcp://localhost:"+subPort);
