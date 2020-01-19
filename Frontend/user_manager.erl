@@ -19,7 +19,7 @@ loop(Sock, User) ->
                             U = maps:get(user, Msg),
                             Username = maps:get(username, U),
                             NPid = negotiations_manager:findNegotiator(Username),
-                            case negotiations_producer:newOrder(Msg,NPid) of
+                            case negotiations_producer:sendOrder(Data,NPid) of
                                 ok ->
                                     sender_handler:sendOrderResponse(Sock,UT,true,"ITEM PRODUCTION OFFER SUCCEDED");
                                 error ->
@@ -36,7 +36,7 @@ loop(Sock, User) ->
                             IOO = maps:get(item_order_offer, Msg),
                             Name = maps:get(manufacturer_name, IOO),
                             NPid = negotiations_manager:findNegotiator(Name),
-                            case negotiations_producer:newOrder(Msg,NPid) of
+                            case negotiations_producer:sendOrder(Data,NPid) of
                                 ok ->
                                     sender_handler:sendOrderResponse(Sock,UT,true,"ITEM ORDER OFFER SUCCEDED");
                                 error ->

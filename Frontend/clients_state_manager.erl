@@ -6,7 +6,6 @@
 
 % register module as a process and start it, as well as start a consumer process
 start() ->
-    negotiations_consumer:start(),
     register(?MODULE, spawn(fun() -> clientsLoop(#{}) end)).
 
 % register module as a process and start it with received Data
