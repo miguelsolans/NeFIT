@@ -6,6 +6,7 @@ public class Negotiator {
     private ProductionOffers productionMap; // key : fabricantName; Value: (key:Artigo;value:production
     private ZMQ.Socket push;
     private ZMQ.Socket pull;
+    private ZMQ.Socket pub;
 
 
     public Negotiator(ZMQ.Socket push, ZMQ.Socket pull) {
@@ -30,34 +31,46 @@ public class Negotiator {
         ZMQ.Socket pull = context.socket(ZMQ.PULL);
         pull.bind("tcp://*:"+portPULL);
 
+        //Notifications
+    //    ZMQ.Socket pub = context.socket(ZMQ.PUB);
+    //    pub.connect("tcp://localhost:"+portPUB);
+
         Negotiator negotiator = new Negotiator(push,pull);
 
         while(true){
             //Receiving message from server front-end
             Protocol.Message message = negotiator.receive();
             boolean result = true;
-
             switch (message.getUserType()){
 
                 case "MANUFACTURER":
                     result =negotiator.addProducionOffer(message,push);
                     if (result) {
+                        System.out.println("Lançamento de Oferta de Produção" +message.getUser().getUsername()+ "validada");
                         sender.sendProductionOffer(message.getUser().getUsername(),message.getItemProductionOffer().getName(),
                                 message.getItemProductionOffer().getUnitPrice(),
                                 message.getItemProductionOffer().getMinimumAmount(),
                                 message.getItemProductionOffer().getMaximumAmount(),(int) message.getItemProductionOffer().getPeriod());
+                      //  pub.send("ProductionOffer "+message.getUser().getUsername()+"lançada");
                     }
-                    break;
-                case "Consumer":
-                    result = negotiator.addOffer(message);
-                    if (result){
-                        sender.sendItemOrderOffer(message.getUser().getUsername(),message.getItemOrderOffer().getManufacturerName(),
-                                                    message.getItemOrderOffer().getProductName(),message.getItemOrderOffer().getQuantity(),
-                                                    message.getItemOrderOffer().getUnitPrice());
+                    else {
+                        System.out.println("Lançamento de Oferta de Produção" +message.getUser().getUsername()+ "cancelado");
+                      //  pub.send("ProductionOffer "+message.getUser().getUsername()+"não foi lançada");
                     }
                     break;
                 case "IMPORTER":
                     result = negotiator.addOffer(message);
+                    if (result){
+                        System.out.println("Lançamento de Oferta "+message.getUser().getUsername()+ "validada");
+                        sender.sendItemOrderOffer(message.getUser().getUsername(),message.getItemOrderOffer().getManufacturerName(),
+                                                    message.getItemOrderOffer().getProductName(),message.getItemOrderOffer().getQuantity(),
+                                                    message.getItemOrderOffer().getUnitPrice());
+                      //  pub.send("ItemOrderOffer"+message.getUser().getUsername()+"lançada");
+                    }
+                    else {
+                        System.out.println("Lançamento de Oferta "+message.getUser().getUsername()+ "cancelado");
+                      //  pub.send("ItemOrderOffer"+message.getUser().getUsername()+"não foi lançada");
+                    }
                     break;
             }
             //Send message with the result of the offer (true or false)
