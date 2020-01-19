@@ -51,4 +51,15 @@ public class ItemProductionController {
 
         return Response.ok().build();
     }
+
+    @PUT
+    @Path("/close/{manufacturer}")
+    public Response closeProduct(
+            @NotNull @PathParam("manufacturer") String manufacturer,
+            @NotNull @QueryParam("product") String product
+    ) {
+        ManufacturerDB.closeOffer(manufacturer, product);
+
+        return Response.ok().build();
+    }
 }

@@ -71,5 +71,4 @@ public class Manufacturer {
         this.negotiator = negotiator;
     }
 
-
 }
