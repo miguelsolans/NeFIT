@@ -5,13 +5,14 @@
 
 % register module as a process and start it
 start() ->
+    negotiations_consumer:start(),
     register(?MODULE, spawn(fun() -> negotiationsLoop(#{}, #{}) end)).
 
 % function that asks the process that mantains de negotiations state for a Negotiator
 findNegotiator(Manufacturer) ->
     ?MODULE ! {find, Manufacturer, self()},
     receive
-        Pid -> Pid
+        {ok, Pid} -> Pid
     end.
 
 % process that runs indefinitely and keeps the negotiators state
@@ -48,10 +49,8 @@ findManufacturerInCatalog(Manufacturer) ->
     case httpc:request("http://localhost:8080/manufacturer/" ++ Manufacturer) of
         {ok, {_, _, Result}} ->
             inets:stop(),
-            {struct, Json} = mochijson2:decode(Result),
-            io:format("Received: ~s~n",[Json]),
-            {_, Data} = proplists:get_value("data", Json),
-            {_, Negotiator} = proplists:get_value("negotiator", Data),
+            {struct, Json} = mochijson:decode(Result),
+            {_, Negotiator} = proplists:get_value("negotiator", Json),
             Name = proplists:get_value("name", Negotiator),
         	Host = proplists:get_value("host", Negotiator),
         	Port = proplists:get_value("port", Negotiator),

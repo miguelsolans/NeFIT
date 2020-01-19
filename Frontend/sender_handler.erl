@@ -1,5 +1,5 @@
 -module(sender_handler).
--export ([sendAuthResponse/3, sendInvalidAuthResponse/2, sendEncoded/2, sendInvalidOperation/2, sendOrderResponse/5]).
+-export ([sendAuthResponse/3, sendInvalidAuthResponse/2, sendEncoded/2, sendInvalidOperation/2, sendOrderResponse/4]).
 
 % function that sends an authentication response to the correspondent client
 sendAuthResponse(Sock, UserType, Description) ->
@@ -21,6 +21,6 @@ sendInvalidOperation(Sock, UserType) ->
     gen_tcp:send(Sock, Op).
 
 %
-sendOrderResponse(Sock, UT, T, R, D) ->
-    Msg = protocol:encode_msg(#{user_type => UT, type => T, state => #{result => R, description => D}}, 'Message'),
+sendOrderResponse(Sock, UT, R, D) ->
+    Msg = protocol:encode_msg(#{user_type => UT, type => 'RESPONSE', state => #{result => R, description => D}}, 'Message'),
     gen_tcp:send(Sock, Msg).

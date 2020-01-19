@@ -22,7 +22,7 @@ public class Negotiator {
 
         String portPUSH = "3000", portPULL="12345";
 
-        if(args.length==1){ portPULL = args[1]; }
+        if(args.length==1){ portPULL = args[0]; }
         //Sender side
         ZMQ.Socket push = context.socket(ZMQ.PUSH);
         push.connect("tcp://localhost:"+portPUSH);
@@ -40,10 +40,10 @@ public class Negotiator {
 
             switch (message.getUserType()){
 
-                case "Producer":
+                case "MANUFACTURER":
                     result =negotiator.addProducionOffer(message,push);
                     break;
-                case "Consumer":
+                case "IMPORTER":
                     result = negotiator.addOffer(message);
                     break;
             }
