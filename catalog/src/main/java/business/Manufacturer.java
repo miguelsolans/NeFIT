@@ -70,4 +70,6 @@ public class Manufacturer {
     public void setNegotiator(Negotiator negotiator) {
         this.negotiator = negotiator;
     }
+
+
 }

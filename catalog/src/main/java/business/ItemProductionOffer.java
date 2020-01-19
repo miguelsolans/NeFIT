@@ -97,4 +97,8 @@ public class ItemProductionOffer {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+    public String getManufacturer() {
+        return this.manufacturer;
+    }
 }
