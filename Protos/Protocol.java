@@ -237,6 +237,21 @@ public final class Protocol {
      * <code>optional .Protos.State state = 6;</code>
      */
     Protos.Protocol.StateOrBuilder getStateOrBuilder();
+
+    /**
+     * <code>optional .Protos.Sale sale = 7;</code>
+     * @return Whether the sale field is set.
+     */
+    boolean hasSale();
+    /**
+     * <code>optional .Protos.Sale sale = 7;</code>
+     * @return The sale.
+     */
+    Protos.Protocol.Sale getSale();
+    /**
+     * <code>optional .Protos.Sale sale = 7;</code>
+     */
+    Protos.Protocol.SaleOrBuilder getSaleOrBuilder();
   }
   /**
    * Protobuf type {@code Protos.Message}
@@ -354,6 +369,19 @@ public final class Protocol {
                 state_ = subBuilder.buildPartial();
               }
               bitField0_ |= 0x00000020;
+              break;
+            }
+            case 58: {
+              Protos.Protocol.Sale.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000040) != 0)) {
+                subBuilder = sale_.toBuilder();
+              }
+              sale_ = input.readMessage(Protos.Protocol.Sale.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(sale_);
+                sale_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000040;
               break;
             }
             default: {
@@ -545,6 +573,29 @@ public final class Protocol {
       return state_ == null ? Protos.Protocol.State.getDefaultInstance() : state_;
     }
 
+    public static final int SALE_FIELD_NUMBER = 7;
+    private Protos.Protocol.Sale sale_;
+    /**
+     * <code>optional .Protos.Sale sale = 7;</code>
+     * @return Whether the sale field is set.
+     */
+    public boolean hasSale() {
+      return ((bitField0_ & 0x00000040) != 0);
+    }
+    /**
+     * <code>optional .Protos.Sale sale = 7;</code>
+     * @return The sale.
+     */
+    public Protos.Protocol.Sale getSale() {
+      return sale_ == null ? Protos.Protocol.Sale.getDefaultInstance() : sale_;
+    }
+    /**
+     * <code>optional .Protos.Sale sale = 7;</code>
+     */
+    public Protos.Protocol.SaleOrBuilder getSaleOrBuilder() {
+      return sale_ == null ? Protos.Protocol.Sale.getDefaultInstance() : sale_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -574,6 +625,12 @@ public final class Protocol {
           return false;
         }
       }
+      if (hasSale()) {
+        if (!getSale().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -598,6 +655,9 @@ public final class Protocol {
       }
       if (((bitField0_ & 0x00000020) != 0)) {
         output.writeMessage(6, getState());
+      }
+      if (((bitField0_ & 0x00000040) != 0)) {
+        output.writeMessage(7, getSale());
       }
       unknownFields.writeTo(output);
     }
@@ -630,6 +690,10 @@ public final class Protocol {
       if (((bitField0_ & 0x00000020) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(6, getState());
+      }
+      if (((bitField0_ & 0x00000040) != 0)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(7, getSale());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -675,6 +739,11 @@ public final class Protocol {
         if (!getState()
             .equals(other.getState())) return false;
       }
+      if (hasSale() != other.hasSale()) return false;
+      if (hasSale()) {
+        if (!getSale()
+            .equals(other.getSale())) return false;
+      }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -709,6 +778,10 @@ public final class Protocol {
       if (hasState()) {
         hash = (37 * hash) + STATE_FIELD_NUMBER;
         hash = (53 * hash) + getState().hashCode();
+      }
+      if (hasSale()) {
+        hash = (37 * hash) + SALE_FIELD_NUMBER;
+        hash = (53 * hash) + getSale().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -842,6 +915,7 @@ public final class Protocol {
           getItemProductionOfferFieldBuilder();
           getUserFieldBuilder();
           getStateFieldBuilder();
+          getSaleFieldBuilder();
         }
       }
       @java.lang.Override
@@ -875,6 +949,12 @@ public final class Protocol {
           stateBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000020);
+        if (saleBuilder_ == null) {
+          sale_ = null;
+        } else {
+          saleBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
 
@@ -942,6 +1022,14 @@ public final class Protocol {
             result.state_ = stateBuilder_.build();
           }
           to_bitField0_ |= 0x00000020;
+        }
+        if (((from_bitField0_ & 0x00000040) != 0)) {
+          if (saleBuilder_ == null) {
+            result.sale_ = sale_;
+          } else {
+            result.sale_ = saleBuilder_.build();
+          }
+          to_bitField0_ |= 0x00000040;
         }
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -1012,6 +1100,9 @@ public final class Protocol {
         if (other.hasState()) {
           mergeState(other.getState());
         }
+        if (other.hasSale()) {
+          mergeSale(other.getSale());
+        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -1034,6 +1125,11 @@ public final class Protocol {
         }
         if (hasUser()) {
           if (!getUser().isInitialized()) {
+            return false;
+          }
+        }
+        if (hasSale()) {
+          if (!getSale().isInitialized()) {
             return false;
           }
         }
@@ -1664,6 +1760,126 @@ public final class Protocol {
           state_ = null;
         }
         return stateBuilder_;
+      }
+
+      private Protos.Protocol.Sale sale_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          Protos.Protocol.Sale, Protos.Protocol.Sale.Builder, Protos.Protocol.SaleOrBuilder> saleBuilder_;
+      /**
+       * <code>optional .Protos.Sale sale = 7;</code>
+       * @return Whether the sale field is set.
+       */
+      public boolean hasSale() {
+        return ((bitField0_ & 0x00000040) != 0);
+      }
+      /**
+       * <code>optional .Protos.Sale sale = 7;</code>
+       * @return The sale.
+       */
+      public Protos.Protocol.Sale getSale() {
+        if (saleBuilder_ == null) {
+          return sale_ == null ? Protos.Protocol.Sale.getDefaultInstance() : sale_;
+        } else {
+          return saleBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .Protos.Sale sale = 7;</code>
+       */
+      public Builder setSale(Protos.Protocol.Sale value) {
+        if (saleBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          sale_ = value;
+          onChanged();
+        } else {
+          saleBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000040;
+        return this;
+      }
+      /**
+       * <code>optional .Protos.Sale sale = 7;</code>
+       */
+      public Builder setSale(
+          Protos.Protocol.Sale.Builder builderForValue) {
+        if (saleBuilder_ == null) {
+          sale_ = builderForValue.build();
+          onChanged();
+        } else {
+          saleBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000040;
+        return this;
+      }
+      /**
+       * <code>optional .Protos.Sale sale = 7;</code>
+       */
+      public Builder mergeSale(Protos.Protocol.Sale value) {
+        if (saleBuilder_ == null) {
+          if (((bitField0_ & 0x00000040) != 0) &&
+              sale_ != null &&
+              sale_ != Protos.Protocol.Sale.getDefaultInstance()) {
+            sale_ =
+              Protos.Protocol.Sale.newBuilder(sale_).mergeFrom(value).buildPartial();
+          } else {
+            sale_ = value;
+          }
+          onChanged();
+        } else {
+          saleBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000040;
+        return this;
+      }
+      /**
+       * <code>optional .Protos.Sale sale = 7;</code>
+       */
+      public Builder clearSale() {
+        if (saleBuilder_ == null) {
+          sale_ = null;
+          onChanged();
+        } else {
+          saleBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000040);
+        return this;
+      }
+      /**
+       * <code>optional .Protos.Sale sale = 7;</code>
+       */
+      public Protos.Protocol.Sale.Builder getSaleBuilder() {
+        bitField0_ |= 0x00000040;
+        onChanged();
+        return getSaleFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .Protos.Sale sale = 7;</code>
+       */
+      public Protos.Protocol.SaleOrBuilder getSaleOrBuilder() {
+        if (saleBuilder_ != null) {
+          return saleBuilder_.getMessageOrBuilder();
+        } else {
+          return sale_ == null ?
+              Protos.Protocol.Sale.getDefaultInstance() : sale_;
+        }
+      }
+      /**
+       * <code>optional .Protos.Sale sale = 7;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          Protos.Protocol.Sale, Protos.Protocol.Sale.Builder, Protos.Protocol.SaleOrBuilder> 
+          getSaleFieldBuilder() {
+        if (saleBuilder_ == null) {
+          saleBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              Protos.Protocol.Sale, Protos.Protocol.Sale.Builder, Protos.Protocol.SaleOrBuilder>(
+                  getSale(),
+                  getParentForChildren(),
+                  isClean());
+          sale_ = null;
+        }
+        return saleBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -5235,6 +5451,1250 @@ public final class Protocol {
 
   }
 
+  public interface SaleOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:Protos.Sale)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>optional string manufactureName = 1;</code>
+     * @return Whether the manufactureName field is set.
+     */
+    boolean hasManufactureName();
+    /**
+     * <code>optional string manufactureName = 1;</code>
+     * @return The manufactureName.
+     */
+    java.lang.String getManufactureName();
+    /**
+     * <code>optional string manufactureName = 1;</code>
+     * @return The bytes for manufactureName.
+     */
+    com.google.protobuf.ByteString
+        getManufactureNameBytes();
+
+    /**
+     * <code>optional string articleName = 2;</code>
+     * @return Whether the articleName field is set.
+     */
+    boolean hasArticleName();
+    /**
+     * <code>optional string articleName = 2;</code>
+     * @return The articleName.
+     */
+    java.lang.String getArticleName();
+    /**
+     * <code>optional string articleName = 2;</code>
+     * @return The bytes for articleName.
+     */
+    com.google.protobuf.ByteString
+        getArticleNameBytes();
+
+    /**
+     * <code>optional string offerName = 3;</code>
+     * @return Whether the offerName field is set.
+     */
+    boolean hasOfferName();
+    /**
+     * <code>optional string offerName = 3;</code>
+     * @return The offerName.
+     */
+    java.lang.String getOfferName();
+    /**
+     * <code>optional string offerName = 3;</code>
+     * @return The bytes for offerName.
+     */
+    com.google.protobuf.ByteString
+        getOfferNameBytes();
+
+    /**
+     * <code>optional float globalPrice = 4;</code>
+     * @return Whether the globalPrice field is set.
+     */
+    boolean hasGlobalPrice();
+    /**
+     * <code>optional float globalPrice = 4;</code>
+     * @return The globalPrice.
+     */
+    float getGlobalPrice();
+
+    /**
+     * <code>required string message = 5;</code>
+     * @return Whether the message field is set.
+     */
+    boolean hasMessage();
+    /**
+     * <code>required string message = 5;</code>
+     * @return The message.
+     */
+    java.lang.String getMessage();
+    /**
+     * <code>required string message = 5;</code>
+     * @return The bytes for message.
+     */
+    com.google.protobuf.ByteString
+        getMessageBytes();
+  }
+  /**
+   * Protobuf type {@code Protos.Sale}
+   */
+  public  static final class Sale extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:Protos.Sale)
+      SaleOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Sale.newBuilder() to construct.
+    private Sale(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private Sale() {
+      manufactureName_ = "";
+      articleName_ = "";
+      offerName_ = "";
+      message_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new Sale();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Sale(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000001;
+              manufactureName_ = bs;
+              break;
+            }
+            case 18: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000002;
+              articleName_ = bs;
+              break;
+            }
+            case 26: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000004;
+              offerName_ = bs;
+              break;
+            }
+            case 37: {
+              bitField0_ |= 0x00000008;
+              globalPrice_ = input.readFloat();
+              break;
+            }
+            case 42: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000010;
+              message_ = bs;
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return Protos.Protocol.internal_static_Protos_Sale_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return Protos.Protocol.internal_static_Protos_Sale_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              Protos.Protocol.Sale.class, Protos.Protocol.Sale.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int MANUFACTURENAME_FIELD_NUMBER = 1;
+    private volatile java.lang.Object manufactureName_;
+    /**
+     * <code>optional string manufactureName = 1;</code>
+     * @return Whether the manufactureName field is set.
+     */
+    public boolean hasManufactureName() {
+      return ((bitField0_ & 0x00000001) != 0);
+    }
+    /**
+     * <code>optional string manufactureName = 1;</code>
+     * @return The manufactureName.
+     */
+    public java.lang.String getManufactureName() {
+      java.lang.Object ref = manufactureName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          manufactureName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string manufactureName = 1;</code>
+     * @return The bytes for manufactureName.
+     */
+    public com.google.protobuf.ByteString
+        getManufactureNameBytes() {
+      java.lang.Object ref = manufactureName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        manufactureName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int ARTICLENAME_FIELD_NUMBER = 2;
+    private volatile java.lang.Object articleName_;
+    /**
+     * <code>optional string articleName = 2;</code>
+     * @return Whether the articleName field is set.
+     */
+    public boolean hasArticleName() {
+      return ((bitField0_ & 0x00000002) != 0);
+    }
+    /**
+     * <code>optional string articleName = 2;</code>
+     * @return The articleName.
+     */
+    public java.lang.String getArticleName() {
+      java.lang.Object ref = articleName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          articleName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string articleName = 2;</code>
+     * @return The bytes for articleName.
+     */
+    public com.google.protobuf.ByteString
+        getArticleNameBytes() {
+      java.lang.Object ref = articleName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        articleName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int OFFERNAME_FIELD_NUMBER = 3;
+    private volatile java.lang.Object offerName_;
+    /**
+     * <code>optional string offerName = 3;</code>
+     * @return Whether the offerName field is set.
+     */
+    public boolean hasOfferName() {
+      return ((bitField0_ & 0x00000004) != 0);
+    }
+    /**
+     * <code>optional string offerName = 3;</code>
+     * @return The offerName.
+     */
+    public java.lang.String getOfferName() {
+      java.lang.Object ref = offerName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          offerName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string offerName = 3;</code>
+     * @return The bytes for offerName.
+     */
+    public com.google.protobuf.ByteString
+        getOfferNameBytes() {
+      java.lang.Object ref = offerName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        offerName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int GLOBALPRICE_FIELD_NUMBER = 4;
+    private float globalPrice_;
+    /**
+     * <code>optional float globalPrice = 4;</code>
+     * @return Whether the globalPrice field is set.
+     */
+    public boolean hasGlobalPrice() {
+      return ((bitField0_ & 0x00000008) != 0);
+    }
+    /**
+     * <code>optional float globalPrice = 4;</code>
+     * @return The globalPrice.
+     */
+    public float getGlobalPrice() {
+      return globalPrice_;
+    }
+
+    public static final int MESSAGE_FIELD_NUMBER = 5;
+    private volatile java.lang.Object message_;
+    /**
+     * <code>required string message = 5;</code>
+     * @return Whether the message field is set.
+     */
+    public boolean hasMessage() {
+      return ((bitField0_ & 0x00000010) != 0);
+    }
+    /**
+     * <code>required string message = 5;</code>
+     * @return The message.
+     */
+    public java.lang.String getMessage() {
+      java.lang.Object ref = message_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          message_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string message = 5;</code>
+     * @return The bytes for message.
+     */
+    public com.google.protobuf.ByteString
+        getMessageBytes() {
+      java.lang.Object ref = message_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        message_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasMessage()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (((bitField0_ & 0x00000001) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, manufactureName_);
+      }
+      if (((bitField0_ & 0x00000002) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, articleName_);
+      }
+      if (((bitField0_ & 0x00000004) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, offerName_);
+      }
+      if (((bitField0_ & 0x00000008) != 0)) {
+        output.writeFloat(4, globalPrice_);
+      }
+      if (((bitField0_ & 0x00000010) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, message_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, manufactureName_);
+      }
+      if (((bitField0_ & 0x00000002) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, articleName_);
+      }
+      if (((bitField0_ & 0x00000004) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, offerName_);
+      }
+      if (((bitField0_ & 0x00000008) != 0)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(4, globalPrice_);
+      }
+      if (((bitField0_ & 0x00000010) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, message_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof Protos.Protocol.Sale)) {
+        return super.equals(obj);
+      }
+      Protos.Protocol.Sale other = (Protos.Protocol.Sale) obj;
+
+      if (hasManufactureName() != other.hasManufactureName()) return false;
+      if (hasManufactureName()) {
+        if (!getManufactureName()
+            .equals(other.getManufactureName())) return false;
+      }
+      if (hasArticleName() != other.hasArticleName()) return false;
+      if (hasArticleName()) {
+        if (!getArticleName()
+            .equals(other.getArticleName())) return false;
+      }
+      if (hasOfferName() != other.hasOfferName()) return false;
+      if (hasOfferName()) {
+        if (!getOfferName()
+            .equals(other.getOfferName())) return false;
+      }
+      if (hasGlobalPrice() != other.hasGlobalPrice()) return false;
+      if (hasGlobalPrice()) {
+        if (java.lang.Float.floatToIntBits(getGlobalPrice())
+            != java.lang.Float.floatToIntBits(
+                other.getGlobalPrice())) return false;
+      }
+      if (hasMessage() != other.hasMessage()) return false;
+      if (hasMessage()) {
+        if (!getMessage()
+            .equals(other.getMessage())) return false;
+      }
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasManufactureName()) {
+        hash = (37 * hash) + MANUFACTURENAME_FIELD_NUMBER;
+        hash = (53 * hash) + getManufactureName().hashCode();
+      }
+      if (hasArticleName()) {
+        hash = (37 * hash) + ARTICLENAME_FIELD_NUMBER;
+        hash = (53 * hash) + getArticleName().hashCode();
+      }
+      if (hasOfferName()) {
+        hash = (37 * hash) + OFFERNAME_FIELD_NUMBER;
+        hash = (53 * hash) + getOfferName().hashCode();
+      }
+      if (hasGlobalPrice()) {
+        hash = (37 * hash) + GLOBALPRICE_FIELD_NUMBER;
+        hash = (53 * hash) + java.lang.Float.floatToIntBits(
+            getGlobalPrice());
+      }
+      if (hasMessage()) {
+        hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
+        hash = (53 * hash) + getMessage().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static Protos.Protocol.Sale parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static Protos.Protocol.Sale parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static Protos.Protocol.Sale parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static Protos.Protocol.Sale parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static Protos.Protocol.Sale parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static Protos.Protocol.Sale parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static Protos.Protocol.Sale parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static Protos.Protocol.Sale parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static Protos.Protocol.Sale parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static Protos.Protocol.Sale parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static Protos.Protocol.Sale parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static Protos.Protocol.Sale parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(Protos.Protocol.Sale prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code Protos.Sale}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:Protos.Sale)
+        Protos.Protocol.SaleOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return Protos.Protocol.internal_static_Protos_Sale_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return Protos.Protocol.internal_static_Protos_Sale_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                Protos.Protocol.Sale.class, Protos.Protocol.Sale.Builder.class);
+      }
+
+      // Construct using Protos.Protocol.Sale.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        manufactureName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        articleName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        offerName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000004);
+        globalPrice_ = 0F;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        message_ = "";
+        bitField0_ = (bitField0_ & ~0x00000010);
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return Protos.Protocol.internal_static_Protos_Sale_descriptor;
+      }
+
+      @java.lang.Override
+      public Protos.Protocol.Sale getDefaultInstanceForType() {
+        return Protos.Protocol.Sale.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public Protos.Protocol.Sale build() {
+        Protos.Protocol.Sale result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public Protos.Protocol.Sale buildPartial() {
+        Protos.Protocol.Sale result = new Protos.Protocol.Sale(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.manufactureName_ = manufactureName_;
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.articleName_ = articleName_;
+        if (((from_bitField0_ & 0x00000004) != 0)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.offerName_ = offerName_;
+        if (((from_bitField0_ & 0x00000008) != 0)) {
+          result.globalPrice_ = globalPrice_;
+          to_bitField0_ |= 0x00000008;
+        }
+        if (((from_bitField0_ & 0x00000010) != 0)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.message_ = message_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof Protos.Protocol.Sale) {
+          return mergeFrom((Protos.Protocol.Sale)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(Protos.Protocol.Sale other) {
+        if (other == Protos.Protocol.Sale.getDefaultInstance()) return this;
+        if (other.hasManufactureName()) {
+          bitField0_ |= 0x00000001;
+          manufactureName_ = other.manufactureName_;
+          onChanged();
+        }
+        if (other.hasArticleName()) {
+          bitField0_ |= 0x00000002;
+          articleName_ = other.articleName_;
+          onChanged();
+        }
+        if (other.hasOfferName()) {
+          bitField0_ |= 0x00000004;
+          offerName_ = other.offerName_;
+          onChanged();
+        }
+        if (other.hasGlobalPrice()) {
+          setGlobalPrice(other.getGlobalPrice());
+        }
+        if (other.hasMessage()) {
+          bitField0_ |= 0x00000010;
+          message_ = other.message_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        if (!hasMessage()) {
+          return false;
+        }
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        Protos.Protocol.Sale parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (Protos.Protocol.Sale) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object manufactureName_ = "";
+      /**
+       * <code>optional string manufactureName = 1;</code>
+       * @return Whether the manufactureName field is set.
+       */
+      public boolean hasManufactureName() {
+        return ((bitField0_ & 0x00000001) != 0);
+      }
+      /**
+       * <code>optional string manufactureName = 1;</code>
+       * @return The manufactureName.
+       */
+      public java.lang.String getManufactureName() {
+        java.lang.Object ref = manufactureName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            manufactureName_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string manufactureName = 1;</code>
+       * @return The bytes for manufactureName.
+       */
+      public com.google.protobuf.ByteString
+          getManufactureNameBytes() {
+        java.lang.Object ref = manufactureName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          manufactureName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string manufactureName = 1;</code>
+       * @param value The manufactureName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setManufactureName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        manufactureName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string manufactureName = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearManufactureName() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        manufactureName_ = getDefaultInstance().getManufactureName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string manufactureName = 1;</code>
+       * @param value The bytes for manufactureName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setManufactureNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        manufactureName_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object articleName_ = "";
+      /**
+       * <code>optional string articleName = 2;</code>
+       * @return Whether the articleName field is set.
+       */
+      public boolean hasArticleName() {
+        return ((bitField0_ & 0x00000002) != 0);
+      }
+      /**
+       * <code>optional string articleName = 2;</code>
+       * @return The articleName.
+       */
+      public java.lang.String getArticleName() {
+        java.lang.Object ref = articleName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            articleName_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string articleName = 2;</code>
+       * @return The bytes for articleName.
+       */
+      public com.google.protobuf.ByteString
+          getArticleNameBytes() {
+        java.lang.Object ref = articleName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          articleName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string articleName = 2;</code>
+       * @param value The articleName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setArticleName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        articleName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string articleName = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearArticleName() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        articleName_ = getDefaultInstance().getArticleName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string articleName = 2;</code>
+       * @param value The bytes for articleName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setArticleNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        articleName_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object offerName_ = "";
+      /**
+       * <code>optional string offerName = 3;</code>
+       * @return Whether the offerName field is set.
+       */
+      public boolean hasOfferName() {
+        return ((bitField0_ & 0x00000004) != 0);
+      }
+      /**
+       * <code>optional string offerName = 3;</code>
+       * @return The offerName.
+       */
+      public java.lang.String getOfferName() {
+        java.lang.Object ref = offerName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            offerName_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string offerName = 3;</code>
+       * @return The bytes for offerName.
+       */
+      public com.google.protobuf.ByteString
+          getOfferNameBytes() {
+        java.lang.Object ref = offerName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          offerName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string offerName = 3;</code>
+       * @param value The offerName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setOfferName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        offerName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string offerName = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearOfferName() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        offerName_ = getDefaultInstance().getOfferName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string offerName = 3;</code>
+       * @param value The bytes for offerName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setOfferNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        offerName_ = value;
+        onChanged();
+        return this;
+      }
+
+      private float globalPrice_ ;
+      /**
+       * <code>optional float globalPrice = 4;</code>
+       * @return Whether the globalPrice field is set.
+       */
+      public boolean hasGlobalPrice() {
+        return ((bitField0_ & 0x00000008) != 0);
+      }
+      /**
+       * <code>optional float globalPrice = 4;</code>
+       * @return The globalPrice.
+       */
+      public float getGlobalPrice() {
+        return globalPrice_;
+      }
+      /**
+       * <code>optional float globalPrice = 4;</code>
+       * @param value The globalPrice to set.
+       * @return This builder for chaining.
+       */
+      public Builder setGlobalPrice(float value) {
+        bitField0_ |= 0x00000008;
+        globalPrice_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional float globalPrice = 4;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearGlobalPrice() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        globalPrice_ = 0F;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object message_ = "";
+      /**
+       * <code>required string message = 5;</code>
+       * @return Whether the message field is set.
+       */
+      public boolean hasMessage() {
+        return ((bitField0_ & 0x00000010) != 0);
+      }
+      /**
+       * <code>required string message = 5;</code>
+       * @return The message.
+       */
+      public java.lang.String getMessage() {
+        java.lang.Object ref = message_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            message_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string message = 5;</code>
+       * @return The bytes for message.
+       */
+      public com.google.protobuf.ByteString
+          getMessageBytes() {
+        java.lang.Object ref = message_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          message_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string message = 5;</code>
+       * @param value The message to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMessage(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        message_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string message = 5;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearMessage() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        message_ = getDefaultInstance().getMessage();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string message = 5;</code>
+       * @param value The bytes for message to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMessageBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        message_ = value;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:Protos.Sale)
+    }
+
+    // @@protoc_insertion_point(class_scope:Protos.Sale)
+    private static final Protos.Protocol.Sale DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new Protos.Protocol.Sale();
+    }
+
+    public static Protos.Protocol.Sale getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<Sale>
+        PARSER = new com.google.protobuf.AbstractParser<Sale>() {
+      @java.lang.Override
+      public Sale parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Sale(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<Sale> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Sale> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public Protos.Protocol.Sale getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_Protos_Message_descriptor;
   private static final 
@@ -5260,6 +6720,11 @@ public final class Protocol {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_Protos_State_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_Protos_Sale_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_Protos_Sale_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -5269,23 +6734,27 @@ public final class Protocol {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\016protocol.proto\022\006Protos\"\340\001\n\007Message\022\021\n\t" +
+      "\n\016protocol.proto\022\006Protos\"\374\001\n\007Message\022\021\n\t" +
       "user_type\030\001 \001(\t\0220\n\020item_order_offer\030\002 \001(" +
       "\0132\026.Protos.ItemOrderOffer\022:\n\025item_produc" +
       "tion_offer\030\003 \001(\0132\033.Protos.ItemProduction" +
       "Offer\022\032\n\004user\030\004 \001(\0132\014.Protos.User\022\032\n\004typ" +
       "e\030\005 \002(\0162\014.Protos.Type\022\034\n\005state\030\006 \001(\0132\r.P" +
-      "rotos.State\"g\n\016ItemOrderOffer\022\031\n\021manufac" +
-      "turer_name\030\001 \002(\t\022\024\n\014product_name\030\002 \002(\t\022\020" +
-      "\n\010quantity\030\003 \002(\002\022\022\n\nunit_price\030\004 \002(\002\"w\n\023" +
-      "ItemProductionOffer\022\014\n\004name\030\001 \002(\t\022\022\n\nuni" +
-      "t_price\030\002 \002(\002\022\026\n\016minimum_amount\030\003 \002(\002\022\026\n" +
-      "\016maximum_amount\030\004 \002(\002\022\016\n\006period\030\005 \002(\003\"*\n" +
-      "\004User\022\020\n\010username\030\001 \002(\t\022\020\n\010password\030\002 \001(" +
-      "\t\",\n\005State\022\016\n\006result\030\001 \001(\010\022\023\n\013descriptio" +
-      "n\030\002 \001(\t*f\n\004Type\022\t\n\005LOGIN\020\000\022\n\n\006LOGOUT\020\001\022\014" +
-      "\n\010REGISTER\020\002\022\014\n\010RESPONSE\020\003\022\022\n\016ITEMORDERO" +
-      "FFER\020\004\022\027\n\023ITEMPRODUCTIONOFFER\020\005"
+      "rotos.State\022\032\n\004sale\030\007 \001(\0132\014.Protos.Sale\"" +
+      "g\n\016ItemOrderOffer\022\031\n\021manufacturer_name\030\001" +
+      " \002(\t\022\024\n\014product_name\030\002 \002(\t\022\020\n\010quantity\030\003" +
+      " \002(\002\022\022\n\nunit_price\030\004 \002(\002\"w\n\023ItemProducti" +
+      "onOffer\022\014\n\004name\030\001 \002(\t\022\022\n\nunit_price\030\002 \002(" +
+      "\002\022\026\n\016minimum_amount\030\003 \002(\002\022\026\n\016maximum_amo" +
+      "unt\030\004 \002(\002\022\016\n\006period\030\005 \002(\003\"*\n\004User\022\020\n\010use" +
+      "rname\030\001 \002(\t\022\020\n\010password\030\002 \001(\t\",\n\005State\022\016" +
+      "\n\006result\030\001 \001(\010\022\023\n\013description\030\002 \001(\t\"m\n\004S" +
+      "ale\022\027\n\017manufactureName\030\001 \001(\t\022\023\n\013articleN" +
+      "ame\030\002 \001(\t\022\021\n\tofferName\030\003 \001(\t\022\023\n\013globalPr" +
+      "ice\030\004 \001(\002\022\017\n\007message\030\005 \002(\t*f\n\004Type\022\t\n\005LO" +
+      "GIN\020\000\022\n\n\006LOGOUT\020\001\022\014\n\010REGISTER\020\002\022\014\n\010RESPO" +
+      "NSE\020\003\022\022\n\016ITEMORDEROFFER\020\004\022\027\n\023ITEMPRODUCT" +
+      "IONOFFER\020\005"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -5296,7 +6765,7 @@ public final class Protocol {
     internal_static_Protos_Message_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Protos_Message_descriptor,
-        new java.lang.String[] { "UserType", "ItemOrderOffer", "ItemProductionOffer", "User", "Type", "State", });
+        new java.lang.String[] { "UserType", "ItemOrderOffer", "ItemProductionOffer", "User", "Type", "State", "Sale", });
     internal_static_Protos_ItemOrderOffer_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_Protos_ItemOrderOffer_fieldAccessorTable = new
@@ -5321,6 +6790,12 @@ public final class Protocol {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Protos_State_descriptor,
         new java.lang.String[] { "Result", "Description", });
+    internal_static_Protos_Sale_descriptor =
+      getDescriptor().getMessageTypes().get(5);
+    internal_static_Protos_Sale_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_Protos_Sale_descriptor,
+        new java.lang.String[] { "ManufactureName", "ArticleName", "OfferName", "GlobalPrice", "Message", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

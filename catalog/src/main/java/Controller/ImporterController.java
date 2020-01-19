@@ -51,6 +51,14 @@ public class ImporterController {
     }
 
     @POST
+    @Path("/")
+    public void newImporter(
+            @NotNull @QueryParam("name") String name
+    ) {
+        System.out.println("Name: " + name);
+    }
+
+    @POST
     @Path("{name}")
     public Response newImporterOrder(
             @NotNull @PathParam("name") String name,
