@@ -18,14 +18,14 @@ findNegotiator(Manufacturer) ->
 negotiationsLoop(NegotiatorsMap, ManufaturersMap) ->
     receive
         {find, Manufacturer, From} ->
-            case maps:get(Manufacturer, ManufaturersMap) of
+            case maps:find(Manufacturer, ManufaturersMap) of
                 {ok, NegotiatorPid} ->
                     From ! NegotiatorPid,
                     negotiationsLoop(NegotiatorsMap, ManufaturersMap);
                 error ->
                     Res = findManufacturerInCatalog(Manufacturer),
                     Name = maps:get(name, Res),
-                    case maps:get(Name, NegotiatorsMap) of
+                    case maps:find(Name, NegotiatorsMap) of
                         {ok, NegotiatorPid} ->
                             maps:put(Manufacturer, NegotiatorPid, ManufaturersMap),
                             From ! {ok, NegotiatorPid},
@@ -45,10 +45,11 @@ negotiationsLoop(NegotiatorsMap, ManufaturersMap) ->
 % function that finds a manufaturer in the catalog
 findManufacturerInCatalog(Manufacturer) ->
     inets:start(),
-    case httpc:request("http://localhost:8080/manufacturers/" ++ Manufacturer) of
+    case httpc:request("http://localhost:8080/manufacturer/" ++ Manufacturer) of
         {ok, {_, _, Result}} ->
             inets:stop(),
             {struct, Json} = mochijson2:decode(Result),
+            io:format("Received: ~s~n",[Json]),
             {_, Data} = proplists:get_value("data", Json),
             {_, Negotiator} = proplists:get_value("negotiator", Data),
             Name = proplists:get_value("name", Negotiator),
