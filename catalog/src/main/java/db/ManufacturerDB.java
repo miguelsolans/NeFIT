@@ -29,6 +29,7 @@ public class ManufacturerDB {
         manufacturers.get("Land Rover").addProduct(new ItemProductionOffer("Defender", "Land Rover", 100000.0, 1, 150, 30));
         manufacturers.get("Land Rover").addProduct(new ItemProductionOffer("Serie", "Land Rover", 105000.0, 3, 2, 90));
 
+
         manufacturers.get("Korg").addProduct(new ItemProductionOffer("Kronos", "Korg", 25000, 1, 2500, 1));
 
         manufacturers.get("Korg").getProduct("Kronos").setActive(false);
