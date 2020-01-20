@@ -5,7 +5,8 @@
 start() ->
     {ok, Context} = erlzmq:context(),
     {ok, Sock} = erlzmq:socket(Context, [pull, {active, false}]),
-    ok = erlzmq:connect(Sock, "tcp://localhost:3000"),
+    ok = erlzmq:bind(Sock, "tcp://127.0.0.1:3000"),
+    io:put_chars("NEGOTIATIONS CONSUMER STARTED...\n"),
     spawn( fun() -> negotiationsConsumer(Sock) end).
 
 % function that receives orders from the negotiator

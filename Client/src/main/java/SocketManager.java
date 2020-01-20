@@ -19,10 +19,7 @@ class SocketManager {
     }
 
     synchronized void write(Message msg) throws IOException {
-        byte[] msgByteArr = msg.toByteArray();
-
-        // send msg size
-        this.os.write(msgByteArr);
+        this.os.write(msg.toByteArray());
     }
 
     byte[] read(){

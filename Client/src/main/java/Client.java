@@ -76,6 +76,8 @@ public class Client implements Runnable {
                     break;
 
                 case "3":
+                    this.handler.shutdown();
+                    System.exit(0);
                     return false;
 
                 default:

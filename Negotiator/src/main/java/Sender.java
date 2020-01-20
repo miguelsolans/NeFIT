@@ -42,6 +42,17 @@ public class Sender {
 
     }
 
+    public void sendCloseNegotiation(String manufacturer, String product) {
+        try{
+            String urlClose = "http://localhost:8080/product/close/"+manufacturer+"?product="+product;
+            this.request("PUT",urlClose);
+        }
+        catch (IOException ex){
+            ex.printStackTrace();
+        }
+
+    }
+
     public void request(String type, String urlString) throws IOException {
         StringBuilder result = new StringBuilder();
         URL url = new URL(urlString);

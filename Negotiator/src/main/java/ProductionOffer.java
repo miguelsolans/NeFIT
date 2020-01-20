@@ -56,12 +56,13 @@ public class ProductionOffer {
         Protocol.User manufactureUser = Protocol.User.newBuilder().
                 setUsername(this.fabricantName).
                 build();
+        quantity = this.quantMax;
         for (Offer offer : this.offers){
-            quantity = this.quantMax - offer.getQuantity();
 
-            if (quantity>= this.quantMIN) {
+            if (offer.getQuantity()>= this.quantMIN && offer.getQuantity()<=this.quantMax
+                    && quantity>=this.quantMIN && quantity-offer.getQuantity()>=0) {
                 winners++;
-                this.quantMax -= offer.getQuantity();
+                quantity -= offer.getQuantity();
 
                 sender.sendWinnerOffer(offer.getUserName(), offer.getId());
 
@@ -76,16 +77,16 @@ public class ProductionOffer {
                         setMessage("Winner").build();
                 Protocol.Message messageO = Protocol.Message.newBuilder().
                         setUser(userOffer).
-                        setType(Protocol.Type.RESPONSE).
+                        setType(Protocol.Type.NOTIFICATION).
                         setSale(sale).
                         build();
                 Protocol.Message messageP = Protocol.Message.newBuilder().
                         setUser(manufactureUser).
-                        setType(Protocol.Type.RESPONSE).
+                        setType(Protocol.Type.NOTIFICATION).
                         setSale(sale).
                         build();
-                push.send(messageP.toByteArray());
-                push.send(messageO.toByteArray());
+                this.push.send(messageP.toByteArray());
+                this.push.send(messageO.toByteArray());
             }
             else {
                 losers++;
@@ -93,17 +94,18 @@ public class ProductionOffer {
                         setUsername(offer.getUserName()).
                         build();
                 Protocol.Sale sale = Protocol.Sale.newBuilder().
+                        setArticleName(this.articleName).
+                        setManufactureName(this.fabricantName).
                         setOfferName(offer.getUserName()).
-                        setMessage("Loser").
-                        build();
+                        setMessage("Loser").build();
                 Protocol.Message messageO = Protocol.Message.newBuilder().
                         setUser(userOffer).
                         setSale(sale).
-                        setType(Protocol.Type.RESPONSE).
+                        setType(Protocol.Type.NOTIFICATION).
                         build();
                 Protocol.Message messageP = Protocol.Message.newBuilder().
                         setUser(manufactureUser).
-                        setType(Protocol.Type.RESPONSE).
+                        setType(Protocol.Type.NOTIFICATION).
                         setSale(sale).
                         build();
                 push.send(messageO.toByteArray());
@@ -111,7 +113,8 @@ public class ProductionOffer {
 
             }
         }
-        System.out.println("Lnçamento de produção finalizado com "+winners+" vencedores e com " +losers);
+        sender.sendCloseNegotiation(this.fabricantName,this.articleName);
+        System.out.println("Lnçamento de produção finalizado com "+winners+" vencedores e com " +losers+" perdedores");
 
     }
 

@@ -48,7 +48,7 @@ public class Negotiator {
                 case "MANUFACTURER":
                     result =negotiator.addProducionOffer(message,push);
                     if (result) {
-                        System.out.println("Lançamento de Oferta de Produção" +message.getUser().getUsername()+ "validada");
+                        System.out.println("Lançamento de Oferta de Produção " +message.getUser().getUsername()+ " validada");
                         sender.sendProductionOffer(message.getUser().getUsername(),message.getItemProductionOffer().getName(),
                                 message.getItemProductionOffer().getUnitPrice(),
                                 message.getItemProductionOffer().getMinimumAmount(),
@@ -57,14 +57,14 @@ public class Negotiator {
                         pub.send(message.getUser().getUsername()+" has a new offer.");
                     }
                     else {
-                        System.out.println("Lançamento de Oferta de Produção" +message.getUser().getUsername()+ "cancelado");
+                        System.out.println("Lançamento de Oferta de Produção " +message.getUser().getUsername()+ " cancelado");
                     }
                     break;
                 case "IMPORTER":
                     result = negotiator.addOffer(message);
 
                     if (result){
-                        System.out.println("Lançamento de Oferta "+message.getUser().getUsername()+ "validada");
+                        System.out.println("Lançamento de Oferta "+message.getUser().getUsername()+ " validada");
                         // String manufacturer, String product, String username
                         int id = productionMap.getProductionOrderId(message.getItemOrderOffer().getManufacturerName(),
                                 message.getItemOrderOffer().getProductName(), message.getUser().getUsername());
@@ -73,24 +73,10 @@ public class Negotiator {
                                 message.getItemOrderOffer().getUnitPrice(), id);
                     }
                     else {
-                        System.out.println("Lançamento de Oferta "+message.getUser().getUsername()+ "cancelado");
+                        System.out.println("Lançamento de Oferta "+message.getUser().getUsername()+ " cancelado");
                     }
                     break;
             }
-            //Send message with the result of the offer (true or false)
-            Protocol.User user = Protocol.User.newBuilder().
-                    setUsername(message.getUser().getUsername()).
-                    build();
-            Protocol.Sale sale = Protocol.Sale.newBuilder().
-                    setMessage(Boolean.toString(result)).
-                    build();
-            Protocol.Message messageS = Protocol.Message.newBuilder().
-                    setUserType(message.getUserType()).
-                    setType(Protocol.Type.RESPONSE).
-                    setUser(user).
-                    setSale(sale).
-                    build();
-            push.send(messageS.toByteArray());
         }
 
     }
