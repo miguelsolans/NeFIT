@@ -28,8 +28,8 @@ $ java -jar exec/Negotiator-1.0.jar 4001
 $ java -jar exec/Client-1.0.jar
 ```
  
-<p align="center"><a href="#">Miguel R. Solans</a></p>
-<p align="center"><a href="#">Tifany Silva</a></p>
-<p align="center"><a href="#">João Silva</a></p>
-<p align="center"><a href="#">Henrique Pereira</a></p>
+<p align="center"><a href="http://github.com/miguelsolans">Miguel R. Solans</a></p>
+<p align="center"><a href="https://github.com/Sarah250">Tifany Silva</a></p>
+<p align="center"><a href="https://github.com/joaop21">João Silva</a></p>
+<p align="center"><a href="https://github.com/hpereira98">Henrique Pereira</a></p>
 <p align="center">2019/2020</p>
