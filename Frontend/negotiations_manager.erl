@@ -21,7 +21,7 @@ negotiationsLoop(NegotiatorsMap, ManufaturersMap) ->
         {find, Manufacturer, From} ->
             case maps:find(Manufacturer, ManufaturersMap) of
                 {ok, NegotiatorPid} ->
-                    From ! NegotiatorPid,
+                    From ! {ok, NegotiatorPid},
                     negotiationsLoop(NegotiatorsMap, ManufaturersMap);
                 error ->
                     Res = findManufacturerInCatalog(Manufacturer),
@@ -35,10 +35,8 @@ negotiationsLoop(NegotiatorsMap, ManufaturersMap) ->
                             Host = maps:get(host, Res),
                             Port = maps:get(port, Res),
                             NegotiatorPid = negotiations_producer:run(Host,Port),
-                            maps:put(Name, NegotiatorPid, NegotiatorsMap),
-                            maps:put(Manufacturer, NegotiatorPid, ManufaturersMap),
                             From ! {ok, NegotiatorPid},
-                            negotiationsLoop(NegotiatorsMap, ManufaturersMap)
+                            negotiationsLoop(maps:put(Name, NegotiatorPid, NegotiatorsMap), maps:put(Manufacturer, NegotiatorPid, ManufaturersMap))
                     end
             end
     end.

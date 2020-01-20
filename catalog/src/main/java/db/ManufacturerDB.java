@@ -99,4 +99,8 @@ public class ManufacturerDB {
         manufacturers.get(manufacturer)
                 .addProduct(product);
     }
+
+    public static void closeOffer(String manufacturer, String product) {
+        manufacturers.get(manufacturer).getProduct(product).setActive(false);
+    }
 }
