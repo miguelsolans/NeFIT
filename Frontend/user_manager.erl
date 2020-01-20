@@ -53,6 +53,7 @@ loop(Sock, User) ->
                     authentication_handler:authentication(Sock)
             end;
         {send_msg, Data} ->
+            io:format("Send message to client ~s~n",[User]),
             sender_handler:sendEncoded(Sock, Data),
             loop(Sock, User);
         {tcp_closed, Sock} ->

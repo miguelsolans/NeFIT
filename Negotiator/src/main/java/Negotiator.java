@@ -77,20 +77,6 @@ public class Negotiator {
                     }
                     break;
             }
-            //Send message with the result of the offer (true or false)
-            Protocol.User user = Protocol.User.newBuilder().
-                    setUsername(message.getUser().getUsername()).
-                    build();
-            Protocol.Sale sale = Protocol.Sale.newBuilder().
-                    setMessage(Boolean.toString(result)).
-                    build();
-            Protocol.Message messageS = Protocol.Message.newBuilder().
-                    setUserType(message.getUserType()).
-                    setType(Protocol.Type.RESPONSE).
-                    setUser(user).
-                    setSale(sale).
-                    build();
-            push.send(messageS.toByteArray());
         }
 
     }
