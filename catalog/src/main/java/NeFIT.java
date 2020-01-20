@@ -39,6 +39,7 @@ public class NeFIT extends Application<NefitConfiguration> {
     public static void main(String[] args) throws Exception {
         System.out.println("Catalog is Starting...");
 
+        // new NeFIT().run(args);
         new NeFIT().run("server", "config.yml");
     }
 
