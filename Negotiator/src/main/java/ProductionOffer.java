@@ -56,12 +56,12 @@ public class ProductionOffer {
         Protocol.User manufactureUser = Protocol.User.newBuilder().
                 setUsername(this.fabricantName).
                 build();
+        quantity = this.quantMax;
         for (Offer offer : this.offers){
-            quantity = this.quantMax - offer.getQuantity();
 
-            if (quantity>= this.quantMIN) {
+            if (offer.getQuantity()>= this.quantMIN && offer.getQuantity()<=this.quantMax && quantity>=this.quantMIN) {
                 winners++;
-                this.quantMax -= offer.getQuantity();
+                quantity -= offer.getQuantity();
 
                 sender.sendWinnerOffer(offer.getUserName(), offer.getId());
 
@@ -111,7 +111,8 @@ public class ProductionOffer {
 
             }
         }
-        System.out.println("Lnçamento de produção finalizado com "+winners+" vencedores e com " +losers);
+        sender.sendCloseNegotiation(this.fabricantName,this.articleName);
+        System.out.println("Lnçamento de produção finalizado com "+winners+" vencedores e com " +losers+" perdedores");
 
     }
 
