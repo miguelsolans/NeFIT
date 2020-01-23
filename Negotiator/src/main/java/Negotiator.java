@@ -35,7 +35,7 @@ public class Negotiator {
 
         //Notifications
         ZMQ.Socket pub = context.socket(ZMQ.PUB);
-        pub.connect("tcp://localhost:"+portPUB);
+        pub.bind("tcp://*:"+portPUB);
 
         Negotiator negotiator = new Negotiator(push,pull);
 
