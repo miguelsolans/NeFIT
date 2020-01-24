@@ -20,7 +20,7 @@ public class Negotiator {
         ZMQ.Context context = ZMQ.context(1);
         Sender sender = new Sender();
 
-        String portPUSH = "3000", portPULL="12345", portPUB="6666";
+        String portPUSH = "3000", portPULL="12345", portPUB="6001";
 
         if(args.length==1){
             portPULL = args[0];
@@ -35,7 +35,7 @@ public class Negotiator {
 
         //Notifications
         ZMQ.Socket pub = context.socket(ZMQ.PUB);
-        pub.bind("tcp://*:"+portPUB);
+        pub.connect("tcp://localhost:"+portPUB);
 
         Negotiator negotiator = new Negotiator(push,pull);
 

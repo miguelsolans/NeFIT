@@ -1,4 +1,4 @@
-build: frontend client negotiator catalog
+build: frontend client negotiator catalog broker
 current_dir = $(shell pwd)
 
 frontend:
@@ -23,10 +23,14 @@ catalog:
 	mv catalog/target/nefit-1.0.jar exec/
 	cp catalog/config.yml exec/
 
+broker:
+	cd Broker && mvn clean compile package && cd ../
+	mv Broker/target/Broker-1.0.jar exec/
+
 run-frontend:
 	cd dependencies/erlzmq2/ebin && erl < ErlangCommands
 
-.PHONY: frontend client negotiator catalog
+.PHONY: frontend client negotiator catalog broker
 
 clean:
 	-@rm -rf Frontend/bin/

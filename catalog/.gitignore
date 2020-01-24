@@ -3,3 +3,5 @@
 .DS_Store
 .classpath
 .project
+dependency-reduced-pom.xml
+nefit.iml
